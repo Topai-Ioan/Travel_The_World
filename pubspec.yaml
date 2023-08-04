@@ -75,7 +75,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/instagram.png"
+  image_path: "assets/images/logo.svg"
 
 # The following section is specific to Flutter.
 flutter:
@@ -85,7 +85,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-
+  assets:
+    - assets/images/
+    - assets/images/roxi.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
