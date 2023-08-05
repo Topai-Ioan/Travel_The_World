@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:travel_the_world/consts.dart';
+import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_up_page.dart';
 import 'package:travel_the_world/features/presentation/widgets/form_container_widget.dart';
 import 'package:travel_the_world/features/presentation/widgets/button_container_widget.dart';
