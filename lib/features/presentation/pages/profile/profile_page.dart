@@ -18,7 +18,7 @@ class ProfilePage extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 10),
+            padding: const EdgeInsets.all(10),
             child: InkWell(
               onTap: () {
                 _openBottomModalSheet(context);
@@ -155,81 +155,89 @@ class ProfilePage extends StatelessWidget {
   }
 
   _openBottomModalSheet(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            height: 150,
-            decoration: BoxDecoration(color: backgroundColor.withOpacity(.8)),
-            child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        "More Options",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: primaryColor),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    const Divider(
-                      thickness: 1,
-                      color: secondaryColor,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EditProfilePage()));
-                        },
-                        child: const Text(
-                          "Edit Profile",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: primaryColor),
-                        ),
-                      ),
-                    ),
-                    sizeVertical(7),
-                    const Divider(
-                      thickness: 1,
-                      color: secondaryColor,
-                    ),
-                    sizeVertical(7),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10.0),
-                      child: InkWell(
-                        child: Text(
-                          "Logout",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: primaryColor),
-                        ),
-                      ),
-                    ),
-                    sizeVertical(7),
-                  ],
-                ),
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent.withOpacity(0.5),
+      context: context,
+      builder: (context) {
+        return _ModalContent();
+      },
+    );
+  }
+}
+
+class _ModalContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      color: Colors.transparent.withOpacity(0.5),
+      child: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _OptionItem(
+                text: "Settings",
+                onTap: () {},
               ),
-            ),
-          );
-        });
+              const SizedBox(height: 8),
+              const Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 8),
+              _OptionItem(
+                text: "Edit Profile",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfilePage(),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 7),
+              const Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 7),
+              _OptionItem(
+                text: "Logout",
+                onTap: () {},
+              ),
+              const SizedBox(height: 7),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OptionItem extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+
+  const _OptionItem({
+    required this.text,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Text(
+          text,
+          style: const TextStyle(
+              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
+        ),
+      ),
+    );
   }
 }

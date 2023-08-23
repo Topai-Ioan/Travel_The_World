@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
 
+import '../upload_post/comment/comment_page.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -71,9 +73,17 @@ class HomePage extends StatelessWidget {
                         color: primaryColor,
                       ),
                       sizeHorizontal(10),
-                      const Icon(
-                        Icons.comment_rounded,
-                        color: primaryColor,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const CommentPage()));
+                        },
+                        child: const Icon(
+                          Icons.comment_rounded,
+                          color: primaryColor,
+                        ),
                       ),
                       sizeHorizontal(10),
                       const Icon(
