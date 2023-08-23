@@ -53,7 +53,71 @@ class HomePage extends StatelessWidget {
                   ),
                   const Icon(Icons.more_vert_rounded, color: primaryColor)
                 ],
-              )
+              ),
+              sizeVertical(10),
+              Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.3,
+                color: secondaryColor,
+              ),
+              sizeVertical(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.favorite,
+                        color: primaryColor,
+                      ),
+                      sizeHorizontal(10),
+                      const Icon(
+                        Icons.comment_rounded,
+                        color: primaryColor,
+                      ),
+                      sizeHorizontal(10),
+                      const Icon(
+                        Icons.send,
+                        color: primaryColor,
+                      ),
+                      sizeHorizontal(10),
+                    ],
+                  ),
+                  const Icon(Icons.bookmark_border_rounded,
+                      color: primaryColor),
+                ],
+              ),
+              sizeVertical(10),
+              const Text(
+                "22 likes",
+                style:
+                    TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+              ),
+              sizeVertical(10),
+              Row(
+                children: [
+                  const Text(
+                    "Username",
+                    style: TextStyle(
+                        color: primaryColor, fontWeight: FontWeight.bold),
+                  ),
+                  sizeHorizontal(10),
+                  const Text(
+                    "Description",
+                    style: TextStyle(color: primaryColor),
+                  ),
+                ],
+              ),
+              sizeVertical(10),
+              const Text(
+                "view all x comments",
+                style: TextStyle(color: darkGreyColor),
+              ),
+              sizeVertical(10),
+              const Text(
+                "01/01/2023",
+                style: TextStyle(color: darkGreyColor),
+              ),
             ],
           ),
         ));

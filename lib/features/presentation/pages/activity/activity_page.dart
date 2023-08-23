@@ -6,11 +6,13 @@ class ActivityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        backgroundColor: backgroundColor,
+        title: const Text(
           "Activity",
-          style: TextStyle(color: blueColor),
+          style: TextStyle(color: primaryColor),
         ),
       ),
     );
