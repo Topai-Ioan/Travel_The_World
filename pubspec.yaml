@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.18.4 <3.0.0"
+  sdk: ">=2.18.4 <=3.0.6"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -29,11 +29,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  provider: ^6.0.5
+
   #state management
   flutter_bloc: ^8.0.1
-
+  bloc: ^8.0.1
   equatable: ^2.0.3
-  #flutter_icons: ^1.1.0
 
   #Firebase
   cloud_firestore: ^4.8.4
@@ -75,7 +77,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/instagram.png"
+  image_path: "assets/images/logo.svg"
 
 # The following section is specific to Flutter.
 flutter:
@@ -85,7 +87,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-
+  assets:
+    - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

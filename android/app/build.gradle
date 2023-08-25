@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace "com.example.travel_the_world"
@@ -48,7 +49,7 @@ android {
         applicationId "com.example.travel_the_world"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 19
+        minSdkVersion 23
         //minSdkVersion flutter.minSdkVersion TO-DO check what are those
         multiDexEnabled true
         targetSdkVersion flutter.targetSdkVersion
