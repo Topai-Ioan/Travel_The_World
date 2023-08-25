@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
 
-import 'edit_profile_page.dart';
-
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -190,12 +188,7 @@ class _ModalContent extends StatelessWidget {
               _OptionItem(
                 text: "Edit Profile",
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EditProfilePage(),
-                    ),
-                  );
+                  Navigator.pushNamed(context, PageRoutes.EditProfilePage);
                 },
               ),
               const SizedBox(height: 7),

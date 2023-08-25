@@ -10,9 +10,12 @@ class CommentPage extends StatefulWidget {
 
 class _CommentPageState extends State<CommentPage> {
   bool _isUserReplying = false;
+  bool _isKeyboardOpenFromReplay = false;
 
   @override
   Widget build(BuildContext context) {
+    _isKeyboardOpenFromReplay =
+        _isUserReplying && MediaQuery.of(context).viewInsets.bottom > 0;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: _buildAppBar(),
@@ -29,7 +32,9 @@ class _CommentPageState extends State<CommentPage> {
               child: _buildCommentRow(),
             ),
           ),
-          _commentSection(),
+          // todo when the user is replaying and the keyboard is closed,
+          // when the user clicks on the comment section, the user is replaying should be set to false
+          if (!_isUserReplying && !_isKeyboardOpenFromReplay) _commentSection(),
         ],
       ),
     );
@@ -183,15 +188,12 @@ class _CommentPageState extends State<CommentPage> {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: TextFormField(
-                  style: const TextStyle(color: primaryColor),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Post your comment...",
-                    hintStyle: TextStyle(color: secondaryColor),
-                  ),
+              child: TextFormField(
+                style: const TextStyle(color: primaryColor),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Post your comment...",
+                  hintStyle: TextStyle(color: secondaryColor),
                 ),
               ),
             ),

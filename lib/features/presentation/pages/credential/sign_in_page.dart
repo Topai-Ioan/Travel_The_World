@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/presentation/pages/credential/sign_up_page.dart';
 import 'package:travel_the_world/features/presentation/widgets/credential/form_container_widget.dart';
 import 'package:travel_the_world/features/presentation/widgets/credential/button_container_widget.dart';
 
@@ -53,11 +52,8 @@ class SignInPage extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignUpPage()),
-                        (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, PageRoutes.SignUpPage, (route) => false);
                   },
                   child: const Text(
                     "Sign Up.",

@@ -4,7 +4,7 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/presentation/pages/activity/activity_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/profile_page.dart';
 import 'package:travel_the_world/features/presentation/pages/search/search_page.dart';
-import 'package:travel_the_world/features/presentation/pages/upload_post/upload_post_page.dart';
+import 'package:travel_the_world/features/presentation/pages/post/upload_post_page.dart';
 
 import '../home/home_page.dart';
 
