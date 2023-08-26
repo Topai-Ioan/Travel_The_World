@@ -189,7 +189,7 @@ class _ModalContent extends StatelessWidget {
               _OptionItem(
                 text: "Edit Post",
                 onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.EditPostPage);
+                  Navigator.pushNamed(context, PageRoutes.UpdatePostPage);
                 },
               ),
               const SizedBox(height: 7),

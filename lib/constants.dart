@@ -25,7 +25,7 @@ Widget sizeHorizontal(double width) {
 class PageRoutes {
   static const String MainPage = "/";
   static const String EditProfilePage = "EditProfilePage";
-  static const String EditPostPage = "EditPostPage";
+  static const String UpdatePostPage = "UpdatePostPage";
   static const String CommentPage = "CommentPage";
   static const String SignInPage = "SignInPage";
   static const String SignUpPage = "SignUpPage";

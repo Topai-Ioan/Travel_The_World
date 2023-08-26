@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_in_page.dart';

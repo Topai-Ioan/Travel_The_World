@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source_interface.dart';
+import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/repository/firebase_repository_interface.dart';
 
@@ -46,4 +47,25 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
   Future<String> uploadImage(File? file, String childName,
           {bool isPost = true}) async =>
       remoteDataSource.uploadImage(file, childName);
+
+// todo separate files
+  @override
+  Future<void> createPost(PostEntity post) async =>
+      remoteDataSource.createPost(post);
+
+  @override
+  Future<void> deletePost(PostEntity post) async =>
+      remoteDataSource.deletePost(post);
+
+  @override
+  Future<void> likePost(PostEntity post) async =>
+      remoteDataSource.likePost(post);
+
+  @override
+  Stream<List<PostEntity>> readPosts(PostEntity post) =>
+      remoteDataSource.readPosts(post);
+
+  @override
+  Future<void> updatePost(PostEntity post) async =>
+      remoteDataSource.updatePost(post);
 }

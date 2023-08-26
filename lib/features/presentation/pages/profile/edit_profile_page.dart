@@ -149,10 +149,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     } else {
       di
           .sl<UploadImageUseCase>()
-          //todo dont harcode string
           .call(_image!, "profileImages", isPost: false)
           .then((profileUrl) {
         _updateUserProfile(profileUrl);
+        //todo dont harcode string
       });
     }
   }

@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   const HomePage(),
                   const SearchPage(),
-                  const UploadPostPage(),
+                  UploadPostPage(currentUser: currentUser),
                   const ActivityPage(),
                   ProfilePage(currentUser: currentUser)
                 ],

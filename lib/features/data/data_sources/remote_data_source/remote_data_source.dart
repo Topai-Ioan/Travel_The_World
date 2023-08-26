@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source_interface.dart';
+import 'package:travel_the_world/features/data/models/post/post_model.dart';
 import 'package:travel_the_world/features/data/models/user/user_model.dart';
+import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 
 class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
@@ -48,7 +50,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         userCollection.doc(uid).update(newUser);
       }
     }).catchError((error) {
-      print(error.toString());
+      toast(error.toString());
       toast("Some error occur");
     });
   }
@@ -83,7 +85,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         await firebaseAuth.signInWithEmailAndPassword(
             email: user.email!, password: user.password!);
       } else {
-        print("fields cannot be empty");
+        toast("fields cannot be empty");
       }
     } on FirebaseAuthException catch (_) {
       //todo log exceptions
@@ -176,8 +178,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         .child(firebaseAuth.currentUser!.uid);
 
     if (isPost) {
-      String id =
-          '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}-${DateTime.now().minute}';
+      String id = "test";
 
       ref = ref.child(id);
     }
@@ -188,5 +189,100 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
 
     return await imageUrl;
+  }
+
+  @override
+  Future<void> createPost(PostEntity post) async {
+    final postCollection =
+        firebaseFirestore.collection(FirebaseConstants.Posts);
+
+    final newPost = PostModel(
+            userProfileUrl: post.userProfileUrl,
+            username: post.username,
+            totalLikes: 0,
+            totalComments: 0,
+            postImageUrl: post.postImageUrl,
+            postId: post.postId,
+            likes: [],
+            description: post.description,
+            userUid: post.userUid,
+            createAt: post.createAt)
+        .toJson();
+
+    try {
+      final postDocRef = await postCollection.doc(post.postId).get();
+
+      if (!postDocRef.exists) {
+        postCollection.doc(post.postId).set(newPost);
+      } //todo we dont need update in create
+      else {
+        postCollection.doc(post.postId).update(newPost);
+      }
+    } catch (e) {
+      toast("some error occured $e");
+    }
+  }
+
+  @override
+  Future<void> deletePost(PostEntity post) async {
+    final postCollection =
+        firebaseFirestore.collection(FirebaseConstants.Posts);
+
+    try {
+      postCollection.doc(post.postId).delete();
+    } catch (e) {
+      toast("some error occured $e");
+    }
+  }
+
+  @override
+  Future<void> likePost(PostEntity post) async {
+    final postCollection =
+        firebaseFirestore.collection(FirebaseConstants.Posts);
+
+    final currentUid = await getCurrentUid();
+    final postRef = await postCollection.doc(post.postId).get();
+
+    //todo dont hardcode strings
+    if (postRef.exists) {
+      List likes = postRef.get("likes");
+      final totalLikes = postRef.get("totalLikes");
+      if (likes.contains(currentUid)) {
+        postCollection.doc(post.postId).update({
+          "likes": FieldValue.arrayRemove([currentUid]),
+          "totalLikes": totalLikes - 1
+        });
+      } else {
+        postCollection.doc(post.postId).update({
+          "likes": FieldValue.arrayUnion([currentUid]),
+          "totalLikes": totalLikes + 1
+        });
+      }
+    }
+  }
+
+  @override
+  Stream<List<PostEntity>> readPosts(PostEntity post) {
+    final postCollection = firebaseFirestore
+        .collection(FirebaseConstants.Posts)
+        .orderBy("createAt", descending: true);
+    return postCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => PostModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<void> updatePost(PostEntity post) async {
+    final postCollection =
+        firebaseFirestore.collection(FirebaseConstants.Posts);
+    Map<String, dynamic> postInfo = {};
+
+    if (post.description != "" && post.description != null) {
+      postInfo['description'] = post.description;
+    }
+    if (post.postImageUrl != "" && post.postImageUrl != null) {
+      postInfo['postImageUrl'] = post.postImageUrl;
+    }
+
+    postCollection.doc(post.postId).update(postInfo);
   }
 }

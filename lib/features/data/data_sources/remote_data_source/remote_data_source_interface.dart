@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 
 abstract class FirebaseRemoteDataSourceInterface {
@@ -19,4 +20,11 @@ abstract class FirebaseRemoteDataSourceInterface {
   // Cloud Storage
   Future<String> uploadImage(File? file, String childName,
       {bool isPost = true});
+
+  // Post Features
+  Future<void> createPost(PostEntity post);
+  Stream<List<PostEntity>> readPosts(PostEntity post);
+  Future<void> updatePost(PostEntity post);
+  Future<void> deletePost(PostEntity post);
+  Future<void> likePost(PostEntity post);
 }
