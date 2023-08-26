@@ -9,6 +9,7 @@ import 'package:travel_the_world/features/data/models/post/post_model.dart';
 import 'package:travel_the_world/features/data/models/user/user_model.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
+import 'package:uuid/uuid.dart';
 
 class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   final FirebaseFirestore firebaseFirestore;
@@ -178,7 +179,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         .child(firebaseAuth.currentUser!.uid);
 
     if (isPost) {
-      String id = "test";
+      String id = const Uuid().v4();
 
       ref = ref.child(id);
     }
