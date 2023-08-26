@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
+import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
+import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
+import 'package:travel_the_world/profile_widget.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  final UserEntity currentUser;
+  const ProfilePage({Key? key, required this.currentUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,10 +15,8 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
-        title: const Text(
-          'username',
-          style: TextStyle(color: primaryColor),
-        ),
+        title: Text("${currentUser.username}",
+            style: const TextStyle(color: primaryColor)),
         actions: [
           Padding(
             padding: const EdgeInsets.all(10),
@@ -21,10 +24,7 @@ class ProfilePage extends StatelessWidget {
               onTap: () {
                 _openBottomModalSheet(context);
               },
-              child: const Icon(
-                Icons.menu,
-                color: primaryColor,
-              ),
+              child: const Icon(Icons.menu, color: primaryColor),
             ),
           ),
         ],
@@ -38,12 +38,12 @@ class ProfilePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 80,
                     height: 80,
-                    decoration: const BoxDecoration(
-                      color: primaryColor,
-                      shape: BoxShape.circle,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(40),
+                      child: profileWidget(imageUrl: currentUser.profileUrl),
                     ),
                   ),
                   Row(
@@ -51,60 +51,43 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          const Text(
-                            '0',
-                            style: TextStyle(
-                              color: primaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          Text('${currentUser.totalPosts}',
+                              style: const TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
                           sizeVertical(7),
-                          const Text(
-                            'Posts',
-                            style: TextStyle(
-                              color: primaryColor,
-                            ),
-                          ),
+                          const Text('Posts',
+                              style: TextStyle(color: primaryColor))
                         ],
                       ),
                       sizeHorizontal(25),
                       Column(
                         children: [
-                          const Text(
-                            '54',
-                            style: TextStyle(
-                              color: primaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          Text('${currentUser.totalFollowers}',
+                              style: const TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
                           sizeVertical(7),
                           const Text(
                             'Followers',
-                            style: TextStyle(
-                              color: primaryColor,
-                            ),
+                            style: TextStyle(color: primaryColor),
                           ),
                         ],
                       ),
                       sizeHorizontal(25),
                       Column(
                         children: [
-                          const Text(
-                            '100',
-                            style: TextStyle(
-                              color: primaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          Text('${currentUser.totalFollowing}',
+                              style: const TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
                           sizeVertical(7),
                           const Text(
                             'Following',
-                            style: TextStyle(
-                              color: primaryColor,
-                            ),
+                            style: TextStyle(color: primaryColor),
                           ),
                         ],
                       )
@@ -113,19 +96,15 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
               sizeVertical(10),
-              const Text(
-                "Name",
-                style: TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+              Text(
+                '${currentUser.name == '' ? currentUser.username : currentUser.name}',
+                style: const TextStyle(
+                    color: primaryColor, fontWeight: FontWeight.bold),
               ),
               sizeVertical(10),
-              const Text(
-                "The bio of user",
-                style: TextStyle(
-                  color: primaryColor,
-                ),
+              Text(
+                '${currentUser.bio}',
+                style: const TextStyle(color: primaryColor),
               ),
               sizeVertical(10),
               GridView.builder(
@@ -199,7 +178,11 @@ class _ModalContent extends StatelessWidget {
               const SizedBox(height: 7),
               _OptionItem(
                 text: "Logout",
-                onTap: () {},
+                onTap: () {
+                  BlocProvider.of<AuthCubit>(context).loggedOut();
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, PageRoutes.SignInPage, (route) => false);
+                },
               ),
               const SizedBox(height: 7),
             ],

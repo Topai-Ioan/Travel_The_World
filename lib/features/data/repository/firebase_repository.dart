@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source_interface.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/repository/firebase_repository_interface.dart';
@@ -39,4 +41,8 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
   @override
   Future<void> updateUser(UserEntity user) async =>
       remoteDataSource.updateUser(user);
+
+  @override
+  Future<String> uploadImage(File? file, bool isPost, String childName) async =>
+      remoteDataSource.uploadImage(file, isPost, childName);
 }

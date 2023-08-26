@@ -6,6 +6,7 @@ import 'package:travel_the_world/features/data/data_sources/remote_data_source/r
 import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source_interface.dart';
 import 'package:travel_the_world/features/data/repository/firebase_repository.dart';
 import 'package:travel_the_world/features/domain/repository/firebase_repository_interface.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/create_user_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_single_user_usecase.dart';
@@ -17,6 +18,7 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/use
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/update_user_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 
 final sl = GetIt.instance; //service locator
@@ -37,6 +39,10 @@ Future<void> init() async {
         getUsersUseCase: sl.call(),
       ));
 
+  sl.registerFactory(() => GetSingleUserCubit(
+        getSingleUserUseCase: sl.call(),
+      ));
+
   // usecases
   sl.registerLazySingleton(() => SignOutUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => IsSignInUseCase(repository: sl.call()));
@@ -47,6 +53,9 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetUsersUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => CreateUserUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => GetSingleUserUseCase(repository: sl.call()));
+
+  // Cloud Storage
+  sl.registerLazySingleton(() => UploadImageUseCase(repository: sl.call()));
 
   // repositories
   sl.registerLazySingleton<FirebaseRepositoryInterface>(

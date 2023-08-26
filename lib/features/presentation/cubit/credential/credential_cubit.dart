@@ -15,27 +15,24 @@ class CredentialCubit extends Cubit<CredentialState> {
       {required this.signInUserUseCase, required this.signUpUseCase})
       : super(CredentialInitial());
 
-  Future<void> signInUser({
-    required String email,
-    required String password,
-  }) async {
-    _performAuthentication(() async {
+  Future<void> signInUser(
+      {required String email, required String password}) async {
+    emit(CredentialLoading());
+    try {
       await signInUserUseCase
           .call(UserEntity(email: email, password: password));
-    });
+      emit(CredentialSuccess());
+    } on SocketException catch (_) {
+      emit(CredentialFailure());
+    } catch (_) {
+      emit(CredentialFailure());
+    }
   }
 
   Future<void> signUpUser({required UserEntity user}) async {
-    _performAuthentication(() async {
-      await signUpUseCase.call(user);
-    });
-  }
-
-  // todo log different exceptions
-  Future<void> _performAuthentication(Function authenticationAction) async {
     emit(CredentialLoading());
     try {
-      await authenticationAction();
+      await signUpUseCase.call(user);
       emit(CredentialSuccess());
     } on SocketException catch (_) {
       emit(CredentialFailure());

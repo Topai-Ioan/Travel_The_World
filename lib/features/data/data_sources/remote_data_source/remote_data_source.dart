@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,6 +18,38 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     required this.firebaseFirestore,
     required this.firebaseAuth,
   });
+
+  Future<void> createUserWithImage(UserEntity user, String profileUrl) async {
+    final userCollection =
+        firebaseFirestore.collection(FirebaseConstants.Users);
+
+    final uid = await getCurrentUid();
+
+    userCollection.doc(uid).get().then((userDoc) {
+      final newUser = UserModel(
+        uid: uid,
+        name: user.name,
+        email: user.email,
+        bio: user.bio,
+        following: user.following,
+        website: user.website,
+        profileUrl: profileUrl,
+        username: user.username,
+        totalFollowers: user.totalFollowers,
+        followers: user.followers,
+        totalFollowing: user.totalFollowing,
+        totalPosts: user.totalPosts,
+      ).toJson();
+
+      if (!userDoc.exists) {
+        userCollection.doc(uid).set(newUser);
+      } else {
+        userCollection.doc(uid).update(newUser);
+      }
+    }).catchError((error) {
+      toast("Some error occur");
+    });
+  }
 
   @override
   Future<void> createUser(UserEntity user) async {
@@ -46,6 +80,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         userCollection.doc(uid).update(newUser);
       }
     }).catchError((error) {
+      print(error.toString());
       toast("Some error occur");
     });
   }
@@ -57,8 +92,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   Stream<List<UserEntity>> getSingleUser(String uid) {
     final userCollection = firebaseFirestore
         .collection(FirebaseConstants.Users)
-        .where("uid", isEqualTo: uid)
-        .limit(1);
+        .where("uid", isEqualTo: uid);
     return userCollection.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList());
   }
@@ -83,7 +117,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       } else {
         print("fields cannot be empty");
       }
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       //todo log exceptions
 
       toast("Invalid credentials");
@@ -103,7 +137,14 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
               email: user.email!, password: user.password!)
           .then((currentUser) async {
         if (currentUser.user?.uid != null) {
-          await createUser(user);
+          if (user.imageFile != null) {
+            uploadImage(user.imageFile, false, "profileImages")
+                .then((profileUrl) {
+              createUserWithImage(user, profileUrl);
+            });
+          } else {
+            createUserWithImage(user, "");
+          }
         }
       });
       return;
@@ -134,7 +175,9 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       userInformation['profileUrl'] = user.profileUrl;
     }
 
-    if (user.bio != "" && user.bio != null) userInformation['bio'] = user.bio;
+    if (user.bio != "" && user.bio != null) {
+      userInformation['bio'] = user.bio;
+    }
 
     if (user.name != "" && user.name != null) {
       userInformation['name'] = user.name;
@@ -153,5 +196,27 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     }
 
     userCollection.doc(user.uid).update(userInformation);
+  }
+
+  @override
+  Future<String> uploadImage(File? file, bool isPost, String childName) async {
+    Reference ref = firebaseStorage
+        .ref()
+        .child(childName)
+        .child(firebaseAuth.currentUser!.uid);
+
+    if (isPost) {
+      String id =
+          '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().hour}-${DateTime.now().minute}';
+
+      ref = ref.child(id);
+    }
+
+    final uploadTask = ref.putFile(file!);
+
+    final imageUrl =
+        (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+
+    return await imageUrl;
   }
 }
