@@ -10,8 +10,8 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
   FirebaseRepository({required this.remoteDataSource});
 
   @override
-  Future<void> createUser(UserEntity user) async =>
-      remoteDataSource.createUser(user);
+  Future<void> createUser(UserEntity user, String profileUrl) async =>
+      remoteDataSource.createUser(user, profileUrl);
 
   @override
   Future<String> getCurrentUid() async => remoteDataSource.getCurrentUid();
@@ -43,6 +43,7 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
       remoteDataSource.updateUser(user);
 
   @override
-  Future<String> uploadImage(File? file, bool isPost, String childName) async =>
-      remoteDataSource.uploadImage(file, isPost, childName);
+  Future<String> uploadImage(File? file, String childName,
+          {bool isPost = true}) async =>
+      remoteDataSource.uploadImage(file, childName);
 }

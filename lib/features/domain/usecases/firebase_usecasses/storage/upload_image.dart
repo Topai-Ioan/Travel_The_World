@@ -7,7 +7,7 @@ class UploadImageUseCase {
 
   UploadImageUseCase({required this.repository});
 
-  Future<String> call(File? file, bool isPost, String childName) {
-    return repository.uploadImage(file, isPost, childName);
+  Future<String> call(File? file, String childName, {bool isPost = true}) {
+    return repository.uploadImage(file, childName);
   }
 }

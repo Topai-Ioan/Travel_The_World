@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
+import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_in_page.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_up_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/comment_page.dart';
@@ -11,7 +12,13 @@ class OnGenerateRoute {
     final args = settings.arguments;
     switch (settings.name) {
       case PageRoutes.EditProfilePage:
-        return routeBuilder(const EditProfilePage());
+        if (args is UserEntity) {
+          return routeBuilder(EditProfilePage(
+            currentUser: args,
+          ));
+        } else {
+          return routeBuilder(const NoPageFound());
+        }
 
       case PageRoutes.EditPostPage:
         return routeBuilder(const EditPostPage());

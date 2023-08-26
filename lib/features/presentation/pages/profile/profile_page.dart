@@ -136,13 +136,16 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.transparent.withOpacity(0.5),
       context: context,
       builder: (context) {
-        return _ModalContent();
+        return _ModalContent(user: currentUser);
       },
     );
   }
 }
 
 class _ModalContent extends StatelessWidget {
+  UserEntity user;
+
+  _ModalContent({Key? key, required this.user}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -167,7 +170,8 @@ class _ModalContent extends StatelessWidget {
               _OptionItem(
                 text: "Edit Profile",
                 onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.EditProfilePage);
+                  Navigator.pushNamed(context, PageRoutes.EditProfilePage,
+                      arguments: user);
                 },
               ),
               const SizedBox(height: 7),

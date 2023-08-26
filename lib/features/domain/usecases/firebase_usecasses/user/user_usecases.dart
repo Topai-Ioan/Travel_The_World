@@ -6,8 +6,8 @@ class UserUseCases {
 
   UserUseCases({required this.repository});
 
-  Future<void> createUser(UserEntity user) {
-    return repository.createUser(user);
+  Future<void> createUser(UserEntity user, String profileUrl) {
+    return repository.createUser(user, profileUrl);
   }
 
   Future<String> getCurrentUid() {

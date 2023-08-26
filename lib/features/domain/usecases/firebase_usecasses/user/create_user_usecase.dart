@@ -6,7 +6,7 @@ class CreateUserUseCase {
 
   CreateUserUseCase({required this.repository});
 
-  Future<void> call(UserEntity user) {
-    return repository.createUser(user);
+  Future<void> call(UserEntity user, String profileUrl) {
+    return repository.createUser(user, profileUrl);
   }
 }

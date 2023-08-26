@@ -19,40 +19,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     required this.firebaseAuth,
   });
 
-  Future<void> createUserWithImage(UserEntity user, String profileUrl) async {
-    final userCollection =
-        firebaseFirestore.collection(FirebaseConstants.Users);
-
-    final uid = await getCurrentUid();
-
-    userCollection.doc(uid).get().then((userDoc) {
-      final newUser = UserModel(
-        uid: uid,
-        name: user.name,
-        email: user.email,
-        bio: user.bio,
-        following: user.following,
-        website: user.website,
-        profileUrl: profileUrl,
-        username: user.username,
-        totalFollowers: user.totalFollowers,
-        followers: user.followers,
-        totalFollowing: user.totalFollowing,
-        totalPosts: user.totalPosts,
-      ).toJson();
-
-      if (!userDoc.exists) {
-        userCollection.doc(uid).set(newUser);
-      } else {
-        userCollection.doc(uid).update(newUser);
-      }
-    }).catchError((error) {
-      toast("Some error occur");
-    });
-  }
-
   @override
-  Future<void> createUser(UserEntity user) async {
+  Future<void> createUser(UserEntity user, String profileUrl) async {
     final userCollection =
         firebaseFirestore.collection(FirebaseConstants.Users);
 
@@ -66,7 +34,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
               bio: user.bio,
               following: user.following,
               website: user.website,
-              profileUrl: user.profileUrl,
+              profileUrl: profileUrl,
               username: user.username,
               totalFollowers: user.totalFollowers,
               followers: user.followers,
@@ -138,12 +106,13 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
           .then((currentUser) async {
         if (currentUser.user?.uid != null) {
           if (user.imageFile != null) {
-            uploadImage(user.imageFile, false, "profileImages")
+            // todo dont hardcode it here
+            uploadImage(user.imageFile, "ProfileImages", isPost: false)
                 .then((profileUrl) {
-              createUserWithImage(user, profileUrl);
+              createUser(user, profileUrl);
             });
           } else {
-            createUserWithImage(user, "");
+            createUser(user, "");
           }
         }
       });
@@ -199,7 +168,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   }
 
   @override
-  Future<String> uploadImage(File? file, bool isPost, String childName) async {
+  Future<String> uploadImage(File? file, String childName,
+      {bool isPost = true}) async {
     Reference ref = firebaseStorage
         .ref()
         .child(childName)
