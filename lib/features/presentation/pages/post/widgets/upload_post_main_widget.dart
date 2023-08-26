@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +16,7 @@ import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dar
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:uuid/uuid.dart';
 
 class UploadPostMainWidget extends StatefulWidget {
   final UserEntity currentUser;
@@ -85,6 +88,17 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
                   const SizedBox(height: 10),
                   ProfileFormWidget(
                       title: "Description", controller: _descriptionController),
+                  sizeVertical(10),
+                  if (_isUploading)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Uploading...",
+                            style: TextStyle(color: Colors.white)),
+                        sizeHorizontal(10),
+                        CircularProgressIndicator()
+                      ],
+                    )
                 ],
               ),
             ),
@@ -108,12 +122,13 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
           userUid: widget.currentUser.uid,
           likes: [],
           //todo check if u want this format
-          postId: "test",
+          postId: const Uuid().v4(),
           postImageUrl: image,
           totalComments: 0,
           totalLikes: 0,
           username: widget.currentUser.username,
           userProfileUrl: widget.currentUser.profileUrl,
+          description: _descriptionController.text,
         ))
         .then((value) => _clear());
     return;
