@@ -5,8 +5,8 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/main_screen/main_screen.dart';
-import 'package:travel_the_world/features/presentation/widgets/credential/form_container_widget.dart';
-import 'package:travel_the_world/features/presentation/widgets/credential/button_container_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/credential/widgets/form_container_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/credential/widgets/button_container_widget.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);

@@ -29,11 +29,15 @@ class PostCubit extends Cubit<PostState> {
     emit(PostLoading());
     try {
       final streamResponse = readPostUseCase.call(post);
-      streamResponse.listen((posts) {
+
+      final subscription = streamResponse.listen((posts) {
         if (posts.isNotEmpty) {
           emit(PostLoaded(posts: posts));
+        } else {
+          emit(PostEmpty());
         }
       });
+      subscription.resume();
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {

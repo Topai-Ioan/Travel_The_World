@@ -8,8 +8,8 @@ import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/main_screen/main_screen.dart';
-import 'package:travel_the_world/features/presentation/widgets/credential/form_container_widget.dart';
-import 'package:travel_the_world/features/presentation/widgets/credential/button_container_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/credential/widgets/form_container_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/credential/widgets/button_container_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/profile_widget.dart';
 
