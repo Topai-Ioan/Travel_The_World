@@ -5,7 +5,7 @@ import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_in_page.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_up_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/comment_page.dart';
-import 'package:travel_the_world/features/presentation/pages/post/edit_post_page.dart';
+import 'package:travel_the_world/features/presentation/pages/post/update_post_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/edit_profile_page.dart';
 
 class OnGenerateRoute {
@@ -20,12 +20,12 @@ class OnGenerateRoute {
         }
       case PageRoutes.UpdatePostPage:
         {
-          return routeBuilder(const EditPostPage());
-          // if (args is PostEntity) {
-          //return routeBuilder(EditPostPage(post: args));
-          // } else {
-          //   return routeBuilder(NoPageFound());
-          // }
+          //return routeBuilder(UpdatePostPage());
+          if (args is PostEntity) {
+            return routeBuilder(UpdatePostPage(post: args));
+          } else {
+            return routeBuilder(const NoPageFound());
+          }
         }
 
       case PageRoutes.CommentPage:

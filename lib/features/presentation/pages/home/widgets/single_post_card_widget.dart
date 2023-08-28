@@ -37,7 +37,7 @@ class SinglePostCardWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _openBottomModalSheet(context);
+                    _openBottomModalSheet(context, post);
                   },
                   child:
                       const Icon(Icons.more_vert_rounded, color: primaryColor),
@@ -122,17 +122,20 @@ class SinglePostCardWidget extends StatelessWidget {
   }
 }
 
-_openBottomModalSheet(BuildContext context) {
+_openBottomModalSheet(BuildContext context, PostEntity post) {
   showModalBottomSheet(
     backgroundColor: Colors.transparent.withOpacity(0.5),
     context: context,
     builder: (context) {
-      return _ModalContent();
+      return _ModalContent(post: post);
     },
   );
 }
 
 class _ModalContent extends StatelessWidget {
+  final PostEntity post;
+
+  const _ModalContent({required this.post});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -167,7 +170,8 @@ class _ModalContent extends StatelessWidget {
               _OptionItem(
                 text: "Edit Post",
                 onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.UpdatePostPage);
+                  Navigator.pushNamed(context, PageRoutes.UpdatePostPage,
+                      arguments: post);
                 },
               ),
               const SizedBox(height: 7),
