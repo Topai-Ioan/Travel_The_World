@@ -13,7 +13,7 @@ class PostEntity extends Equatable {
   final Timestamp? createAt;
   final String? userProfileUrl;
 
-  PostEntity({
+  const PostEntity({
     this.postId,
     this.userUid,
     this.username,

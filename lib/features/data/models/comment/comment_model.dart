@@ -14,7 +14,7 @@ class CommentModel extends CommentEntity {
   final List<String>? likes;
   final num? totalReplays;
 
-  CommentModel({
+  const CommentModel({
     this.commentId,
     this.postId,
     this.creatorUid,

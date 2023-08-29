@@ -12,7 +12,7 @@ class ReplyEntity extends Equatable {
   final List<String>? likes;
   final Timestamp? createAt;
 
-  ReplyEntity({
+  const ReplyEntity({
     this.creatorUid,
     this.replyId,
     this.commentId,

@@ -17,7 +17,7 @@ class UserModel extends UserEntity {
   final num? totalFollowing;
   final num? totalPosts;
 
-  UserModel({
+  const UserModel({
     this.uid,
     this.username,
     this.name,

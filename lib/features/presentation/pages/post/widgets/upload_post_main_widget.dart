@@ -9,9 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/create_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image.dart';
-import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
@@ -120,7 +118,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
             post: PostEntity(
           createAt: Timestamp.now(),
           userUid: widget.currentUser.uid,
-          likes: [],
+          likes: const [],
           //todo check if u want this format
           postId: const Uuid().v4(),
           postImageUrl: image,

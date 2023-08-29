@@ -120,7 +120,8 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                         const Spacer(),
                         Text(
                           "${widget.comment.likes?.length} Likes",
-                          style: TextStyle(color: darkGreyColor, fontSize: 12),
+                          style: const TextStyle(
+                              color: darkGreyColor, fontSize: 12),
                         ),
                       ],
                     ),

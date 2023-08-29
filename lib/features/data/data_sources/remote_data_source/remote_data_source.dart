@@ -207,7 +207,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
             totalComments: 0,
             postImageUrl: post.postImageUrl,
             postId: post.postId,
-            likes: [],
+            likes: const [],
             description: post.description,
             userUid: post.userUid,
             createAt: post.createAt)
@@ -313,7 +313,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
             totalReplays: comment.totalReplays,
             commentId: comment.commentId,
             postId: comment.postId,
-            likes: [],
+            likes: const [],
             description: comment.description,
             creatorUid: comment.creatorUid,
             createAt: comment.createAt)
@@ -412,10 +412,11 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         .doc(comment.postId)
         .collection(FirebaseConstants.Comment);
 
-    Map<String, dynamic> commentInfo = Map();
+    Map<String, dynamic> commentInfo = {};
 
-    if (comment.description != "" && comment.description != null)
+    if (comment.description != "" && comment.description != null) {
       commentInfo["description"] = comment.description;
+    }
 
     commentCollection.doc(comment.commentId).update(commentInfo);
   }

@@ -12,7 +12,7 @@ class CommentEntity extends Equatable {
   final List<String>? likes;
   final num? totalReplays;
 
-  CommentEntity({
+  const CommentEntity({
     this.commentId,
     this.postId,
     this.creatorUid,

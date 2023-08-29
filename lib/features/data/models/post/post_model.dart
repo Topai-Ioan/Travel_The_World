@@ -16,7 +16,7 @@ class PostModel extends PostEntity {
   final Timestamp? createAt;
   final String? userProfileUrl;
 
-  PostModel({
+  const PostModel({
     this.postId,
     this.userUid,
     this.username,

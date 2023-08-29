@@ -14,7 +14,7 @@ class CommentLoading extends CommentState {}
 class CommentLoaded extends CommentState {
   final List<CommentEntity> comments;
 
-  CommentLoaded({required this.comments});
+  const CommentLoaded({required this.comments});
   @override
   List<Object> get props => [comments];
 }

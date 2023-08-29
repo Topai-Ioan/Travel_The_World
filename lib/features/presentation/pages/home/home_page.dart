@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         ),
         body: BlocProvider.value(
           // todo i think this stay active forever ? XD, investigate it
-          value: di.sl<PostCubit>()..getPosts(post: PostEntity()),
+          value: di.sl<PostCubit>()..getPosts(post: const PostEntity()),
           child:
               BlocBuilder<PostCubit, PostState>(builder: (context, postState) {
             if (postState is PostEmpty) {

@@ -8,7 +8,6 @@ import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/post/comment/edit_comment_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_comment_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:uuid/uuid.dart';
@@ -38,7 +37,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
     super.initState();
   }
 
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void dispose() {
@@ -204,7 +203,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
       totalReplays: 0,
       commentId: const Uuid().v1(),
       createAt: Timestamp.now(),
-      likes: [],
+      likes: const [],
       username: currentUser.username,
       userProfileUrl: currentUser.profileUrl,
       description: _descriptionController.text,
