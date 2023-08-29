@@ -29,6 +29,7 @@ class PageRoutes {
   static const String CommentPage = "CommentPage";
   static const String SignInPage = "SignInPage";
   static const String SignUpPage = "SignUpPage";
+  static const String UpdateCommentPage = "UpdateCommentPage";
 }
 
 class FirebaseConstants {

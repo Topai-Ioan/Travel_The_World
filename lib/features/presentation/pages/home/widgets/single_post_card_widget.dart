@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
+import 'package:travel_the_world/features/domain/entites/app_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
@@ -103,7 +104,12 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                     sizeHorizontal(10),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, PageRoutes.CommentPage);
+                        Navigator.pushNamed(
+                          context,
+                          PageRoutes.CommentPage,
+                          arguments: AppEntity(
+                              uid: _currentUid, postId: widget.post.postId),
+                        );
                       },
                       child: const Icon(
                         Icons.comment_rounded,

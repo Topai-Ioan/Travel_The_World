@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
+import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 
 abstract class FirebaseRepositoryInterface {
@@ -24,7 +26,22 @@ abstract class FirebaseRepositoryInterface {
   // Post Features
   Future<void> createPost(PostEntity post);
   Stream<List<PostEntity>> readPosts(PostEntity post);
+  Stream<List<PostEntity>> readSinglePost(String postId);
   Future<void> updatePost(PostEntity post);
   Future<void> deletePost(PostEntity post);
   Future<void> likePost(PostEntity post);
+
+  // Comment Features
+  Future<void> createComment(CommentEntity comment);
+  Stream<List<CommentEntity>> readComments(String postId);
+  Future<void> updateComment(CommentEntity comment);
+  Future<void> deleteComment(CommentEntity comment);
+  Future<void> likeComment(CommentEntity comment);
+
+  // Replay Features
+  Future<void> createReply(ReplyEntity replay);
+  Stream<List<ReplyEntity>> readReplies(ReplyEntity replay);
+  Future<void> updateReply(ReplyEntity replay);
+  Future<void> deleteReply(ReplyEntity replay);
+  Future<void> likeReply(ReplyEntity replay);
 }

@@ -6,10 +6,16 @@ import 'package:travel_the_world/features/data/data_sources/remote_data_source/r
 import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source_interface.dart';
 import 'package:travel_the_world/features/data/repository/firebase_repository.dart';
 import 'package:travel_the_world/features/domain/repository/firebase_repository_interface.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/create_comment_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/delete_comment_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/like_comment_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/read_comments_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/update_comment_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/create_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/delete_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/like_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_single_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/create_user_usecase.dart';
@@ -22,7 +28,9 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/use
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_up_user_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/update_user_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
@@ -60,6 +68,21 @@ Future<void> init() async {
         readPostUseCase: sl.call()),
   );
 
+  sl.registerFactory(
+    () => GetSinglePostCubit(readSinglePostUseCase: sl.call()),
+  );
+
+  // Comment Cubit Injection
+  sl.registerFactory(
+    () => CommentCubit(
+      createCommentUseCase: sl.call(),
+      deleteCommentUseCase: sl.call(),
+      likeCommentUseCase: sl.call(),
+      readCommentsUseCase: sl.call(),
+      updateCommentUseCase: sl.call(),
+    ),
+  );
+
   // Use Cases
   // User
   sl.registerLazySingleton(() => SignOutUseCase(repository: sl.call()));
@@ -77,9 +100,17 @@ Future<void> init() async {
   // Post
   sl.registerLazySingleton(() => CreatePostUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => ReadPostsUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => ReadSinglePostUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => LikePostUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => UpdatePostUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => DeletePostUseCase(repository: sl.call()));
+
+  // Comment
+  sl.registerLazySingleton(() => CreateCommentUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => ReadCommentsUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => LikeCommentUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => UpdateCommentUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => DeleteCommentUseCase(repository: sl.call()));
 
   // Repository
 

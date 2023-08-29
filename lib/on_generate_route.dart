@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
+import 'package:travel_the_world/features/domain/entites/app_entity.dart';
+import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_in_page.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_up_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/comment_page.dart';
+import 'package:travel_the_world/features/presentation/pages/post/comment/edit_comment_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/update_post_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/edit_profile_page.dart';
 
@@ -28,8 +31,25 @@ class OnGenerateRoute {
           }
         }
 
+      case PageRoutes.UpdateCommentPage:
+        {
+          if (args is CommentEntity) {
+            return routeBuilder(EditCommentPage(
+              comment: args,
+            ));
+          } else {
+            return routeBuilder(const NoPageFound());
+          }
+        }
       case PageRoutes.CommentPage:
-        return routeBuilder(const CommentPage());
+        {
+          if (args is AppEntity) {
+            return routeBuilder(CommentPage(
+              appEntity: args,
+            ));
+          }
+          return routeBuilder(const NoPageFound());
+        }
 
       case PageRoutes.SignInPage:
         return routeBuilder(const SignInPage());
