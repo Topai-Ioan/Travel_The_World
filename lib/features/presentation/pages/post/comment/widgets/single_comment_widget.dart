@@ -117,6 +117,11 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                           "View Replays",
                           style: TextStyle(color: darkGreyColor, fontSize: 12),
                         ),
+                        const Spacer(),
+                        Text(
+                          "${widget.comment.likes?.length} Likes",
+                          style: TextStyle(color: darkGreyColor, fontSize: 12),
+                        ),
                       ],
                     ),
                     sizeVertical(10),

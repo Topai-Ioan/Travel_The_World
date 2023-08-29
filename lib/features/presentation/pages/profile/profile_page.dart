@@ -143,9 +143,9 @@ class ProfilePage extends StatelessWidget {
 }
 
 class _ModalContent extends StatelessWidget {
-  UserEntity user;
+  final UserEntity user;
 
-  _ModalContent({Key? key, required this.user}) : super(key: key);
+  const _ModalContent({Key? key, required this.user}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(

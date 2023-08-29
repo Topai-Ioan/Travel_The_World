@@ -8,6 +8,7 @@ import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
+import 'package:travel_the_world/features/presentation/pages/post/comment/edit_comment_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_comment_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:uuid/uuid.dart';
@@ -220,80 +221,49 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required CommentEntity comment}) {
     return showModalBottomSheet(
+        backgroundColor: Colors.transparent.withOpacity(0.5),
         context: context,
         builder: (context) {
           return Container(
             height: 150,
-            decoration: BoxDecoration(color: backgroundColor.withOpacity(.8)),
+            color: Colors.transparent.withOpacity(0.5),
             child: SingleChildScrollView(
               child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
+                margin: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        "More Options",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: primaryColor),
-                      ),
+                    _OptionItem(
+                      text: "Delete Comment",
+                      onTap: () => _deleteComment(
+                          commentId: comment.commentId!,
+                          postId: comment.postId!),
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
+                    const SizedBox(height: 8),
                     const Divider(
                       thickness: 1,
-                      color: secondaryColor,
+                      color: Colors.grey,
                     ),
-                    const SizedBox(
-                      height: 8,
+                    const SizedBox(height: 8),
+                    _OptionItem(
+                      text: "Edit Comment",
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, PageRoutes.UpdateCommentPage,
+                            arguments: comment);
+                      },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          _deleteComment(
-                              commentId: comment.commentId!,
-                              postId: comment.postId!);
-                        },
-                        child: const Text(
-                          "Delete Comment",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: primaryColor),
-                        ),
-                      ),
-                    ),
-                    sizeVertical(7),
+                    const SizedBox(height: 7),
                     const Divider(
                       thickness: 1,
-                      color: secondaryColor,
+                      color: Colors.grey,
                     ),
-                    sizeVertical(7),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, PageRoutes.UpdateCommentPage,
-                              arguments: comment);
-
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => UpdatePostPage()));
-                        },
-                        child: const Text(
-                          "Update Comment",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: primaryColor),
-                        ),
-                      ),
+                    const SizedBox(height: 7),
+                    _OptionItem(
+                      text: "Settings",
+                      onTap: () {},
                     ),
-                    sizeVertical(7),
+                    const SizedBox(height: 7),
                   ],
                 ),
               ),
@@ -305,11 +275,37 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   _deleteComment({required String commentId, required String postId}) {
     BlocProvider.of<CommentCubit>(context).deleteComment(
         comment: CommentEntity(commentId: commentId, postId: postId));
+    Navigator.pop(context);
   }
 
   _likeComment({required CommentEntity comment}) {
     BlocProvider.of<CommentCubit>(context).likeComment(
         comment: CommentEntity(
             commentId: comment.commentId, postId: comment.postId));
+  }
+}
+
+class _OptionItem extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+
+  const _OptionItem({
+    required this.text,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Text(
+          text,
+          style: const TextStyle(
+              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
+        ),
+      ),
+    );
   }
 }

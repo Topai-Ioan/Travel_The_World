@@ -40,7 +40,7 @@ class _EditCommentMainWidgetState extends State<EditCommentMainWidget> {
         child: Column(
           children: [
             ProfileFormWidget(
-              title: "description",
+              title: "Comment",
               controller: _descriptionController,
             ),
             sizeVertical(10),
@@ -56,10 +56,8 @@ class _EditCommentMainWidgetState extends State<EditCommentMainWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Updating...",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  const Text("Updating...",
+                      style: TextStyle(color: Colors.white)),
                   sizeHorizontal(10),
                   const CircularProgressIndicator(),
                 ],
@@ -85,6 +83,7 @@ class _EditCommentMainWidgetState extends State<EditCommentMainWidget> {
         _isCommentUpdating = false;
         _descriptionController!.clear();
       });
+      Navigator.pop(context);
       Navigator.pop(context);
     });
   }
