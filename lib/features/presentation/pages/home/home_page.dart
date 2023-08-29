@@ -41,8 +41,13 @@ class _HomePageState extends State<HomePage> {
           child:
               BlocBuilder<PostCubit, PostState>(builder: (context, postState) {
             if (postState is PostEmpty) {
-              return const Text("no posts",
-                  style: TextStyle(color: Colors.white));
+              return const Center(
+                child: Text("no posts",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
+              );
             }
             if (postState is PostLoading) {
               return const CircularProgressIndicator();
@@ -55,7 +60,9 @@ class _HomePageState extends State<HomePage> {
                   itemCount: postState.posts.length,
                   itemBuilder: (context, index) {
                     final post = postState.posts[index];
-                    return SinglePostCardWidget(post: post);
+                    return SinglePostCardWidget(
+                        post: post,
+                        postCubit: BlocProvider.of<PostCubit>(context));
                   });
             }
             return const Center(

@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
+import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:intl/intl.dart';
 
-class SinglePostCardWidget extends StatelessWidget {
+class SinglePostCardWidget extends StatefulWidget {
   final PostEntity post;
-  const SinglePostCardWidget({super.key, required this.post});
+  final PostCubit postCubit;
+  const SinglePostCardWidget(
+      {super.key, required this.post, required this.postCubit});
 
+  @override
+  State<SinglePostCardWidget> createState() => _SinglePostCardWidgetState();
+}
+
+class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,17 +36,18 @@ class SinglePostCardWidget extends StatelessWidget {
                         height: 30,
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child:
-                                profileWidget(imageUrl: post.userProfileUrl))),
+                            child: profileWidget(
+                                imageUrl: widget.post.userProfileUrl))),
                     sizeHorizontal(10),
-                    Text('${post.username}',
+                    Text('${widget.post.username}',
                         style: const TextStyle(
                             color: primaryColor, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 GestureDetector(
                   onTap: () {
-                    _openBottomModalSheet(context, post);
+                    _openBottomModalSheet(
+                        context, widget.post, widget.postCubit);
                   },
                   child:
                       const Icon(Icons.more_vert_rounded, color: primaryColor),
@@ -48,7 +58,7 @@ class SinglePostCardWidget extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.3,
-              child: profileWidget(imageUrl: "${post.postImageUrl}"),
+              child: profileWidget(imageUrl: "${widget.post.postImageUrl}"),
             ),
             sizeVertical(10),
             Row(
@@ -85,13 +95,14 @@ class SinglePostCardWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${post.totalLikes} likes',
+                Text('${widget.post.totalLikes} likes',
                     style: const TextStyle(
                         color: primaryColor, fontWeight: FontWeight.bold)),
                 Text(
                   //todo maybe use datetine.now insead of timestamp
                   // cant do it, firebase accepts only timestamps
-                  DateFormat("dd/MMM/yyyy").format(post.createAt!.toDate()),
+                  DateFormat("dd/MMM/yyyy")
+                      .format(widget.post.createAt!.toDate()),
                   style: const TextStyle(color: darkGreyColor),
                 ),
               ],
@@ -99,19 +110,19 @@ class SinglePostCardWidget extends StatelessWidget {
             sizeVertical(10),
             Row(
               children: [
-                Text("${post.username}",
+                Text("${widget.post.username}",
                     style: const TextStyle(
                         color: primaryColor, fontWeight: FontWeight.w600)),
                 sizeHorizontal(10),
                 Text(
-                  "${post.description}",
+                  "${widget.post.description}",
                   style: const TextStyle(color: primaryColor),
                 ),
               ],
             ),
             sizeVertical(10),
             Text(
-              "view all ${post.totalComments} comments",
+              "view all ${widget.post.totalComments} comments",
               style: const TextStyle(color: darkGreyColor),
             ),
             sizeVertical(10),
@@ -122,65 +133,60 @@ class SinglePostCardWidget extends StatelessWidget {
   }
 }
 
-_openBottomModalSheet(BuildContext context, PostEntity post) {
-  showModalBottomSheet(
-    backgroundColor: Colors.transparent.withOpacity(0.5),
-    context: context,
-    builder: (context) {
-      return _ModalContent(post: post);
-    },
-  );
-}
-
-class _ModalContent extends StatelessWidget {
-  final PostEntity post;
-
-  const _ModalContent({required this.post});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      color: Colors.transparent.withOpacity(0.5),
-      child: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _OptionItem(
-                text: "Settings",
-                onTap: () {},
-              ),
-              const SizedBox(height: 8),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 8),
-              _OptionItem(
-                text: "Delete Post",
-                onTap: () {},
-              ),
-              const SizedBox(height: 7),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 7),
-              _OptionItem(
-                text: "Edit Post",
-                onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.UpdatePostPage,
-                      arguments: post);
-                },
-              ),
-              const SizedBox(height: 7),
-            ],
-          ),
-        ),
-      ),
-    );
+_openBottomModalSheet(
+    BuildContext context, PostEntity post, PostCubit postCubit) {
+  deletePost() {
+    postCubit.deletePost(post: PostEntity(postId: post.postId));
+    Navigator.pop(context);
   }
+
+  showModalBottomSheet(
+      backgroundColor: Colors.transparent.withOpacity(0.5),
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 150,
+          color: Colors.transparent.withOpacity(0.5),
+          child: SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _OptionItem(
+                    text: "Settings",
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 8),
+                  const Divider(
+                    thickness: 1,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(height: 8),
+                  _OptionItem(
+                    text: "Delete Post",
+                    onTap: deletePost,
+                  ),
+                  const SizedBox(height: 7),
+                  const Divider(
+                    thickness: 1,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(height: 7),
+                  _OptionItem(
+                    text: "Edit Post",
+                    onTap: () {
+                      Navigator.pushNamed(context, PageRoutes.UpdatePostPage,
+                          arguments: post);
+                    },
+                  ),
+                  const SizedBox(height: 7),
+                ],
+              ),
+            ),
+          ),
+        );
+      });
 }
 
 class _OptionItem extends StatelessWidget {
