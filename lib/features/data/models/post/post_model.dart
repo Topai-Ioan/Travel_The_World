@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides, overridden_fields
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 
