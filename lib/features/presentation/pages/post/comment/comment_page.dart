@@ -18,9 +18,8 @@ class CommentPage extends StatelessWidget {
         BlocProvider<CommentCubit>.value(
           value: di.sl<CommentCubit>(),
         ),
-        BlocProvider<GetSingleUserCubit>(
-          create: (context) => di.sl<GetSingleUserCubit>(),
-        ),
+        BlocProvider<GetSingleUserCubit>.value(
+            value: di.sl<GetSingleUserCubit>()),
         BlocProvider<GetSinglePostCubit>.value(
           value: di.sl<GetSinglePostCubit>(),
         ),

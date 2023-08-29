@@ -17,7 +17,9 @@ class GetSinglePostCubit extends Cubit<GetSinglePostState> {
     try {
       final streamResponse = readSinglePostUseCase.call(postId);
       streamResponse.listen((posts) {
-        emit(GetSinglePostLoaded(post: posts.first));
+        if (posts.isNotEmpty) {
+          emit(GetSinglePostLoaded(post: posts.first));
+        }
       });
     } on SocketException catch (_) {
       emit(GetSinglePostFailure());
