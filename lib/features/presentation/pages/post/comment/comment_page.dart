@@ -15,8 +15,8 @@ class CommentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CommentCubit>(
-          create: (context) => di.sl<CommentCubit>(),
+        BlocProvider<CommentCubit>.value(
+          value: di.sl<CommentCubit>(),
         ),
         BlocProvider<GetSingleUserCubit>(
           create: (context) => di.sl<GetSingleUserCubit>(),

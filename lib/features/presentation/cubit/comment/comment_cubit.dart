@@ -30,7 +30,9 @@ class CommentCubit extends Cubit<CommentState> {
     try {
       final streamResponse = readCommentsUseCase.call(postId);
       streamResponse.listen((comments) {
-        emit(CommentLoaded(comments: comments));
+        if (comments.isNotEmpty) {
+          emit(CommentLoaded(comments: comments));
+        }
       });
     } on SocketException catch (_) {
       emit(CommentFailure());
