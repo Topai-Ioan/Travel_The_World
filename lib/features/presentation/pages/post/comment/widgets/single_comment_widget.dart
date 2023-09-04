@@ -132,7 +132,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                         GestureDetector(
                           onTap: () {
                             widget.comment.totalReplies == 0
-                                ? toast("no replys")
+                                ? toast("no replies")
                                 : BlocProvider.of<ReplyCubit>(context)
                                     .getReplies(
                                         reply: ReplyEntity(
@@ -262,6 +262,9 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                       text: "Delete Reply",
                       onTap: () {
                         _deleteReply(reply: reply);
+                        setState(() {
+                          _isUserReplying = false;
+                        });
                       },
                     ),
                     const SizedBox(height: 8),

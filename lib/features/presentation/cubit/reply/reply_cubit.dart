@@ -31,9 +31,7 @@ class ReplyCubit extends Cubit<ReplyState> {
     try {
       final streamResponse = readRepliesUseCase.call(reply);
       streamResponse.listen((replies) {
-        if (replies.isNotEmpty) {
-          emit(ReplyLoaded(replies: replies));
-        }
+        emit(ReplyLoaded(replies: replies));
       });
     } on SocketException catch (_) {
       emit(ReplyFailure());

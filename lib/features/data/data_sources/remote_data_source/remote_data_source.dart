@@ -446,7 +446,21 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       final replyDocRef = await replyCollection.doc(reply.replyId).get();
 
       if (!replyDocRef.exists) {
-        replyCollection.doc(reply.replyId).set(newReply);
+        replyCollection.doc(reply.replyId).set(newReply).then((value) {
+          final commentCollection = firebaseFirestore
+              .collection(FirebaseConstants.Posts)
+              .doc(reply.postId)
+              .collection(FirebaseConstants.Comment)
+              .doc(reply.commentId);
+
+          commentCollection.get().then((value) {
+            if (value.exists) {
+              final totalreplies = value.get('totalReplies');
+              commentCollection.update({"totalReplies": totalreplies + 1});
+              return;
+            }
+          });
+        });
       } else {
         replyCollection.doc(reply.replyId).update(newReply);
       }
@@ -465,7 +479,21 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         .collection(FirebaseConstants.Reply);
 
     try {
-      replyCollection.doc(reply.replyId).delete();
+      replyCollection.doc(reply.replyId).delete().then((value) {
+        final commentCollection = firebaseFirestore
+            .collection(FirebaseConstants.Posts)
+            .doc(reply.postId)
+            .collection(FirebaseConstants.Comment)
+            .doc(reply.commentId);
+
+        commentCollection.get().then((value) {
+          if (value.exists) {
+            final totalReplies = value.get('totalReplies');
+            commentCollection.update({"totalReplies": totalReplies - 1});
+            return;
+          }
+        });
+      });
     } catch (e) {
       print("some error occured $e");
     }
