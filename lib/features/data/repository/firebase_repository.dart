@@ -96,22 +96,22 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
       remoteDataSource.updateComment(comment);
 
   @override
-  Future<void> createReply(ReplyEntity replay) async =>
-      remoteDataSource.createReply(replay);
+  Future<void> createReply(ReplyEntity reply) async =>
+      remoteDataSource.createReply(reply);
 
   @override
-  Future<void> deleteReply(ReplyEntity replay) async =>
-      remoteDataSource.deleteReply(replay);
+  Future<void> deleteReply(ReplyEntity reply) async =>
+      remoteDataSource.deleteReply(reply);
 
   @override
-  Future<void> likeReply(ReplyEntity replay) async =>
-      remoteDataSource.likeReply(replay);
+  Future<void> likeReply(ReplyEntity reply) async =>
+      remoteDataSource.likeReply(reply);
 
   @override
-  Stream<List<ReplyEntity>> readReplies(ReplyEntity replay) =>
-      remoteDataSource.readReplies(replay);
+  Stream<List<ReplyEntity>> readReplies(ReplyEntity reply) =>
+      remoteDataSource.readReplies(reply);
 
   @override
-  Future<void> updateReply(ReplyEntity replay) async =>
-      remoteDataSource.updateReply(replay);
+  Future<void> updateReply(ReplyEntity reply) async =>
+      remoteDataSource.updateReply(reply);
 }

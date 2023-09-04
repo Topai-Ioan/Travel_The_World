@@ -17,6 +17,11 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/pos
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_single_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_post_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/create_reply_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/delete_reply_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/like_reply_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/read_replies_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/update_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/create_user_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
@@ -32,6 +37,7 @@ import 'package:travel_the_world/features/presentation/cubit/comment/comment_cub
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 
@@ -83,6 +89,16 @@ Future<void> init() async {
     ),
   );
 
+  // Reply Cubit Injection
+  sl.registerFactory(
+    () => ReplyCubit(
+        createReplyUseCase: sl.call(),
+        deleteReplyUseCase: sl.call(),
+        likeReplyUseCase: sl.call(),
+        readRepliesUseCase: sl.call(),
+        updateReplyUseCase: sl.call()),
+  );
+
   // Use Cases
   // User
   sl.registerLazySingleton(() => SignOutUseCase(repository: sl.call()));
@@ -111,6 +127,13 @@ Future<void> init() async {
   sl.registerLazySingleton(() => LikeCommentUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => UpdateCommentUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => DeleteCommentUseCase(repository: sl.call()));
+
+  // Reply
+  sl.registerLazySingleton(() => CreateReplyUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => ReadRepliesUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => LikeReplyUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => UpdateReplyUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => DeleteReplyUseCase(repository: sl.call()));
 
   // Repository
 

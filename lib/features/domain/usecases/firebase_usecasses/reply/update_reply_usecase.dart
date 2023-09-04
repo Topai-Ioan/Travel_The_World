@@ -6,7 +6,7 @@ class UpdateReplyUseCase {
 
   UpdateReplyUseCase({required this.repository});
 
-  Future<void> call(ReplyEntity replay) {
-    return repository.updateReply(replay);
+  Future<void> call(ReplyEntity reply) {
+    return repository.updateReply(reply);
   }
 }

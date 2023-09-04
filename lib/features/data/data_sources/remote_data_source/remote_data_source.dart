@@ -7,11 +7,13 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source_interface.dart';
 import 'package:travel_the_world/features/data/models/comment/comment_model.dart';
 import 'package:travel_the_world/features/data/models/post/post_model.dart';
+import 'package:travel_the_world/features/data/models/reply/reply_model.dart';
 import 'package:travel_the_world/features/data/models/user/user_model.dart';
 import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/read_replies_usecase.dart';
 import 'package:uuid/uuid.dart';
 
 class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
@@ -310,7 +312,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     final newComment = CommentModel(
             userProfileUrl: comment.userProfileUrl,
             username: comment.username,
-            totalReplays: comment.totalReplays,
+            totalReplies: comment.totalReplies,
             commentId: comment.commentId,
             postId: comment.postId,
             likes: const [],
@@ -422,32 +424,101 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   }
 
   @override
-  Future<void> createReply(ReplyEntity replay) {
-    // TODO: implement createReplay
-    throw UnimplementedError();
+  Future<void> createReply(ReplyEntity reply) async {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConstants.Posts)
+        .doc(reply.postId)
+        .collection(FirebaseConstants.Comment)
+        .doc(reply.commentId)
+        .collection(FirebaseConstants.Reply);
+    final newReply = ReplyModel(
+            userProfileUrl: reply.userProfileUrl,
+            username: reply.username,
+            replyId: reply.replyId,
+            commentId: reply.commentId,
+            postId: reply.postId,
+            likes: const [],
+            description: reply.description,
+            creatorUid: reply.creatorUid,
+            createAt: reply.createAt)
+        .toJson();
+    try {
+      final replyDocRef = await replyCollection.doc(reply.replyId).get();
+
+      if (!replyDocRef.exists) {
+        replyCollection.doc(reply.replyId).set(newReply);
+      } else {
+        replyCollection.doc(reply.replyId).update(newReply);
+      }
+    } catch (e) {
+      print("some error occured $e");
+    }
   }
 
   @override
-  Future<void> deleteReply(ReplyEntity replay) {
-    // TODO: implement deleteReplay
-    throw UnimplementedError();
+  Future<void> deleteReply(ReplyEntity reply) async {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConstants.Posts)
+        .doc(reply.postId)
+        .collection(FirebaseConstants.Comment)
+        .doc(reply.commentId)
+        .collection(FirebaseConstants.Reply);
+
+    try {
+      replyCollection.doc(reply.replyId).delete();
+    } catch (e) {
+      print("some error occured $e");
+    }
   }
 
   @override
-  Future<void> likeReply(ReplyEntity replay) {
-    // TODO: implement likeReplay
-    throw UnimplementedError();
+  Future<void> likeReply(ReplyEntity reply) async {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConstants.Posts)
+        .doc(reply.postId)
+        .collection(FirebaseConstants.Comment)
+        .doc(reply.commentId)
+        .collection(FirebaseConstants.Reply);
+    final currentUid = await getCurrentUid();
+    final replyRef = await replyCollection.doc(reply.replyId).get();
+    if (replyRef.exists) {
+      List likes = replyRef.get("likes");
+      if (likes.contains(currentUid)) {
+        replyCollection.doc(reply.replyId).update({
+          "likes": FieldValue.arrayRemove([currentUid])
+        });
+      } else {
+        replyCollection.doc(reply.replyId).update({
+          "likes": FieldValue.arrayUnion([currentUid])
+        });
+      }
+    }
   }
 
   @override
-  Stream<List<ReplyEntity>> readReplies(ReplyEntity replay) {
-    // TODO: implement readReplies
-    throw UnimplementedError();
+  Stream<List<ReplyEntity>> readReplies(ReplyEntity reply) {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConstants.Posts)
+        .doc(reply.postId)
+        .collection(FirebaseConstants.Comment)
+        .doc(reply.commentId)
+        .collection(FirebaseConstants.Reply);
+    return replyCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => ReplyModel.fromSnapshot(e)).toList());
   }
 
   @override
-  Future<void> updateReply(ReplyEntity replay) {
-    // TODO: implement updateReplay
-    throw UnimplementedError();
+  Future<void> updateReply(ReplyEntity reply) async {
+    final replyCollection = firebaseFirestore
+        .collection(FirebaseConstants.Posts)
+        .doc(reply.postId)
+        .collection(FirebaseConstants.Comment)
+        .doc(reply.commentId)
+        .collection(FirebaseConstants.Reply);
+    Map<String, dynamic> replyInfo = {};
+    if (reply.description != "" && reply.description != null) {
+      replyInfo['description'] = reply.description;
+    }
+    replyCollection.doc(reply.replyId).update(replyInfo);
   }
 }

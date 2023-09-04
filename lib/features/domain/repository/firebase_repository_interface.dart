@@ -38,10 +38,10 @@ abstract class FirebaseRepositoryInterface {
   Future<void> deleteComment(CommentEntity comment);
   Future<void> likeComment(CommentEntity comment);
 
-  // Replay Features
-  Future<void> createReply(ReplyEntity replay);
-  Stream<List<ReplyEntity>> readReplies(ReplyEntity replay);
-  Future<void> updateReply(ReplyEntity replay);
-  Future<void> deleteReply(ReplyEntity replay);
-  Future<void> likeReply(ReplyEntity replay);
+  // Reply Features
+  Future<void> createReply(ReplyEntity reply);
+  Stream<List<ReplyEntity>> readReplies(ReplyEntity reply);
+  Future<void> updateReply(ReplyEntity reply);
+  Future<void> deleteReply(ReplyEntity reply);
+  Future<void> likeReply(ReplyEntity reply);
 }

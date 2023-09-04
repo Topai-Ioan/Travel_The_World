@@ -10,7 +10,7 @@ class CommentEntity extends Equatable {
   final String? userProfileUrl;
   final Timestamp? createAt;
   final List<String>? likes;
-  final num? totalReplays;
+  final num? totalReplies;
 
   const CommentEntity({
     this.commentId,
@@ -21,7 +21,7 @@ class CommentEntity extends Equatable {
     this.userProfileUrl,
     this.createAt,
     this.likes,
-    this.totalReplays,
+    this.totalReplies,
   });
 
   @override
@@ -34,6 +34,6 @@ class CommentEntity extends Equatable {
         userProfileUrl,
         createAt,
         likes,
-        totalReplays,
+        totalReplies,
       ];
 }

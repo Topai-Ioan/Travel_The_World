@@ -7,10 +7,12 @@ import 'package:travel_the_world/features/domain/entites/comment/comment_entity.
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_comment_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:uuid/uuid.dart';
+import 'package:travel_the_world/injection_container.dart' as di;
 
 class CommentMainWidget extends StatefulWidget {
   final AppEntity appEntity;
@@ -115,19 +117,24 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
                                   itemBuilder: (context, index) {
                                     final singleComment =
                                         commentState.comments[index];
-                                    return SingleCommentWidget(
-                                      comment: singleComment,
-                                      onLongPressListener: () {
-                                        _openBottomModalSheet(
-                                          context: context,
-                                          comment: commentState.comments[index],
-                                        );
-                                      },
-                                      onLikeClickListener: () {
-                                        _likeComment(
+                                    return BlocProvider<ReplyCubit>.value(
+                                      value: di.sl<ReplyCubit>(),
+                                      child: SingleCommentWidget(
+                                        currentUser: singleUser,
+                                        comment: singleComment,
+                                        onLongPressListener: () {
+                                          _openBottomModalSheet(
+                                            context: context,
                                             comment:
-                                                commentState.comments[index]);
-                                      },
+                                                commentState.comments[index],
+                                          );
+                                        },
+                                        onLikeClickListener: () {
+                                          _likeComment(
+                                              comment:
+                                                  commentState.comments[index]);
+                                        },
+                                      ),
                                     );
                                   }),
                             ),
@@ -200,7 +207,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
     BlocProvider.of<CommentCubit>(context)
         .createComment(
             comment: CommentEntity(
-      totalReplays: 0,
+      totalReplies: 0,
       commentId: const Uuid().v1(),
       createAt: Timestamp.now(),
       likes: const [],

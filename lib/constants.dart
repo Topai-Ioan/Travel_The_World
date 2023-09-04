@@ -30,13 +30,14 @@ class PageRoutes {
   static const String SignInPage = "SignInPage";
   static const String SignUpPage = "SignUpPage";
   static const String UpdateCommentPage = "UpdateCommentPage";
+  static const String UpdateReplyPage = "UpdateReplyPage";
 }
 
 class FirebaseConstants {
   static const String Users = "Users";
   static const String Posts = "Posts";
   static const String Comment = "Comment";
-  static const String Replay = "Replay";
+  static const String Reply = "Reply";
 }
 
 void toast(String message) {
