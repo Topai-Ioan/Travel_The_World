@@ -164,10 +164,16 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
               ],
             ),
             sizeVertical(10),
-            Text(
-              "view all ${widget.post.totalComments} comments",
-              style: const TextStyle(color: darkGreyColor),
-            ),
+            GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, PageRoutes.CommentPage,
+                      arguments: AppEntity(
+                          uid: _currentUid, postId: widget.post.postId));
+                },
+                child: Text(
+                  "View all ${widget.post.totalComments} comments",
+                  style: const TextStyle(color: darkGreyColor),
+                )),
             sizeVertical(10),
           ],
         ),

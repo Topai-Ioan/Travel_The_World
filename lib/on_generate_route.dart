@@ -10,6 +10,7 @@ import 'package:travel_the_world/features/presentation/pages/credential/sign_up_
 import 'package:travel_the_world/features/presentation/pages/post/comment/comment_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/edit_comment_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/edit_reply_page.dart';
+import 'package:travel_the_world/features/presentation/pages/post/post_detail_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/update_post_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/edit_profile_page.dart';
 
@@ -61,6 +62,15 @@ class OnGenerateRoute {
           } else {
             return routeBuilder(const NoPageFound());
           }
+        }
+      case PageRoutes.PostDetailPage:
+        {
+          if (args is String) {
+            return routeBuilder(PostDetailPage(
+              postId: args,
+            ));
+          }
+          return routeBuilder(const NoPageFound());
         }
       case PageRoutes.SignInPage:
         return routeBuilder(const SignInPage());
