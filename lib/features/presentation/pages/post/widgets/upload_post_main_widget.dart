@@ -57,6 +57,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     return _image == null
         ? _uploadPostWidget()
         : Scaffold(
+            resizeToAvoidBottomInset: true,
             backgroundColor: backgroundColor,
             appBar: AppBar(
               backgroundColor: backgroundColor,
@@ -75,29 +76,36 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
             ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Column(
-                // todo images with higher height are showing wrong
-                children: [
-                  SizedBox(
-                    height: 200,
-                    width: double.infinity,
-                    child: profileWidget(image: _image),
-                  ),
-                  const SizedBox(height: 10),
-                  ProfileFormWidget(
-                      title: "Description", controller: _descriptionController),
-                  sizeVertical(10),
-                  if (_isUploading)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Uploading...",
-                            style: TextStyle(color: Colors.white)),
-                        sizeHorizontal(10),
-                        CircularProgressIndicator()
-                      ],
-                    )
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  // todo images with higher height are showing wrong
+                  children: [
+                    Image.file(
+                      _image!,
+                      fit: BoxFit.fill,
+                    ),
+                    // SizedBox(
+                    //   height: 200,
+                    //   width: double.infinity,
+                    //   child: profileWidget(image: _image),
+                    // ),
+                    const SizedBox(height: 10),
+                    ProfileFormWidget(
+                        title: "Description",
+                        controller: _descriptionController),
+                    sizeVertical(10),
+                    if (_isUploading)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Uploading...",
+                              style: TextStyle(color: Colors.white)),
+                          sizeHorizontal(10),
+                          CircularProgressIndicator()
+                        ],
+                      )
+                  ],
+                ),
               ),
             ),
           );
@@ -117,9 +125,8 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
         .createPost(
             post: PostEntity(
           createAt: Timestamp.now(),
-          userUid: widget.currentUser.uid,
+          creatorUid: widget.currentUser.uid,
           likes: const [],
-          //todo check if u want this format
           postId: const Uuid().v4(),
           postImageUrl: image,
           totalComments: 0,

@@ -59,7 +59,9 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
     //_isKeyboardOpenFromReply =
     //_isUserReplying && MediaQuery.of(context).viewInsets.bottom > 0;
     return InkWell(
-      onLongPress: widget.onLongPressListener,
+      onLongPress: widget.comment.creatorUid == _currentUid
+          ? widget.onLongPressListener
+          : null,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(

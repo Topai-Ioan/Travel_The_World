@@ -211,7 +211,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
             postId: post.postId,
             likes: const [],
             description: post.description,
-            userUid: post.userUid,
+            creatorUid: post.creatorUid,
             createAt: post.createAt)
         .toJson();
 
@@ -219,13 +219,24 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       final postDocRef = await postCollection.doc(post.postId).get();
 
       if (!postDocRef.exists) {
-        postCollection.doc(post.postId).set(newPost);
-      } //todo we dont need update in create
-      else {
+        postCollection.doc(post.postId).set(newPost).then((value) {
+          final userCollection = firebaseFirestore
+              .collection(FirebaseConstants.Users)
+              .doc(post.creatorUid);
+
+          userCollection.get().then((value) {
+            if (value.exists) {
+              final totalPosts = value.get('totalPosts');
+              userCollection.update({"totalPosts": totalPosts + 1});
+              return;
+            }
+          });
+        });
+      } else {
         postCollection.doc(post.postId).update(newPost);
       }
     } catch (e) {
-      toast("some error occured $e");
+      print("some error occured $e");
     }
   }
 
@@ -235,9 +246,26 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         firebaseFirestore.collection(FirebaseConstants.Posts);
 
     try {
-      postCollection.doc(post.postId).delete();
+      final postDoc = await postCollection.doc(post.postId).get();
+      if (postDoc.exists) {
+        final creatorUid = postDoc.data()?['creatorUid'];
+        final userCollection = firebaseFirestore
+            .collection(FirebaseConstants.Users)
+            .doc(creatorUid);
+
+        final userDoc = await userCollection.get();
+        if (userDoc.exists) {
+          final totalPosts = userDoc.data()?['totalPosts'];
+
+          userCollection.update({"totalPosts": totalPosts - 1});
+        }
+
+        postCollection.doc(post.postId).delete();
+      } else {
+        print("Post does not exist.");
+      }
     } catch (e) {
-      toast("some error occured $e");
+      print("Some error occurred: $e");
     }
   }
 

@@ -4,6 +4,8 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/delete_post_usecase.dart';
+
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/widgets/like_animation_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
@@ -61,14 +63,19 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                             color: primaryColor, fontWeight: FontWeight.bold)),
                   ],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    _openBottomModalSheet(
-                        context, widget.post, widget.postCubit);
-                  },
-                  child:
-                      const Icon(Icons.more_vert_rounded, color: primaryColor),
-                )
+                widget.post.creatorUid == _currentUid
+                    ? GestureDetector(
+                        onTap: () {
+                          _openBottomModalSheet(
+                              context, widget.post, widget.postCubit);
+                        },
+                        child: const Icon(Icons.more_vert_rounded,
+                            color: primaryColor),
+                      )
+                    : const SizedBox(
+                        width: 0,
+                        height: 0,
+                      ),
               ],
             ),
             sizeVertical(10),
@@ -207,7 +214,8 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
 _openBottomModalSheet(
     BuildContext context, PostEntity post, PostCubit postCubit) {
   deletePost() {
-    postCubit.deletePost(post: PostEntity(postId: post.postId));
+    BlocProvider.of<PostCubit>(context)
+        .deletePost(post: PostEntity(postId: post.postId));
     Navigator.pop(context);
   }
 

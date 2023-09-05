@@ -166,7 +166,7 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
           post: PostEntity(
             postImageUrl: image,
             description: _descriptionController!.text,
-            userUid: widget.post.userUid,
+            creatorUid: widget.post.creatorUid,
             postId: widget.post.postId,
           ),
         )

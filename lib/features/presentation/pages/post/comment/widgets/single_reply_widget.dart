@@ -37,7 +37,9 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onLongPress: widget.onLongPressListener,
+      onLongPress: widget.reply.creatorUid == _currentUid
+          ? widget.onLongPressListener
+          : null,
       child: Container(
         margin: const EdgeInsets.only(left: 10, top: 10),
         child: Row(

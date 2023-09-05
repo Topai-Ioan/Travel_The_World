@@ -6,7 +6,7 @@ import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 class PostModel extends PostEntity {
   @override
   final String? postId;
-  final String? userUid;
+  final String? creatorUid;
   final String? username;
   final String? description;
   final String? postImageUrl;
@@ -18,7 +18,7 @@ class PostModel extends PostEntity {
 
   const PostModel({
     this.postId,
-    this.userUid,
+    this.creatorUid,
     this.username,
     this.description,
     this.postImageUrl,
@@ -29,7 +29,7 @@ class PostModel extends PostEntity {
     this.userProfileUrl,
   }) : super(
           createAt: createAt,
-          userUid: userUid,
+          creatorUid: creatorUid,
           description: description,
           likes: likes,
           postId: postId,
@@ -45,7 +45,7 @@ class PostModel extends PostEntity {
 
     return PostModel(
       createAt: snapshot['createAt'],
-      userUid: snapshot['userUid'],
+      creatorUid: snapshot['creatorUid'],
       description: snapshot['description'],
       userProfileUrl: snapshot['userProfileUrl'],
       totalLikes: snapshot['totalLikes'],
@@ -59,7 +59,7 @@ class PostModel extends PostEntity {
 
   Map<String, dynamic> toJson() => {
         "createAt": createAt,
-        "userUid": userUid,
+        "creatorUid": creatorUid,
         "description": description,
         "userProfileUrl": userProfileUrl,
         "totalLikes": totalLikes,
