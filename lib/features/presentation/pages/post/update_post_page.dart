@@ -16,8 +16,8 @@ class UpdatePostPage extends StatefulWidget {
 class _UpdatePostPageState extends State<UpdatePostPage> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PostCubit>(
-      create: (context) => di.sl<PostCubit>(),
+    return BlocProvider<PostCubit>.value(
+      value: di.sl<PostCubit>(),
       child: UpdatePostMainWidget(post: widget.post),
     );
   }

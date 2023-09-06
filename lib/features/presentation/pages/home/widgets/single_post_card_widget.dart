@@ -4,8 +4,6 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/delete_post_usecase.dart';
-
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/widgets/like_animation_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
@@ -48,20 +46,28 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: profileWidget(
-                                imageUrl: widget.post.userProfileUrl))),
-                    sizeHorizontal(10),
-                    Text('${widget.post.username}',
-                        style: const TextStyle(
-                            color: primaryColor, fontWeight: FontWeight.bold)),
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, PageRoutes.SingleUserProfilePage,
+                        arguments: widget.post.creatorUid);
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: profileWidget(
+                                  imageUrl: widget.post.userProfileUrl))),
+                      sizeHorizontal(10),
+                      Text('${widget.post.username}',
+                          style: const TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
                 widget.post.creatorUid == _currentUid
                     ? GestureDetector(

@@ -12,8 +12,9 @@ class UploadPostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PostCubit>(
-        create: (BuildContext context) => di.sl<PostCubit>(),
-        child: UploadPostMainWidget(currentUser: currentUser));
+    return BlocProvider<PostCubit>.value(
+      value: di.sl<PostCubit>(),
+      child: UploadPostMainWidget(currentUser: currentUser),
+    );
   }
 }

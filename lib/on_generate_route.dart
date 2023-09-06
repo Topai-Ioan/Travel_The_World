@@ -13,6 +13,7 @@ import 'package:travel_the_world/features/presentation/pages/post/comment/edit_r
 import 'package:travel_the_world/features/presentation/pages/post/post_detail_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/update_post_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/edit_profile_page.dart';
+import 'package:travel_the_world/features/presentation/pages/profile/single_user_profile_page.dart';
 
 class OnGenerateRoute {
   static Route<dynamic>? route(RouteSettings settings) {
@@ -68,6 +69,16 @@ class OnGenerateRoute {
           if (args is String) {
             return routeBuilder(PostDetailPage(
               postId: args,
+            ));
+          }
+          return routeBuilder(const NoPageFound());
+        }
+
+      case PageRoutes.SingleUserProfilePage:
+        {
+          if (args is String) {
+            return routeBuilder(SingleUserProfilePage(
+              otherUserId: args,
             ));
           }
           return routeBuilder(const NoPageFound());

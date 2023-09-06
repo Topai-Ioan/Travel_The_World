@@ -12,7 +12,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<PostCubit>.value(
       value: di.sl<PostCubit>(),
-      child: SearchMainWidget(),
+      child: const SearchMainWidget(),
     );
   }
 }
