@@ -13,6 +13,8 @@ import 'package:travel_the_world/features/presentation/pages/post/comment/edit_r
 import 'package:travel_the_world/features/presentation/pages/post/post_detail_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/update_post_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/edit_profile_page.dart';
+import 'package:travel_the_world/features/presentation/pages/profile/followers_page.dart';
+import 'package:travel_the_world/features/presentation/pages/profile/following_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/single_user_profile_page.dart';
 
 class OnGenerateRoute {
@@ -79,6 +81,25 @@ class OnGenerateRoute {
           if (args is String) {
             return routeBuilder(SingleUserProfilePage(
               otherUserId: args,
+            ));
+          }
+          return routeBuilder(const NoPageFound());
+        }
+
+      case PageRoutes.FollowingPage:
+        {
+          if (args is UserEntity) {
+            return routeBuilder(FollowingPage(
+              user: args,
+            ));
+          }
+          return routeBuilder(const NoPageFound());
+        }
+      case PageRoutes.FollowersPage:
+        {
+          if (args is UserEntity) {
+            return routeBuilder(FollowersPage(
+              user: args,
             ));
           }
           return routeBuilder(const NoPageFound());

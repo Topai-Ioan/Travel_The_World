@@ -6,7 +6,10 @@ import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
+import 'package:travel_the_world/features/presentation/pages/credential/widgets/button_container_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
@@ -26,8 +29,8 @@ class _SingleUserProfileMainWidgetState
 
   @override
   void initState() {
-    BlocProvider.of<GetSingleUserCubit>(context)
-        .getSingleUser(uid: widget.otherUserId);
+    BlocProvider.of<GetSingleOtherUserCubit>(context)
+        .getSingleOtherUser(otherUid: widget.otherUserId);
     BlocProvider.of<PostCubit>(context).getPosts(post: const PostEntity());
     super.initState();
 
@@ -40,10 +43,10 @@ class _SingleUserProfileMainWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetSingleUserCubit, GetSingleUserState>(
+    return BlocBuilder<GetSingleOtherUserCubit, GetSingleOtherUserState>(
         builder: (context, userState) {
-      if (userState is GetSingleUserLoaded) {
-        final singleUser = userState.user;
+      if (userState is GetSingleOtherUserLoaded) {
+        final singleUser = userState.otherUser;
         return Scaffold(
           backgroundColor: backgroundColor,
           appBar: AppBar(
@@ -51,15 +54,17 @@ class _SingleUserProfileMainWidgetState
             title: Text("${singleUser.username}",
                 style: const TextStyle(color: primaryColor)),
             actions: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: InkWell(
-                  onTap: () {
-                    _openBottomModalSheet(context, singleUser);
-                  },
-                  child: const Icon(Icons.menu, color: primaryColor),
-                ),
-              ),
+              _currentUid == singleUser.uid
+                  ? Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: InkWell(
+                        onTap: () {
+                          _openBottomModalSheet(context, singleUser);
+                        },
+                        child: const Icon(Icons.menu, color: primaryColor),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
           body: Padding(
@@ -95,34 +100,50 @@ class _SingleUserProfileMainWidgetState
                             ],
                           ),
                           sizeHorizontal(25),
-                          Column(
-                            children: [
-                              Text('${singleUser.totalFollowers}',
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, PageRoutes.FollowersPage,
+                                  arguments: singleUser);
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  "${singleUser.totalFollowers}",
                                   style: const TextStyle(
                                       color: primaryColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                              sizeVertical(7),
-                              const Text(
-                                'Followers',
-                                style: TextStyle(color: primaryColor),
-                              ),
-                            ],
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                sizeVertical(8),
+                                const Text(
+                                  "Followers",
+                                  style: TextStyle(color: primaryColor),
+                                )
+                              ],
+                            ),
                           ),
                           sizeHorizontal(25),
-                          Column(
-                            children: [
-                              Text('${singleUser.totalFollowing}',
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, PageRoutes.FollowingPage,
+                                  arguments: singleUser);
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  "${singleUser.totalFollowing}",
                                   style: const TextStyle(
                                       color: primaryColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                              sizeVertical(7),
-                              const Text(
-                                'Following',
-                                style: TextStyle(color: primaryColor),
-                              ),
-                            ],
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                sizeVertical(8),
+                                const Text(
+                                  "Following",
+                                  style: TextStyle(color: primaryColor),
+                                )
+                              ],
+                            ),
                           )
                         ],
                       )
@@ -139,6 +160,24 @@ class _SingleUserProfileMainWidgetState
                     '${singleUser.bio}',
                     style: const TextStyle(color: primaryColor),
                   ),
+                  sizeVertical(10),
+                  _currentUid == singleUser.uid
+                      ? Container()
+                      : ButtonContainerWidget(
+                          text: singleUser.followers!.contains(_currentUid)
+                              ? "UnFollow"
+                              : "Follow",
+                          color: singleUser.followers!.contains(_currentUid)
+                              ? secondaryColor.withOpacity(.4)
+                              : blueColor,
+                          onTapListener: () {
+                            BlocProvider.of<UserCubit>(context)
+                                .followUnFollowUser(
+                                    user: UserEntity(
+                                        uid: _currentUid,
+                                        otherUid: widget.otherUserId));
+                          },
+                        ),
                   sizeVertical(10),
                   BlocBuilder<PostCubit, PostState>(
                     builder: (context, postState) {

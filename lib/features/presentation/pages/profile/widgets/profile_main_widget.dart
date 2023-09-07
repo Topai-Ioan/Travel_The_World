@@ -77,34 +77,48 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                         ],
                       ),
                       sizeHorizontal(25),
-                      Column(
-                        children: [
-                          Text('${widget.currentUser.totalFollowers}',
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, PageRoutes.FollowersPage,
+                              arguments: widget.currentUser);
+                        },
+                        child: Column(
+                          children: [
+                            Text(
+                              "${widget.currentUser.totalFollowers}",
                               style: const TextStyle(
                                   color: primaryColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold)),
-                          sizeVertical(7),
-                          const Text(
-                            'Followers',
-                            style: TextStyle(color: primaryColor),
-                          ),
-                        ],
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            sizeVertical(8),
+                            const Text(
+                              "Followers",
+                              style: TextStyle(color: primaryColor),
+                            )
+                          ],
+                        ),
                       ),
                       sizeHorizontal(25),
-                      Column(
-                        children: [
-                          Text('${widget.currentUser.totalFollowing}',
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, PageRoutes.FollowingPage,
+                              arguments: widget.currentUser);
+                        },
+                        child: Column(
+                          children: [
+                            Text(
+                              "${widget.currentUser.totalFollowing}",
                               style: const TextStyle(
                                   color: primaryColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold)),
-                          sizeVertical(7),
-                          const Text(
-                            'Following',
-                            style: TextStyle(color: primaryColor),
-                          ),
-                        ],
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            sizeVertical(8),
+                            const Text(
+                              "Following",
+                              style: TextStyle(color: primaryColor),
+                            )
+                          ],
+                        ),
                       )
                     ],
                   )

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/search/widgets/search_main_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
@@ -14,9 +13,6 @@ class SearchPage extends StatelessWidget {
       providers: [
         BlocProvider<PostCubit>.value(
           value: di.sl<PostCubit>(),
-        ),
-        BlocProvider<UserCubit>(
-          create: (context) => di.sl<UserCubit>(),
         ),
       ],
       child: const SearchMainWidget(),

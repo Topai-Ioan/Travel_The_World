@@ -46,6 +46,14 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
       remoteDataSource.updateUser(user);
 
   @override
+  Future<void> followUnFollowUser(UserEntity user) async =>
+      remoteDataSource.followUnFollowUser(user);
+
+  @override
+  Stream<List<UserEntity>> getSingleOtherUser(String otherUid) =>
+      remoteDataSource.getSingleOtherUser(otherUid);
+
+  @override
   Future<String> uploadImage(File? file, String childName,
           {bool isPost = true}) async =>
       remoteDataSource.uploadImage(file, childName);

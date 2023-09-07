@@ -33,6 +33,8 @@ class PageRoutes {
   static const String UpdateReplyPage = "UpdateReplyPage";
   static const String PostDetailPage = "PostDetailPage";
   static const String SingleUserProfilePage = "SingleUserProfilePage";
+  static const String FollowingPage = "FollowingPage";
+  static const String FollowersPage = "FollowersPage";
 }
 
 class FirebaseConstants {

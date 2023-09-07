@@ -13,9 +13,6 @@ class SingleUserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<GetSingleUserCubit>(
-          create: (context) => di.sl<GetSingleUserCubit>(),
-        ),
         BlocProvider<PostCubit>.value(
           value: di.sl<PostCubit>(),
         ),
