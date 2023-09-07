@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
+import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
@@ -142,18 +144,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  _updateUserProfileData() {
+  Future<void> _updateUserProfileData() async {
     setState(() => _isUpdating = true);
+
     if (_image == null) {
-      _updateUserProfile("");
+      await _updateUserProfile("");
     } else {
-      di
+      final profileUrl = await di
           .sl<UploadImageUseCase>()
-          .call(_image!, "profileImages", isPost: false)
-          .then((profileUrl) {
-        _updateUserProfile(profileUrl);
-        //todo dont harcode string
-      });
+          .call(_image!, "profileImages", isPost: false);
+
+      await _updateUserProfile(profileUrl);
+      // TODO MAKE A USECASE UpdateAllPostsFromUser where you update the profile url
+      await di.sl<UploadImageUseCase>().call(_image!, "profileImages",
+          isPost: false, profileUrl: profileUrl);
+
+      //todo dont harcode string
     }
   }
 

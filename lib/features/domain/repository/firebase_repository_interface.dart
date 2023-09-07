@@ -23,7 +23,7 @@ abstract class FirebaseRepositoryInterface {
 
   // Cloud Storage
   Future<String> uploadImage(File? file, String childName,
-      {bool isPost = true});
+      {bool isPost = true, String profileUrl = ""});
 
   // Post Features
   Future<void> createPost(PostEntity post);

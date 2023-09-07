@@ -55,8 +55,9 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
 
   @override
   Future<String> uploadImage(File? file, String childName,
-          {bool isPost = true}) async =>
-      remoteDataSource.uploadImage(file, childName);
+          {bool isPost = true, String profileUrl = ""}) async =>
+      remoteDataSource.uploadImage(file, childName,
+          isPost: isPost, profileUrl: profileUrl);
 
 // todo separate files
   @override

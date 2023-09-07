@@ -269,7 +269,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Future<String> uploadImage(File? file, String childName,
-      {bool isPost = true}) async {
+      {bool isPost = true, String profileUrl = ""}) async {
     Reference ref = firebaseStorage
         .ref()
         .child(childName)
@@ -279,6 +279,28 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       String id = const Uuid().v4();
 
       ref = ref.child(id);
+    } else {
+      //TODO who updated the profile picture ??
+      // Update the user's profile picture URL in Firestore.
+      // final userCollection =
+      //     firebaseFirestore.collection(FirebaseConstants.Users);
+      // await userCollection.doc(firebaseAuth.currentUser!.uid).update({
+      //   'profileUrl': profileUrl,
+      // });
+
+      // Update the profile picture URL for all posts made by the user.
+      //TODO you can change this in another method
+      final userPostsQuery = firebaseFirestore
+          .collection(FirebaseConstants.Posts)
+          .where('creatorUid', isEqualTo: firebaseAuth.currentUser!.uid);
+
+      final userPostsDocuments = await userPostsQuery.get();
+
+      for (final post in userPostsDocuments.docs) {
+        await post.reference.update({
+          'userProfileUrl': profileUrl,
+        });
+      }
     }
 
     final uploadTask = ref.putFile(file!);
@@ -417,6 +439,9 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     }
     if (post.postImageUrl != "" && post.postImageUrl != null) {
       postInfo['postImageUrl'] = post.postImageUrl;
+    }
+    if (post.userProfileUrl != "" && post.userProfileUrl != null) {
+      postInfo['userProfileUrl'] = post.userProfileUrl;
     }
 
     postCollection.doc(post.postId).update(postInfo);
