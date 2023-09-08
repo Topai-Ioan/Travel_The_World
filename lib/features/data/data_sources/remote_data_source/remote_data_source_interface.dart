@@ -22,8 +22,8 @@ abstract class FirebaseRemoteDataSourceInterface {
   Future<void> followUnFollowUser(UserEntity user);
 
   // Cloud Storage
-  Future<String> uploadImage(File? file, String childName,
-      {bool isPost = true, String profileUrl = ""});
+  Future<Map<String, String>> uploadImagePost(File? file, String childName);
+  Future<String> uploadImageProfilePicture(File? file, String childName);
 
   // Post Features
   Future<void> createPost(PostEntity post);
@@ -32,6 +32,7 @@ abstract class FirebaseRemoteDataSourceInterface {
   Future<void> updatePost(PostEntity post);
   Future<void> deletePost(PostEntity post);
   Future<void> likePost(PostEntity post);
+  Future<void> updatePostsProfilePicture(String profileUrl);
 
 // Comment Features
   Future<void> createComment(CommentEntity comment);

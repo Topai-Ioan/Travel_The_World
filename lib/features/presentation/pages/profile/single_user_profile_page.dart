@@ -11,15 +11,8 @@ class SingleUserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<PostCubit>.value(
-          value: di.sl<PostCubit>(),
-        ),
-      ],
-      child: SingleUserProfileMainWidget(
-        otherUserId: otherUserId,
-      ),
+    return SingleUserProfileMainWidget(
+      otherUserId: otherUserId,
     );
   }
 }

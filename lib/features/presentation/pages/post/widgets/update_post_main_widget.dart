@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
@@ -145,29 +145,30 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
     );
   }
 
-  _updatePost() {
+  _updatePost() async {
     setState(() {
       _isUploading = true;
     });
 
     if (_image != null) {
-      di
-          .sl<UploadImageUseCase>()
-          .call(_image, "Posts")
-          .then((imageUrl) => _submitUpdatePost(image: imageUrl));
-    } else {
-      _submitUpdatePost(image: widget.post.postImageUrl!);
+      Map<String, String> imageInfo =
+          await di.sl<UploadImagePostUseCase>().call(_image, "Posts");
+
+      String imageUrl = imageInfo["imageUrl"]!;
+      String imageId = imageInfo["imageId"]!;
+
+      _submitUpdatePost(imageUrl: imageUrl, imageId: imageId);
     }
   }
 
-  _submitUpdatePost({required String image}) {
+  _submitUpdatePost({required String imageUrl, required String imageId}) {
     BlocProvider.of<PostCubit>(context)
         .updatePost(
           post: PostEntity(
-            postImageUrl: image,
+            postId: imageId,
+            postImageUrl: imageUrl,
             description: _descriptionController!.text,
             creatorUid: widget.post.creatorUid,
-            postId: widget.post.postId,
           ),
         )
         .then((value) => _clear());

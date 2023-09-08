@@ -54,10 +54,14 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
       remoteDataSource.getSingleOtherUser(otherUid);
 
   @override
-  Future<String> uploadImage(File? file, String childName,
-          {bool isPost = true, String profileUrl = ""}) async =>
-      remoteDataSource.uploadImage(file, childName,
-          isPost: isPost, profileUrl: profileUrl);
+  Future<Map<String, String>> uploadImagePost(
+          File? file, String childName) async =>
+      remoteDataSource.uploadImagePost(file, childName);
+
+  @override
+  Future<String> uploadImageProfilePicture(
+          File? file, String childName) async =>
+      remoteDataSource.uploadImageProfilePicture(file, childName);
 
 // todo separate files
   @override
@@ -83,6 +87,10 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
   @override
   Future<void> updatePost(PostEntity post) async =>
       remoteDataSource.updatePost(post);
+
+  @override
+  Future<void> updatePostsProfilePicture(String profileUrl) async =>
+      remoteDataSource.updatePostsProfilePicture(profileUrl);
 
   @override
   Future<void> createComment(CommentEntity comment) async =>

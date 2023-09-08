@@ -12,15 +12,6 @@ class PostDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<GetSinglePostCubit>.value(
-            value: di.sl<GetSinglePostCubit>()),
-        BlocProvider<PostCubit>.value(
-          value: di.sl<PostCubit>(),
-        )
-      ],
-      child: PostDetailMainWidget(postId: postId),
-    );
+    return PostDetailMainWidget(postId: postId);
   }
 }

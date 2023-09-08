@@ -17,12 +17,14 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/pos
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_single_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_post_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_posts_profile_picture.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/create_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/delete_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/like_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/read_replies_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/update_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_profile_picture.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/create_user_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/follow_unfollow_user_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
@@ -125,7 +127,9 @@ Future<void> init() async {
       () => GetSingleOtherUserUseCase(repository: sl.call()));
 
   // Cloud Storage
-  sl.registerLazySingleton(() => UploadImageUseCase(repository: sl.call()));
+  sl.registerLazySingleton(
+      () => UploadImageProfilePictureUseCase(repository: sl.call()));
+  sl.registerLazySingleton(() => UploadImagePostUseCase(repository: sl.call()));
 
   // Post
   sl.registerLazySingleton(() => CreatePostUseCase(repository: sl.call()));
@@ -134,6 +138,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => LikePostUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => UpdatePostUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => DeletePostUseCase(repository: sl.call()));
+  sl.registerLazySingleton(
+      () => UpdatePostsProfilePictureUseCase(repository: sl.call()));
 
   // Comment
   sl.registerLazySingleton(() => CreateCommentUseCase(repository: sl.call()));

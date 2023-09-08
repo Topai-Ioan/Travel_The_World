@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
+import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
@@ -31,6 +32,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<UserCubit>()),
         BlocProvider(create: (_) => di.sl<GetSingleUserCubit>()),
         BlocProvider(create: (_) => di.sl<GetSingleOtherUserCubit>()),
+        BlocProvider(create: (_) => di.sl<PostCubit>()),
+        BlocProvider(create: (_) => di.sl<GetSinglePostCubit>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

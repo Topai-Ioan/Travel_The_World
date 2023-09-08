@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
@@ -111,24 +111,28 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
           );
   }
 
-  _submitPost() {
+  _submitPost() async {
     setState(() {
       _isUploading = true;
     });
-    di.sl<UploadImageUseCase>().call(_image!, "Posts").then((imageUrl) {
-      _createSubmitPost(image: imageUrl);
-    });
+    Map<String, String> imageInfo =
+        await di.sl<UploadImagePostUseCase>().call(_image, "Posts");
+
+    String imageUrl = imageInfo["imageUrl"]!;
+    String imageId = imageInfo["imageId"]!;
+
+    _createSubmitPost(imageUrl: imageUrl, imageId: imageId);
   }
 
-  _createSubmitPost({required String image}) {
+  _createSubmitPost({required String imageUrl, required String imageId}) {
     BlocProvider.of<PostCubit>(context)
         .createPost(
             post: PostEntity(
           createAt: Timestamp.now(),
           creatorUid: widget.currentUser.uid,
           likes: const [],
-          postId: const Uuid().v4(),
-          postImageUrl: image,
+          postId: imageId,
+          postImageUrl: imageUrl,
           totalComments: 0,
           totalLikes: 0,
           username: widget.currentUser.username,

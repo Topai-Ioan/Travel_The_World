@@ -207,7 +207,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         if (currentUser.user?.uid != null) {
           if (user.imageFile != null) {
             // todo dont hardcode it here
-            uploadImage(user.imageFile, "ProfileImages", isPost: false)
+            uploadImageProfilePicture(user.imageFile, "ProfileImages")
                 .then((profileUrl) {
               createUser(user, profileUrl);
             });
@@ -268,40 +268,14 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   }
 
   @override
-  Future<String> uploadImage(File? file, String childName,
-      {bool isPost = true, String profileUrl = ""}) async {
+  Future<String> uploadImageProfilePicture(
+    File? file,
+    String childName,
+  ) async {
     Reference ref = firebaseStorage
         .ref()
         .child(childName)
         .child(firebaseAuth.currentUser!.uid);
-
-    if (isPost) {
-      String id = const Uuid().v4();
-
-      ref = ref.child(id);
-    } else {
-      //TODO who updated the profile picture ??
-      // Update the user's profile picture URL in Firestore.
-      // final userCollection =
-      //     firebaseFirestore.collection(FirebaseConstants.Users);
-      // await userCollection.doc(firebaseAuth.currentUser!.uid).update({
-      //   'profileUrl': profileUrl,
-      // });
-
-      // Update the profile picture URL for all posts made by the user.
-      //TODO you can change this in another method
-      final userPostsQuery = firebaseFirestore
-          .collection(FirebaseConstants.Posts)
-          .where('creatorUid', isEqualTo: firebaseAuth.currentUser!.uid);
-
-      final userPostsDocuments = await userPostsQuery.get();
-
-      for (final post in userPostsDocuments.docs) {
-        await post.reference.update({
-          'userProfileUrl': profileUrl,
-        });
-      }
-    }
 
     final uploadTask = ref.putFile(file!);
 
@@ -309,6 +283,30 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
 
     return await imageUrl;
+  }
+
+  @override
+  Future<Map<String, String>> uploadImagePost(
+    File? file,
+    String childName,
+  ) async {
+    Reference ref = firebaseStorage
+        .ref()
+        .child(childName)
+        .child(firebaseAuth.currentUser!.uid);
+
+    String id = const Uuid().v4();
+    ref = ref.child(id);
+
+    final uploadTask = ref.putFile(file!);
+
+    final imageUrl =
+        await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+
+    return {
+      "imageId": id,
+      "imageUrl": imageUrl,
+    };
   }
 
   @override
@@ -371,10 +369,18 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         if (userDoc.exists) {
           final totalPosts = userDoc.data()?['totalPosts'];
 
-          userCollection.update({"totalPosts": totalPosts - 1});
+          await userCollection.update({"totalPosts": totalPosts - 1});
         }
 
         postCollection.doc(post.postId).delete();
+
+        final imageId = post.postId!;
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child("Posts")
+            .child(firebaseAuth.currentUser!.uid)
+            .child(imageId);
+        await storageRef.delete();
       } else {
         print("Post does not exist.");
       }
@@ -693,5 +699,20 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       replyInfo['description'] = reply.description;
     }
     replyCollection.doc(reply.replyId).update(replyInfo);
+  }
+
+  @override
+  Future<void> updatePostsProfilePicture(String profileUrl) async {
+    final userPostsQuery = firebaseFirestore
+        .collection(FirebaseConstants.Posts)
+        .where('creatorUid', isEqualTo: firebaseAuth.currentUser!.uid);
+
+    final userPostsDocuments = await userPostsQuery.get();
+
+    for (final post in userPostsDocuments.docs) {
+      await post.reference.update({
+        'userProfileUrl': profileUrl,
+      });
+    }
   }
 }
