@@ -181,7 +181,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     try {
       if (user.email!.isNotEmpty || user.password!.isNotEmpty) {
         await firebaseAuth.signInWithEmailAndPassword(
-            email: user.email!, password: user.password!);
+            email: user.email!.replaceAll(" ", ""), password: user.password!);
       } else {
         toast("fields cannot be empty");
       }
@@ -199,6 +199,21 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Future<void> signUpUser(UserEntity user) async {
+    final passwordPattern = RegExp(
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*(),.?":{}|<>])[A-Za-z0-9!@#$%^&*(),.?":{}|<>]{8,}$');
+
+    if (!passwordPattern.hasMatch(user.password!)) {
+      toast(
+          "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.");
+      return;
+    }
+
+    if (!user.password!
+        .contains(RegExp(r'^[A-Za-z0-9!@#$%^&*(),.?":{}|<>]+$'))) {
+      toast("Only English characters allowed");
+      return;
+    }
+
     try {
       await firebaseAuth
           .createUserWithEmailAndPassword(
@@ -206,7 +221,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
           .then((currentUser) async {
         if (currentUser.user?.uid != null) {
           if (user.imageFile != null) {
-            // todo dont hardcode it here
+            // todo don't hardcode it here
             uploadImageProfilePicture(user.imageFile, "ProfileImages")
                 .then((profileUrl) {
               createUser(user, profileUrl);
@@ -217,12 +232,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         }
       });
       return;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "email-already-in-use") {
-        toast("email is already taken");
-      } else {
-        toast("something went wrong");
-      }
+    } on FirebaseAuthException catch (_) {
+      toast("Something went wrong");
     }
   }
 
@@ -231,6 +242,10 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     final userCollection =
         firebaseFirestore.collection(FirebaseConstants.Users);
     Map<String, dynamic> userInformation = {};
+
+    if (user.email != "" && user.email != null) {
+      userInformation['email'] = user.email;
+    }
 
     if (user.username != "" && user.username != null) {
       userInformation['username'] = user.username;
