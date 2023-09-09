@@ -455,10 +455,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Future<void> createComment(CommentEntity comment) async {
-    final commentCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(comment.postId)
-        .collection(FirebaseConstants.Comment);
+    final commentCollection =
+        firebaseFirestore.collection(FirebaseConstants.Comment);
 
     final newComment = CommentModel(
             userProfileUrl: comment.userProfileUrl,
@@ -490,8 +488,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
             }
           });
         });
-      } else {
-        commentCollection.doc(comment.commentId).update(newComment);
       }
     } catch (e) {
       print("some error occured $e");
@@ -500,10 +496,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Future<void> deleteComment(CommentEntity comment) async {
-    final commentCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(comment.postId)
-        .collection(FirebaseConstants.Comment);
+    final commentCollection =
+        firebaseFirestore.collection(FirebaseConstants.Comment);
 
     try {
       commentCollection.doc(comment.commentId).delete().then((value) {
@@ -526,10 +520,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Future<void> likeComment(CommentEntity comment) async {
-    final commentCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(comment.postId)
-        .collection(FirebaseConstants.Comment);
+    final commentCollection =
+        firebaseFirestore.collection(FirebaseConstants.Comment);
     final currentUid = await getCurrentUid();
 
     final commentRef = await commentCollection.doc(comment.commentId).get();
@@ -551,19 +543,17 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   @override
   Stream<List<CommentEntity>> readComments(String postId) {
     final commentCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(postId)
-        .collection(FirebaseConstants.Comment);
+        .collection(FirebaseConstants.Comment)
+        .where("postId", isEqualTo: postId);
+
     return commentCollection.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => CommentModel.fromSnapshot(e)).toList());
   }
 
   @override
   Future<void> updateComment(CommentEntity comment) async {
-    final commentCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(comment.postId)
-        .collection(FirebaseConstants.Comment);
+    final commentCollection =
+        firebaseFirestore.collection(FirebaseConstants.Comment);
 
     Map<String, dynamic> commentInfo = {};
 
@@ -577,8 +567,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   @override
   Future<void> createReply(ReplyEntity reply) async {
     final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(reply.postId)
         .collection(FirebaseConstants.Comment)
         .doc(reply.commentId)
         .collection(FirebaseConstants.Reply);
@@ -599,8 +587,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       if (!replyDocRef.exists) {
         replyCollection.doc(reply.replyId).set(newReply).then((value) {
           final commentCollection = firebaseFirestore
-              .collection(FirebaseConstants.Posts)
-              .doc(reply.postId)
               .collection(FirebaseConstants.Comment)
               .doc(reply.commentId);
 
@@ -623,8 +609,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   @override
   Future<void> deleteReply(ReplyEntity reply) async {
     final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(reply.postId)
         .collection(FirebaseConstants.Comment)
         .doc(reply.commentId)
         .collection(FirebaseConstants.Reply);
@@ -632,8 +616,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     try {
       replyCollection.doc(reply.replyId).delete().then((value) {
         final commentCollection = firebaseFirestore
-            .collection(FirebaseConstants.Posts)
-            .doc(reply.postId)
             .collection(FirebaseConstants.Comment)
             .doc(reply.commentId);
 
@@ -653,8 +635,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   @override
   Future<void> likeReply(ReplyEntity reply) async {
     final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(reply.postId)
         .collection(FirebaseConstants.Comment)
         .doc(reply.commentId)
         .collection(FirebaseConstants.Reply);
@@ -677,11 +657,10 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   @override
   Stream<List<ReplyEntity>> readReplies(ReplyEntity reply) {
     final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(reply.postId)
         .collection(FirebaseConstants.Comment)
         .doc(reply.commentId)
         .collection(FirebaseConstants.Reply);
+
     return replyCollection.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => ReplyModel.fromSnapshot(e)).toList());
   }
@@ -689,8 +668,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   @override
   Future<void> updateReply(ReplyEntity reply) async {
     final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Posts)
-        .doc(reply.postId)
         .collection(FirebaseConstants.Comment)
         .doc(reply.commentId)
         .collection(FirebaseConstants.Reply);

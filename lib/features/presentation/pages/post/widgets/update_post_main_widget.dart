@@ -5,11 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/injection_container.dart' as di;
 
 class UpdatePostMainWidget extends StatefulWidget {
   final PostEntity post;
@@ -97,30 +95,11 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
                     fontWeight: FontWeight.w600),
               ),
               sizeVertical(10),
-              Stack(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 200,
-                    child: profileWidget(
-                        imageUrl: widget.post.postImageUrl, image: _image),
-                  ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: GestureDetector(
-                      onTap: selectImage,
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: const Icon(Icons.edit, color: blueColor),
-                      ),
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: double.infinity,
+                height: 200,
+                child: profileWidget(
+                    imageUrl: widget.post.postImageUrl, image: _image),
               ),
               sizeVertical(10),
               ProfileFormWidget(
@@ -150,25 +129,17 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
       _isUploading = true;
     });
 
-    if (_image != null) {
-      Map<String, String> imageInfo =
-          await di.sl<UploadImagePostUseCase>().call(_image, "Posts");
-
-      String imageUrl = imageInfo["imageUrl"]!;
-      String imageId = imageInfo["imageId"]!;
-
-      _submitUpdatePost(imageUrl: imageUrl, imageId: imageId);
+    if (_descriptionController != null) {
+      _submitUpdateDescription();
     }
   }
 
-  _submitUpdatePost({required String imageUrl, required String imageId}) {
+  _submitUpdateDescription() {
     BlocProvider.of<PostCubit>(context)
         .updatePost(
           post: PostEntity(
-            postId: imageId,
-            postImageUrl: imageUrl,
+            postId: widget.post.postId,
             description: _descriptionController!.text,
-            creatorUid: widget.post.creatorUid,
           ),
         )
         .then((value) => _clear());

@@ -2,17 +2,13 @@ part of 'get_single_other_user_cubit.dart';
 
 abstract class GetSingleOtherUserState extends Equatable {
   const GetSingleOtherUserState();
-}
-
-class GetSingleOtherUserInitial extends GetSingleOtherUserState {
   @override
   List<Object> get props => [];
 }
 
-class GetSingleOtherUserLoading extends GetSingleOtherUserState {
-  @override
-  List<Object> get props => [];
-}
+class GetSingleOtherUserInitial extends GetSingleOtherUserState {}
+
+class GetSingleOtherUserLoading extends GetSingleOtherUserState {}
 
 class GetSingleOtherUserLoaded extends GetSingleOtherUserState {
   final UserEntity otherUser;
@@ -22,7 +18,4 @@ class GetSingleOtherUserLoaded extends GetSingleOtherUserState {
   List<Object> get props => [otherUser];
 }
 
-class GetSingleOtherUserFailure extends GetSingleOtherUserState {
-  @override
-  List<Object> get props => [];
-}
+class GetSingleOtherUserFailure extends GetSingleOtherUserState {}

@@ -14,7 +14,7 @@ class ReplyModel extends ReplyEntity {
   final List<String>? likes;
   final Timestamp? createAt;
 
-  ReplyModel({
+  const ReplyModel({
     this.creatorUid,
     this.replyId,
     this.commentId,

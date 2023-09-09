@@ -168,6 +168,11 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                         );
                       },
                     );
+                  } else if (postState is PostEmpty) {
+                    return const Center(
+                      child: Text("No post yet",
+                          style: TextStyle(color: primaryColor)),
+                    );
                   }
                   return const Center(
                     child: CircularProgressIndicator(),

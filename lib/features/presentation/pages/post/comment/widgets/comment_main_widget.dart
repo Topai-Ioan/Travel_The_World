@@ -141,6 +141,8 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
                             _commentSection(currentUser: singleUser)
                           ],
                         );
+                      } else if (commentState is CommentEmpty) {
+                        return Container();
                       }
                       return const Center(
                         child: CircularProgressIndicator(),

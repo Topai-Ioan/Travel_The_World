@@ -20,3 +20,5 @@ class CommentLoaded extends CommentState {
 }
 
 class CommentFailure extends CommentState {}
+
+class CommentEmpty extends CommentState {}

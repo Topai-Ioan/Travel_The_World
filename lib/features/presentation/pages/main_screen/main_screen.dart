@@ -52,44 +52,68 @@ class _MainScreenState extends State<MainScreen> {
         if (getsingleUserState is GetSingleUserLoaded) {
           final currentUser = getsingleUserState.user;
           return Scaffold(
-              backgroundColor: backgroundColor,
-              bottomNavigationBar: CupertinoTabBar(
-                backgroundColor: backgroundColor,
-                items: const [
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.home_rounded, color: primaryColor),
-                      label: 'Home'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.search_rounded, color: primaryColor),
-                      label: 'Search'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.add_circle_rounded, color: primaryColor),
-                      label: 'Post'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.favorite_rounded, color: primaryColor),
-                      label: 'Favorite'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.account_circle_rounded,
-                          color: primaryColor),
-                      label: 'Profile'),
-                ],
-                onTap: navigationTapped,
-              ),
-              body: PageView(
-                controller: pageController,
-                onPageChanged: onPageChanged,
-                children: [
-                  const HomePage(),
-                  const SearchPage(),
-                  UploadPostPage(currentUser: currentUser),
-                  const ActivityPage(),
-                  ProfilePage(currentUser: currentUser)
-                ],
-              ));
+            backgroundColor: backgroundColor,
+            bottomNavigationBar: CustomCupertinoTabBar(
+              currentIndex: _currentIndex,
+              onTap: navigationTapped,
+            ),
+            body: PageView(
+              controller: pageController,
+              onPageChanged: onPageChanged,
+              children: [
+                const HomePage(),
+                const SearchPage(),
+                UploadPostPage(currentUser: currentUser),
+                const ActivityPage(),
+                ProfilePage(currentUser: currentUser)
+              ],
+            ),
+          );
         } else {
           return const Center(child: CircularProgressIndicator());
         }
       },
+    );
+  }
+}
+
+class CustomCupertinoTabBar extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+
+  const CustomCupertinoTabBar(
+      {super.key, required this.currentIndex, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoTabBar(
+      backgroundColor: backgroundColor,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_rounded, color: primaryColor),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search_rounded, color: primaryColor),
+          label: 'Search',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add_circle_rounded, color: primaryColor),
+          label: 'Post',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite_rounded, color: primaryColor),
+          label: 'Favorite',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle_rounded, color: primaryColor),
+          label: 'Profile',
+        ),
+      ],
+      currentIndex: currentIndex,
+      onTap: onTap,
+      activeColor: blueColor, // Highlighted color
+      inactiveColor: primaryColor, // Inactive color
     );
   }
 }

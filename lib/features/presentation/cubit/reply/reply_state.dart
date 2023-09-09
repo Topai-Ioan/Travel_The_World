@@ -7,31 +7,19 @@ abstract class ReplyState extends Equatable {
   List<Object> get props => [];
 }
 
-class ReplyInitial extends ReplyState {
-  @override
-  List<Object> get props => [];
-}
+class ReplyInitial extends ReplyState {}
 
-class ReplyLoading extends ReplyState {
-  @override
-  List<Object> get props => [];
-}
+class ReplyLoading extends ReplyState {}
 
 class ReplyLoaded extends ReplyState {
   final List<ReplyEntity> replies;
 
-  ReplyLoaded({required this.replies});
+  const ReplyLoaded({required this.replies});
 
   @override
   List<Object> get props => [replies];
 }
 
-class ReplyFailure extends ReplyState {
-  @override
-  List<Object> get props => [];
-}
+class ReplyFailure extends ReplyState {}
 
-class ReplyEmpty extends ReplyState {
-  @override
-  List<Object> get props => [];
-}
+class ReplyEmpty extends ReplyState {}

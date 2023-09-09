@@ -160,8 +160,6 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                 color: primaryColor,
                                 fontWeight: FontWeight.bold)),
                         Text(
-                          //todo maybe use datetine.now insead of timestamp
-                          // cant do it, firebase accepts only timestamps
                           DateFormat("dd/MMM/yyyy")
                               .format(singlePost.createAt!.toDate()),
                           style: const TextStyle(color: darkGreyColor),
