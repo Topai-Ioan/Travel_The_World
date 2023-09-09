@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_posts_profile_picture.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_profile_picture.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';

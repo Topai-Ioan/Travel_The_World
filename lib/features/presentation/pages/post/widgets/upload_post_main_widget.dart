@@ -13,8 +13,6 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/sto
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
-import 'package:travel_the_world/profile_widget.dart';
-import 'package:uuid/uuid.dart';
 
 class UploadPostMainWidget extends StatefulWidget {
   final UserEntity currentUser;
