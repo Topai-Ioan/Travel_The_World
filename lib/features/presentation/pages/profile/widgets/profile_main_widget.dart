@@ -204,7 +204,6 @@ class _ModalContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150,
       color: Colors.transparent.withOpacity(0.5),
       child: SingleChildScrollView(
         child: Container(

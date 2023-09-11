@@ -33,6 +33,21 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
     super.initState();
   }
 
+  String formatTimeAgo(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inMinutes < 1) {
+      return 'a few seconds ago';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} minutes ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hours ago';
+    } else {
+      return DateFormat("dd/MMM/yyyy").format(dateTime);
+    }
+  }
+
   bool _isLikeAnimating = false;
   @override
   Widget build(BuildContext context) {
@@ -55,8 +70,8 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                   child: Row(
                     children: [
                       SizedBox(
-                          width: 30,
-                          height: 30,
+                          width: 40,
+                          height: 40,
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: profileWidget(
@@ -66,6 +81,11 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                           style: const TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.bold)),
+                      sizeHorizontal(5),
+                      Text(
+                        formatTimeAgo(widget.post.createAt!.toDate()),
+                        style: const TextStyle(color: darkGreyColor),
+                      ),
                     ],
                   ),
                 ),
@@ -102,6 +122,17 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        Navigator.pushNamed(context, PageRoutes.LikeListPage,
+                            arguments: widget.post);
+                      },
+                      child: Text('${widget.post.totalLikes} ',
+                          style: const TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18)),
+                    ),
+                    GestureDetector(
+                      onTap: () {
                         _likePost();
                       },
                       child: Icon(
@@ -113,8 +144,14 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                             : primaryColor,
                       ),
                     ),
-                    //if (_isLikedButtonPressed) Visibility(child: _animation()),
                     sizeHorizontal(10),
+                    Text(
+                      "${widget.post.totalComments} ",
+                      style: const TextStyle(
+                          color: primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(
@@ -130,6 +167,13 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                       ),
                     ),
                     sizeHorizontal(10),
+                    const Text(
+                      "0 ",
+                      style: TextStyle(
+                          color: primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
                     const Icon(
                       Icons.send,
                       color: primaryColor,
@@ -140,51 +184,26 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                 const Icon(Icons.bookmark_border_rounded, color: primaryColor),
               ],
             ),
-            sizeVertical(10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, PageRoutes.LikeListPage,
-                        arguments: widget.post);
-                  },
-                  child: Text('${widget.post.totalLikes} likes',
-                      style: const TextStyle(
-                          color: primaryColor, fontWeight: FontWeight.bold)),
-                ),
-                Text(
-                  DateFormat("dd/MMM/yyyy")
-                      .format(widget.post.createAt!.toDate()),
-                  style: const TextStyle(color: darkGreyColor),
-                ),
-              ],
+            if (widget.post.description != null &&
+                widget.post.description != "")
+              Column(
+                children: [
+                  sizeVertical(10),
+                  Row(
+                    children: [
+                      Text(
+                        "${widget.post.description}",
+                        style: const TextStyle(color: primaryColor),
+                      ),
+                    ],
+                  ),
+                  sizeVertical(10),
+                ],
+              ),
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
             ),
-            sizeVertical(10),
-            Row(
-              children: [
-                Text("${widget.post.username}",
-                    style: const TextStyle(
-                        color: primaryColor, fontWeight: FontWeight.w600)),
-                sizeHorizontal(10),
-                Text(
-                  "${widget.post.description}",
-                  style: const TextStyle(color: primaryColor),
-                ),
-              ],
-            ),
-            sizeVertical(10),
-            GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.CommentPage,
-                      arguments: AppEntity(
-                          uid: _currentUid, postId: widget.post.postId));
-                },
-                child: Text(
-                  "View all ${widget.post.totalComments} comments",
-                  style: const TextStyle(color: darkGreyColor),
-                )),
-            sizeVertical(10),
           ],
         ),
       ),
