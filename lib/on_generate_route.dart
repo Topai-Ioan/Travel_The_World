@@ -10,12 +10,12 @@ import 'package:travel_the_world/features/presentation/pages/credential/sign_up_
 import 'package:travel_the_world/features/presentation/pages/comment/comment_page.dart';
 import 'package:travel_the_world/features/presentation/pages/comment/edit_comment_page.dart';
 import 'package:travel_the_world/features/presentation/pages/comment/edit_reply_page.dart';
-import 'package:travel_the_world/features/presentation/pages/like_list/like_list_page.dart';
+import 'package:travel_the_world/features/presentation/pages/user_list_pages/like_list_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/post_detail_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/update_post_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/edit_profile_page.dart';
-import 'package:travel_the_world/features/presentation/pages/profile/followers_page.dart';
-import 'package:travel_the_world/features/presentation/pages/profile/following_page.dart';
+import 'package:travel_the_world/features/presentation/pages/user_list_pages/followers_page.dart';
+import 'package:travel_the_world/features/presentation/pages/user_list_pages/following_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/single_user_profile_page.dart';
 
 class OnGenerateRoute {
