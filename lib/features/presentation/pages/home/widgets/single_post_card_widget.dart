@@ -144,9 +144,15 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${widget.post.totalLikes} likes',
-                    style: const TextStyle(
-                        color: primaryColor, fontWeight: FontWeight.bold)),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, PageRoutes.LikeListPage,
+                        arguments: widget.post);
+                  },
+                  child: Text('${widget.post.totalLikes} likes',
+                      style: const TextStyle(
+                          color: primaryColor, fontWeight: FontWeight.bold)),
+                ),
                 Text(
                   DateFormat("dd/MMM/yyyy")
                       .format(widget.post.createAt!.toDate()),

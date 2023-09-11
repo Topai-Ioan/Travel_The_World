@@ -434,8 +434,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   Stream<List<PostEntity>> readSinglePost(String postId) {
     final postCollection = firebaseFirestore
         .collection(FirebaseConstants.Posts)
-        .orderBy("createAt", descending: true)
-        .where("postId", isEqualTo: postId);
+        .where("postId", isEqualTo: postId)
+        .orderBy("createAt", descending: true);
     return postCollection.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => PostModel.fromSnapshot(e)).toList());
   }
@@ -575,16 +575,17 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     if (comment.description != "" && comment.description != null) {
       commentInfo["description"] = comment.description;
     }
+    if (comment.userProfileUrl != "" && comment.userProfileUrl != null) {
+      commentInfo['userProfileUrl'] = comment.userProfileUrl;
+    }
 
     commentCollection.doc(comment.commentId).update(commentInfo);
   }
 
   @override
   Future<void> createReply(ReplyEntity reply) async {
-    final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Comment)
-        .doc(reply.commentId)
-        .collection(FirebaseConstants.Reply);
+    final replyCollection =
+        firebaseFirestore.collection(FirebaseConstants.Reply);
     final newReply = ReplyModel(
             userProfileUrl: reply.userProfileUrl,
             username: reply.username,
@@ -623,10 +624,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Future<void> deleteReply(ReplyEntity reply) async {
-    final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Comment)
-        .doc(reply.commentId)
-        .collection(FirebaseConstants.Reply);
+    final replyCollection =
+        firebaseFirestore.collection(FirebaseConstants.Reply);
 
     try {
       replyCollection.doc(reply.replyId).delete().then((value) {
@@ -649,10 +648,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Future<void> likeReply(ReplyEntity reply) async {
-    final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Comment)
-        .doc(reply.commentId)
-        .collection(FirebaseConstants.Reply);
+    final replyCollection =
+        firebaseFirestore.collection(FirebaseConstants.Reply);
     final currentUid = await getCurrentUid();
     final replyRef = await replyCollection.doc(reply.replyId).get();
     if (replyRef.exists) {
@@ -671,10 +668,8 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Stream<List<ReplyEntity>> readReplies(ReplyEntity reply) {
-    final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Comment)
-        .doc(reply.commentId)
-        .collection(FirebaseConstants.Reply);
+    final replyCollection =
+        firebaseFirestore.collection(FirebaseConstants.Reply);
 
     return replyCollection.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => ReplyModel.fromSnapshot(e)).toList());
@@ -682,19 +677,24 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
   @override
   Future<void> updateReply(ReplyEntity reply) async {
-    final replyCollection = firebaseFirestore
-        .collection(FirebaseConstants.Comment)
-        .doc(reply.commentId)
-        .collection(FirebaseConstants.Reply);
+    final replyCollection =
+        firebaseFirestore.collection(FirebaseConstants.Reply);
+
     Map<String, dynamic> replyInfo = {};
     if (reply.description != "" && reply.description != null) {
       replyInfo['description'] = reply.description;
     }
+
+    if (reply.userProfileUrl != "" && reply.userProfileUrl != null) {
+      replyInfo['userProfileUrl'] = reply.userProfileUrl;
+    }
+
     replyCollection.doc(reply.replyId).update(replyInfo);
   }
 
   @override
-  Future<void> updatePostsProfilePicture(String profileUrl) async {
+  Future<void> syncProfilePicture(String profileUrl) async {
+    //posts
     final userPostsQuery = firebaseFirestore
         .collection(FirebaseConstants.Posts)
         .where('creatorUid', isEqualTo: firebaseAuth.currentUser!.uid);
@@ -703,6 +703,31 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
 
     for (final post in userPostsDocuments.docs) {
       await post.reference.update({
+        'userProfileUrl': profileUrl,
+      });
+    }
+    //coments
+    final userCommentsQuery = firebaseFirestore
+        .collection(FirebaseConstants.Comment)
+        .where('creatorUid', isEqualTo: firebaseAuth.currentUser!.uid);
+
+    final userCommentsDocuments = await userCommentsQuery.get();
+
+    for (final comment in userCommentsDocuments.docs) {
+      await comment.reference.update({
+        'userProfileUrl': profileUrl,
+      });
+    }
+
+    //replies
+    final userRepliesQuery = firebaseFirestore
+        .collection(FirebaseConstants.Reply)
+        .where('creatorUid', isEqualTo: firebaseAuth.currentUser!.uid);
+
+    final userRepliesDocuments = await userRepliesQuery.get();
+
+    for (final reply in userRepliesDocuments.docs) {
+      await reply.reference.update({
         'userProfileUrl': profileUrl,
       });
     }

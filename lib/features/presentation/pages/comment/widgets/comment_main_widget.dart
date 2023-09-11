@@ -9,7 +9,7 @@ import 'package:travel_the_world/features/presentation/cubit/comment/comment_cub
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_comment_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/comment/widgets/single_comment_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:uuid/uuid.dart';
 import 'package:travel_the_world/injection_container.dart' as di;

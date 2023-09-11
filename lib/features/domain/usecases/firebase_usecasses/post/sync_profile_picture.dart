@@ -1,11 +1,11 @@
 import 'package:travel_the_world/features/domain/repository/firebase_repository_interface.dart';
 
-class UpdatePostsProfilePictureUseCase {
+class SyncProfilePictureUseCase {
   final FirebaseRepositoryInterface repository;
 
-  UpdatePostsProfilePictureUseCase({required this.repository});
+  SyncProfilePictureUseCase({required this.repository});
 
   Future<void> call(String profileUrl) {
-    return repository.updatePostsProfilePicture(profileUrl);
+    return repository.syncProfilePicture(profileUrl);
   }
 }

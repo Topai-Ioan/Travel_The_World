@@ -32,7 +32,6 @@ abstract class FirebaseRepositoryInterface {
   Future<void> updatePost(PostEntity post);
   Future<void> deletePost(PostEntity post);
   Future<void> likePost(PostEntity post);
-  Future<void> updatePostsProfilePicture(String profileUrl);
 
   // Comment Features
   Future<void> createComment(CommentEntity comment);
@@ -47,4 +46,7 @@ abstract class FirebaseRepositoryInterface {
   Future<void> updateReply(ReplyEntity reply);
   Future<void> deleteReply(ReplyEntity reply);
   Future<void> likeReply(ReplyEntity reply);
+
+  // others
+  Future<void> syncProfilePicture(String profileUrl);
 }

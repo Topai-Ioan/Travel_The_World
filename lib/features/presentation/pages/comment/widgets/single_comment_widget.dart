@@ -9,7 +9,7 @@ import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/widgets/form_container_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_reply_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/comment/widgets/single_reply_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:uuid/uuid.dart';

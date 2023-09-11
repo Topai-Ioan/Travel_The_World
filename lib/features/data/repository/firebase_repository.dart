@@ -89,8 +89,8 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
       remoteDataSource.updatePost(post);
 
   @override
-  Future<void> updatePostsProfilePicture(String profileUrl) async =>
-      remoteDataSource.updatePostsProfilePicture(profileUrl);
+  Future<void> syncProfilePicture(String profileUrl) async =>
+      remoteDataSource.syncProfilePicture(profileUrl);
 
   @override
   Future<void> createComment(CommentEntity comment) async =>
