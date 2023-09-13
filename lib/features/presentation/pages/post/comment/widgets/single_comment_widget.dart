@@ -9,7 +9,8 @@ import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/widgets/form_container_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/comment/widgets/single_reply_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_reply_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:uuid/uuid.dart';
@@ -260,7 +261,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _OptionItem(
+                    OptionItem(
                       text: "Delete Reply",
                       onTap: () {
                         _deleteReply(reply: reply);
@@ -275,7 +276,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                       color: Colors.grey,
                     ),
                     const SizedBox(height: 8),
-                    _OptionItem(
+                    OptionItem(
                       text: "Edit Reply",
                       onTap: () {
                         Navigator.pushNamed(context, PageRoutes.UpdateReplyPage,
@@ -306,30 +307,5 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
             postId: reply.postId,
             commentId: reply.commentId,
             replyId: reply.replyId));
-  }
-}
-
-class _OptionItem extends StatelessWidget {
-  final String text;
-  final VoidCallback onTap;
-
-  const _OptionItem({
-    required this.text,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Text(
-          text,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
-        ),
-      ),
-    );
   }
 }

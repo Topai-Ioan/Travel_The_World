@@ -5,6 +5,7 @@ import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 
 class ProfileMainWidget extends StatefulWidget {
@@ -211,7 +212,7 @@ class _ModalContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _OptionItem(
+              OptionItem(
                 text: "Settings",
                 onTap: () {},
               ),
@@ -221,7 +222,7 @@ class _ModalContent extends StatelessWidget {
                 color: Colors.grey,
               ),
               const SizedBox(height: 8),
-              _OptionItem(
+              OptionItem(
                 text: "Edit Profile",
                 onTap: () {
                   Navigator.pushNamed(context, PageRoutes.EditProfilePage,
@@ -234,7 +235,7 @@ class _ModalContent extends StatelessWidget {
                 color: Colors.grey,
               ),
               const SizedBox(height: 7),
-              _OptionItem(
+              OptionItem(
                 text: "Logout",
                 onTap: () {
                   BlocProvider.of<AuthCubit>(context).loggedOut();
@@ -245,31 +246,6 @@ class _ModalContent extends StatelessWidget {
               const SizedBox(height: 7),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _OptionItem extends StatelessWidget {
-  final String text;
-  final VoidCallback onTap;
-
-  const _OptionItem({
-    required this.text,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Text(
-          text,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
         ),
       ),
     );

@@ -7,7 +7,8 @@ import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/post/widgets/like_animation_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/post/post/widgets/like_animation_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
@@ -270,7 +271,7 @@ _openBottomModalSheet(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _OptionItem(
+                  OptionItem(
                     text: "Settings",
                     onTap: () {},
                   ),
@@ -280,7 +281,7 @@ _openBottomModalSheet(
                     color: Colors.grey,
                   ),
                   const SizedBox(height: 8),
-                  _OptionItem(
+                  OptionItem(
                     text: "Delete Post",
                     onTap: deletePost,
                   ),
@@ -290,7 +291,7 @@ _openBottomModalSheet(
                     color: Colors.grey,
                   ),
                   const SizedBox(height: 7),
-                  _OptionItem(
+                  OptionItem(
                     text: "Edit Post",
                     onTap: () {
                       Navigator.pushNamed(context, PageRoutes.UpdatePostPage,
@@ -304,29 +305,4 @@ _openBottomModalSheet(
           ),
         );
       });
-}
-
-class _OptionItem extends StatelessWidget {
-  final String text;
-  final VoidCallback onTap;
-
-  const _OptionItem({
-    required this.text,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Text(
-          text,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
-        ),
-      ),
-    );
-  }
 }

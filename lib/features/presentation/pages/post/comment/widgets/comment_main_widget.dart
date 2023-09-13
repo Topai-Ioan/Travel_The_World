@@ -9,7 +9,8 @@ import 'package:travel_the_world/features/presentation/cubit/comment/comment_cub
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/comment/widgets/single_comment_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_comment_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:uuid/uuid.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
@@ -241,7 +242,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _OptionItem(
+                    OptionItem(
                       text: "Delete Comment",
                       onTap: () => _deleteComment(
                           commentId: comment.commentId!,
@@ -253,7 +254,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
                       color: Colors.grey,
                     ),
                     const SizedBox(height: 8),
-                    _OptionItem(
+                    OptionItem(
                       text: "Edit Comment",
                       onTap: () {
                         Navigator.pushNamed(
@@ -267,7 +268,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
                       color: Colors.grey,
                     ),
                     const SizedBox(height: 7),
-                    _OptionItem(
+                    OptionItem(
                       text: "Settings",
                       onTap: () {},
                     ),
@@ -290,30 +291,5 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
     BlocProvider.of<CommentCubit>(context).likeComment(
         comment: CommentEntity(
             commentId: comment.commentId, postId: comment.postId));
-  }
-}
-
-class _OptionItem extends StatelessWidget {
-  final String text;
-  final VoidCallback onTap;
-
-  const _OptionItem({
-    required this.text,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Text(
-          text,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
-        ),
-      ),
-    );
   }
 }

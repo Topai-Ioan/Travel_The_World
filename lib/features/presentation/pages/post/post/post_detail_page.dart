@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_the_world/features/presentation/pages/post/widgets/post_detail_main_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/post/post/widgets/post_detail_main_widget.dart';
 
 class PostDetailPage extends StatelessWidget {
   final String postId;
