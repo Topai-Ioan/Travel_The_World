@@ -8,18 +8,18 @@ Widget profileWidget({String? imageUrl, File? image}) {
     if (imageUrl == null || imageUrl == "") {
       return Image.asset(
         'assets/images/profile_default.png',
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
       );
     } else {
       return CachedNetworkImage(
         imageUrl: imageUrl,
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
         progressIndicatorBuilder: (context, url, downloadProgress) {
           return const CircularProgressIndicator();
         },
         errorWidget: (context, url, error) => Image.asset(
           'assets/images/profile_default.png',
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
         ),
       );
     }

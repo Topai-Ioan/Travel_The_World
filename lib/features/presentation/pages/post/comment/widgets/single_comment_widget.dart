@@ -8,8 +8,10 @@ import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/credential/widgets/form_container_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_reply_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/confirmation_dialog.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_bottom_sheet.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_text_input.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
@@ -37,6 +39,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   final TextEditingController _replyController = TextEditingController();
 
   String _currentUid = "";
+  bool _showReplies = false;
 
   @override
   void initState() {
@@ -53,12 +56,136 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   }
 
   bool _isUserReplying = false;
-  //bool _isKeyboardOpenFromReply = false;
 
-  @override
-  Widget build(BuildContext context) {
-    //_isKeyboardOpenFromReply =
-    //_isUserReplying && MediaQuery.of(context).viewInsets.bottom > 0;
+  Widget buildCommentHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "${widget.comment.username}",
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: primaryColor,
+          ),
+        ),
+        GestureDetector(
+          onTap: widget.onLikeClickListener,
+          child: Icon(
+            widget.comment.likes!.contains(_currentUid)
+                ? Icons.favorite
+                : Icons.favorite_outline,
+            size: 20,
+            color: widget.comment.likes!.contains(_currentUid)
+                ? Colors.red
+                : darkGreyColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildCommentText() {
+    return Text(
+      "${widget.comment.description}",
+      style: const TextStyle(color: primaryColor),
+    );
+  }
+
+  Widget buildCommentFooter() {
+    return Row(
+      children: [
+        Text(
+          DateFormat("dd/MMM/yyy").format(widget.comment.createAt!.toDate()),
+          style: const TextStyle(color: darkGreyColor),
+        ),
+        sizeHorizontal(15),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _isUserReplying = !_isUserReplying;
+            });
+          },
+          child: const Text(
+            "Reply",
+            style: TextStyle(color: darkGreyColor, fontSize: 12),
+          ),
+        ),
+        sizeHorizontal(15),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _showReplies = !_showReplies;
+            });
+            if (_showReplies) {
+              widget.comment.totalReplies == 0
+                  ? toast("no replies")
+                  : BlocProvider.of<ReplyCubit>(context).getReplies(
+                      reply: ReplyEntity(
+                        postId: widget.comment.postId,
+                        commentId: widget.comment.commentId,
+                      ),
+                    );
+            }
+          },
+          child: Text(
+            _showReplies && widget.comment.totalReplies != 0
+                ? "Hide Replies"
+                : "View ${widget.comment.totalReplies} Replies",
+            style: const TextStyle(
+              color: darkGreyColor,
+              fontSize: 12,
+            ),
+          ),
+        ),
+        const Spacer(),
+        Text(
+          "${widget.comment.likes?.length} Likes",
+          style: const TextStyle(color: darkGreyColor, fontSize: 12),
+        ),
+      ],
+    );
+  }
+
+  Widget buildRepliesList(ReplyState replyState) {
+    if (_showReplies && replyState is ReplyLoaded) {
+      final replies = replyState.replies
+          .where((element) => element.commentId == widget.comment.commentId)
+          .toList();
+
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: const ScrollPhysics(),
+        itemCount: replies.length,
+        itemBuilder: (context, index) {
+          return SingleReplyWidget(
+            reply: replies[index],
+            onLongPressListener: () {
+              _openBottomModalSheet(context: context, reply: replies[index]);
+            },
+            onLikeClickListener: () {
+              _likeReply(reply: replies[index]);
+            },
+          );
+        },
+      );
+    }
+
+    return const SizedBox(width: 0, height: 0);
+  }
+
+  Widget buildReplySection() {
+    return _isUserReplying == true
+        ? CustomCommentSection(
+            currentUser: widget.currentUser!,
+            hintText: "Post your reply...",
+            descriptionController: _replyController,
+            createComment: _createReply,
+          )
+        : const SizedBox(width: 0, height: 0);
+  }
+
+  Widget buildCommentWidget() {
     return InkWell(
       onLongPress: widget.comment.creatorUid == _currentUid
           ? widget.onLongPressListener
@@ -83,148 +210,35 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "${widget.comment.username}",
-                          style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: primaryColor),
-                        ),
-                        GestureDetector(
-                            onTap: widget.onLikeClickListener,
-                            child: Icon(
-                              widget.comment.likes!.contains(_currentUid)
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline,
-                              size: 20,
-                              color: widget.comment.likes!.contains(_currentUid)
-                                  ? Colors.red
-                                  : darkGreyColor,
-                            ))
-                      ],
-                    ),
+                    buildCommentHeader(),
                     sizeVertical(4),
-                    Text(
-                      "${widget.comment.description}",
-                      style: const TextStyle(color: primaryColor),
-                    ),
+                    buildCommentText(),
                     sizeVertical(4),
-                    Row(
-                      children: [
-                        Text(
-                          DateFormat("dd/MMM/yyy")
-                              .format(widget.comment.createAt!.toDate()),
-                          style: const TextStyle(color: darkGreyColor),
-                        ),
-                        sizeHorizontal(15),
-                        GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _isUserReplying = !_isUserReplying;
-                              });
-                            },
-                            child: const Text(
-                              "Reply",
-                              style:
-                                  TextStyle(color: darkGreyColor, fontSize: 12),
-                            )),
-                        sizeHorizontal(15),
-                        GestureDetector(
-                          onTap: () {
-                            widget.comment.totalReplies == 0
-                                ? toast("no replies")
-                                : BlocProvider.of<ReplyCubit>(context)
-                                    .getReplies(
-                                        reply: ReplyEntity(
-                                            postId: widget.comment.postId,
-                                            commentId:
-                                                widget.comment.commentId));
-                          },
-                          child: const Text(
-                            "View Replies",
-                            style:
-                                TextStyle(color: darkGreyColor, fontSize: 12),
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          "${widget.comment.likes?.length} Likes",
-                          style: const TextStyle(
-                              color: darkGreyColor, fontSize: 12),
-                        ),
-                      ],
-                    ),
+                    buildCommentFooter(),
                     sizeVertical(10),
                     BlocBuilder<ReplyCubit, ReplyState>(
                       builder: (context, replyState) {
-                        if (replyState is ReplyLoaded) {
-                          final replies = replyState.replies
-                              .where((element) =>
-                                  element.commentId == widget.comment.commentId)
-                              .toList();
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const ScrollPhysics(),
-                              itemCount: replies.length,
-                              itemBuilder: (context, index) {
-                                return SingleReplyWidget(
-                                  reply: replies[index],
-                                  onLongPressListener: () {
-                                    _openBottomModalSheet(
-                                        context: context,
-                                        reply: replies[index]);
-                                  },
-                                  onLikeClickListener: () {
-                                    _likeReply(reply: replies[index]);
-                                  },
-                                );
-                              });
-                        }
-                        return const SizedBox(
-                          width: 0,
-                          height: 0,
-                        );
+                        return buildRepliesList(replyState);
                       },
                     ),
                     sizeVertical(10),
-                    _isUserReplying == true
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              FormContainerWidget(
-                                  hintText: "Post your reply...",
-                                  controller: _replyController),
-                              sizeVertical(10),
-                              GestureDetector(
-                                onTap: () {
-                                  _createReply();
-                                },
-                                child: const Text(
-                                  "Post",
-                                  style: TextStyle(color: blueColor),
-                                ),
-                              )
-                            ],
-                          )
-                        : const SizedBox(
-                            width: 0,
-                            height: 0,
-                          )
+                    buildReplySection(),
                   ],
                 ),
               ),
             ),
-            //if (!_isUserReplying && !_isKeyboardOpenFromReply)
           ],
         ),
       ),
     );
   }
 
-  _createReply() {
+  @override
+  Widget build(BuildContext context) {
+    return buildCommentWidget();
+  }
+
+  _createReply(UserEntity currentUser) {
     BlocProvider.of<ReplyCubit>(context)
         .createReply(
             reply: ReplyEntity(
@@ -252,53 +266,50 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
         backgroundColor: Colors.transparent.withOpacity(0.5),
         context: context,
         builder: (context) {
-          return Container(
-            height: 100,
-            color: Colors.transparent.withOpacity(0.5),
-            child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    OptionItem(
-                      text: "Delete Reply",
-                      onTap: () {
-                        _deleteReply(reply: reply);
-                        setState(() {
-                          _isUserReplying = false;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    const Divider(
-                      thickness: 1,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(height: 8),
-                    OptionItem(
-                      text: "Edit Reply",
-                      onTap: () {
-                        Navigator.pushNamed(context, PageRoutes.UpdateReplyPage,
-                            arguments: reply);
-                      },
-                    ),
-                  ],
-                ),
-              ),
+          return CustomBottomSheet(children: [
+            OptionItem(
+              text: "Delete Reply",
+              onTap: () {
+                _deleteReply(reply: reply);
+                setState(() {
+                  _isUserReplying = false;
+                });
+              },
             ),
-          );
+            OptionItem(
+              text: "Edit Reply",
+              onTap: () {
+                Navigator.pushNamed(context, PageRoutes.UpdateReplyPage,
+                    arguments: reply);
+              },
+            )
+          ]);
         });
   }
 
   _deleteReply({required ReplyEntity reply}) {
-    BlocProvider.of<ReplyCubit>(context).deleteReply(
-        reply: ReplyEntity(
-            postId: reply.postId,
-            commentId: reply.commentId,
-            replyId: reply.replyId));
-
-    Navigator.pop(context);
+    final currentContext = context;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ConfirmationDialog(
+          message: 'Are you sure you want to delete this post?',
+          onYesPressed: () {
+            BlocProvider.of<ReplyCubit>(currentContext).deleteReply(
+                reply: ReplyEntity(
+                    postId: reply.postId,
+                    commentId: reply.commentId,
+                    replyId: reply.replyId));
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          onNoPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
   }
 
   _likeReply({required ReplyEntity reply}) {

@@ -6,6 +6,8 @@ import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/post/widgets/like_animation_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/confirmation_dialog.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_bottom_sheet.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:intl/intl.dart';
@@ -215,10 +217,12 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        SizedBox(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 0.30,
-          child: profileWidget(imageUrl: "${widget.post.postImageUrl}"),
+        Container(
+          constraints: const BoxConstraints(minHeight: 200.0),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: profileWidget(imageUrl: "${widget.post.postImageUrl}"),
+          ),
         ),
         AnimatedOpacity(
           duration: const Duration(milliseconds: 200),
@@ -247,59 +251,54 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
   }
 }
 
+_deletePost(BuildContext context, PostEntity post, PostCubit postCubit) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return ConfirmationDialog(
+        message: 'Are you sure you want to delete this post?',
+        onYesPressed: () {
+          BlocProvider.of<PostCubit>(context)
+              .deletePost(post: PostEntity(postId: post.postId));
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+        onNoPressed: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+      );
+    },
+  );
+}
+
 _openBottomModalSheet(
     BuildContext context, PostEntity post, PostCubit postCubit) {
-  deletePost() {
-    BlocProvider.of<PostCubit>(context)
-        .deletePost(post: PostEntity(postId: post.postId));
-    Navigator.pop(context);
-  }
-
   showModalBottomSheet(
-      backgroundColor: Colors.transparent.withOpacity(0.5),
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 150,
-          color: Colors.transparent.withOpacity(0.5),
-          child: SingleChildScrollView(
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  OptionItem(
-                    text: "Settings",
-                    onTap: () {},
-                  ),
-                  const SizedBox(height: 8),
-                  const Divider(
-                    thickness: 1,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(height: 8),
-                  OptionItem(
-                    text: "Delete Post",
-                    onTap: deletePost,
-                  ),
-                  const SizedBox(height: 7),
-                  const Divider(
-                    thickness: 1,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(height: 7),
-                  OptionItem(
-                    text: "Edit Post",
-                    onTap: () {
-                      Navigator.pushNamed(context, PageRoutes.UpdatePostPage,
-                          arguments: post);
-                    },
-                  ),
-                  const SizedBox(height: 7),
-                ],
-              ),
-            ),
+    backgroundColor: Colors.transparent.withOpacity(0.5),
+    context: context,
+    builder: (context) {
+      return CustomBottomSheet(
+        children: [
+          OptionItem(
+            text: "Settings",
+            onTap: () {},
           ),
-        );
-      });
+          OptionItem(
+            text: "Delete Post",
+            onTap: () {
+              _deletePost(context, post, postCubit);
+            },
+          ),
+          OptionItem(
+            text: "Edit Post",
+            onTap: () {
+              Navigator.pushNamed(context, PageRoutes.UpdatePostPage,
+                  arguments: post);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

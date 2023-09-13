@@ -4,12 +4,10 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
-import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/widgets/button_container_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
@@ -53,19 +51,6 @@ class _SingleUserProfileMainWidgetState
             backgroundColor: backgroundColor,
             title: Text("${singleUser.username}",
                 style: const TextStyle(color: primaryColor)),
-            actions: [
-              _currentUid == singleUser.uid
-                  ? Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: InkWell(
-                        onTap: () {
-                          _openBottomModalSheet(context, singleUser);
-                        },
-                        child: const Icon(Icons.menu, color: primaryColor),
-                      ),
-                    )
-                  : Container(),
-            ],
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -226,70 +211,5 @@ class _SingleUserProfileMainWidgetState
         child: CircularProgressIndicator(),
       );
     });
-  }
-
-  _openBottomModalSheet(BuildContext context, UserEntity singleUser) {
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent.withOpacity(0.5),
-      context: context,
-      builder: (context) {
-        return _ModalContent(user: singleUser);
-      },
-    );
-  }
-}
-
-class _ModalContent extends StatelessWidget {
-  final UserEntity user;
-
-  const _ModalContent({Key? key, required this.user}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      color: Colors.transparent.withOpacity(0.5),
-      child: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              OptionItem(
-                text: "Settings",
-                onTap: () {},
-              ),
-              const SizedBox(height: 8),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 8),
-              OptionItem(
-                text: "Edit Profile",
-                onTap: () {
-                  Navigator.pushNamed(context, PageRoutes.EditProfilePage,
-                      arguments: user);
-                },
-              ),
-              const SizedBox(height: 7),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 7),
-              OptionItem(
-                text: "Logout",
-                onTap: () {
-                  BlocProvider.of<AuthCubit>(context).loggedOut();
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, PageRoutes.SignInPage, (route) => false);
-                },
-              ),
-              const SizedBox(height: 7),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

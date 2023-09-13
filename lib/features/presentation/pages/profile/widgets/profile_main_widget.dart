@@ -5,6 +5,7 @@ import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_bottom_sheet.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 
@@ -37,7 +38,8 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
             padding: const EdgeInsets.all(10),
             child: InkWell(
               onTap: () {
-                _openBottomModalSheet(context);
+                _openBottomModalSheet(
+                    context: context, user: widget.currentUser);
               },
               child: const Icon(Icons.menu, color: primaryColor),
             ),
@@ -187,41 +189,18 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
     );
   }
 
-  _openBottomModalSheet(BuildContext context) {
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent.withOpacity(0.5),
-      context: context,
-      builder: (context) {
-        return _ModalContent(user: widget.currentUser);
-      },
-    );
-  }
-}
-
-class _ModalContent extends StatelessWidget {
-  final UserEntity user;
-
-  const _ModalContent({Key? key, required this.user}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent.withOpacity(0.5),
-      child: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+  _openBottomModalSheet(
+      {required BuildContext context, required UserEntity user}) {
+    return showModalBottomSheet(
+        backgroundColor: Colors.transparent.withOpacity(0.5),
+        context: context,
+        builder: (context) {
+          return CustomBottomSheet(
             children: [
               OptionItem(
                 text: "Settings",
                 onTap: () {},
               ),
-              const SizedBox(height: 8),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 8),
               OptionItem(
                 text: "Edit Profile",
                 onTap: () {
@@ -229,12 +208,6 @@ class _ModalContent extends StatelessWidget {
                       arguments: user);
                 },
               ),
-              const SizedBox(height: 7),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 7),
               OptionItem(
                 text: "Logout",
                 onTap: () {
@@ -243,11 +216,8 @@ class _ModalContent extends StatelessWidget {
                       context, PageRoutes.SignInPage, (route) => false);
                 },
               ),
-              const SizedBox(height: 7),
             ],
-          ),
-        ),
-      ),
-    );
+          );
+        });
   }
 }

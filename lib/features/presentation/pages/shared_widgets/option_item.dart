@@ -5,22 +5,38 @@ class OptionItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const OptionItem({
-    super.key,
+    Key? key,
     required this.text,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Text(
-          text,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
-        ),
+      child: Column(
+        children: <Widget>[
+          const Divider(
+            thickness: 1,
+            color: Colors.grey,
+          ),
+          const SizedBox(height: 5),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 100),
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                text,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
