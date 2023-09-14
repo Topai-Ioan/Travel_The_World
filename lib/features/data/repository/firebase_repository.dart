@@ -77,12 +77,15 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
       remoteDataSource.likePost(post);
 
   @override
-  Stream<List<PostEntity>> readPosts(PostEntity post) =>
-      remoteDataSource.readPosts(post);
+  Stream<List<PostEntity>> readPosts() => remoteDataSource.readPosts();
 
   @override
   Stream<List<PostEntity>> readSinglePost(String postId) =>
       remoteDataSource.readSinglePost(postId);
+  @override
+  Future<Stream<List<PostEntity>>> readPostsFromFollowedUsers(
+          UserEntity currentUser) =>
+      remoteDataSource.readPostsFromFollowedUsers(currentUser);
 
   @override
   Future<void> updatePost(PostEntity post) async =>

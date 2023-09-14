@@ -441,11 +441,27 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   }
 
   @override
-  Stream<List<PostEntity>> readPosts(PostEntity post) {
+  Stream<List<PostEntity>> readPosts() {
     final postCollection = firebaseFirestore
         .collection(FirebaseConstants.Posts)
         .orderBy("createAt", descending: true);
     return postCollection.snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map((e) => PostModel.fromSnapshot(e)).toList());
+  }
+
+  @override
+  Future<Stream<List<PostEntity>>> readPostsFromFollowedUsers(
+      UserEntity currentUser) async {
+    final followingList = List<String>.from(currentUser.following ?? []);
+    if (!followingList.contains(currentUser.uid)) {
+      followingList.add(currentUser.uid!);
+    }
+    final posts = firebaseFirestore
+        .collection(FirebaseConstants.Posts)
+        .where('creatorUid', whereIn: followingList)
+        .orderBy("createAt", descending: true);
+
+    return posts.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => PostModel.fromSnapshot(e)).toList());
   }
 

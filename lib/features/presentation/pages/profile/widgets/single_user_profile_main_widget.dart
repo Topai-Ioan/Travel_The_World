@@ -24,12 +24,17 @@ class SingleUserProfileMainWidget extends StatefulWidget {
 class _SingleUserProfileMainWidgetState
     extends State<SingleUserProfileMainWidget> {
   String _currentUid = "";
+  bool _dataLoaded = false;
 
   @override
   void initState() {
-    BlocProvider.of<GetSingleOtherUserCubit>(context)
-        .getSingleOtherUser(otherUid: widget.otherUserId);
-    BlocProvider.of<PostCubit>(context).getPosts(post: const PostEntity());
+    if (!_dataLoaded) {
+      BlocProvider.of<GetSingleOtherUserCubit>(context)
+          .getSingleOtherUser(otherUid: widget.otherUserId);
+      BlocProvider.of<PostCubit>(context).getPosts();
+      _dataLoaded = true; // Set the flag to true after loading data
+    }
+
     super.initState();
 
     di.sl<GetCurrentUidUseCase>().call().then((value) {

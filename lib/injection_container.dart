@@ -14,6 +14,7 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/com
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/create_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/delete_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/like_post_usecase.dart';
+import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_from_following_users_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_single_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_post_usecase.dart';
@@ -77,14 +78,14 @@ Future<void> init() async {
   );
 
   // Post Cubit Injection
-  sl.registerFactory(
-    () => PostCubit(
+  sl.registerFactory(() => PostCubit(
         updatePostUseCase: sl.call(),
         deletePostUseCase: sl.call(),
         likePostUseCase: sl.call(),
         createPostUseCase: sl.call(),
-        readPostUseCase: sl.call()),
-  );
+        readPostUseCase: sl.call(),
+        readPostsFromFollowingUsersUseCase: sl.call(),
+      ));
 
   sl.registerFactory(
     () => GetSinglePostCubit(readSinglePostUseCase: sl.call()),
@@ -138,6 +139,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => LikePostUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => UpdatePostUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => DeletePostUseCase(repository: sl.call()));
+  sl.registerLazySingleton(
+      () => ReadPostsFromFollowingUsersUseCase(repository: sl.call()));
   sl.registerLazySingleton(
       () => SyncProfilePictureUseCase(repository: sl.call()));
 

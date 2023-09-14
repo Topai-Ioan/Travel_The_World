@@ -21,7 +21,7 @@ class ProfileMainWidget extends StatefulWidget {
 class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   @override
   void initState() {
-    BlocProvider.of<PostCubit>(context).getPosts(post: const PostEntity());
+    BlocProvider.of<PostCubit>(context).getPosts();
     super.initState();
   }
 

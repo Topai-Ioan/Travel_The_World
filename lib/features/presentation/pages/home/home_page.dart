@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
+import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
+import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/home/widgets/single_post_card_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final UserEntity currentUser;
+  const HomePage({Key? key, required this.currentUser}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -37,7 +39,8 @@ class _HomePageState extends State<HomePage> {
         ),
         body: BlocProvider.value(
           // todo i think this stay active forever ? XD, investigate it
-          value: di.sl<PostCubit>()..getPosts(post: const PostEntity()),
+          value: di.sl<PostCubit>()
+            ..getPostsFromFollowingUsers(widget.currentUser),
           child:
               BlocBuilder<PostCubit, PostState>(builder: (context, postState) {
             if (postState is PostEmpty) {

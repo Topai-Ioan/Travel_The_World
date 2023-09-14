@@ -22,7 +22,7 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
   void initState() {
     BlocProvider.of<UserCubit>(context).getUsers(user: const UserEntity());
 
-    BlocProvider.of<PostCubit>(context).getPosts(post: const PostEntity());
+    BlocProvider.of<PostCubit>(context).getPosts();
     super.initState();
 
     _searchController.addListener(() {
