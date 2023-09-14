@@ -257,6 +257,7 @@ _openBottomModalSheet(
     BlocProvider.of<PostCubit>(context)
         .deletePost(post: PostEntity(postId: post.postId));
     Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   return showModalBottomSheet(

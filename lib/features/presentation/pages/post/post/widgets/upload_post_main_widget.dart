@@ -13,6 +13,7 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/sto
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/profile_widget.dart';
 
 class UploadPostMainWidget extends StatefulWidget {
   final UserEntity currentUser;
@@ -27,6 +28,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
   File? _image;
   final TextEditingController _descriptionController = TextEditingController();
   bool _isUploading = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -76,17 +78,11 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: SingleChildScrollView(
                 child: Column(
-                  // todo images with higher height are showing wrong
                   children: [
                     Image.file(
                       _image!,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.contain,
                     ),
-                    // SizedBox(
-                    //   height: 200,
-                    //   width: double.infinity,
-                    //   child: profileWidget(image: _image),
-                    // ),
                     const SizedBox(height: 10),
                     ProfileFormWidget(
                         title: "Description",
@@ -113,13 +109,23 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     setState(() {
       _isUploading = true;
     });
-    Map<String, String> imageInfo =
-        await di.sl<UploadImagePostUseCase>().call(_image, "Posts");
+    if (!_isSubmitting) {
+      setState(() {
+        _isSubmitting = true;
+      });
+      Map<String, String> imageInfo =
+          await di.sl<UploadImagePostUseCase>().call(_image, "Posts");
 
-    String imageUrl = imageInfo["imageUrl"]!;
-    String imageId = imageInfo["imageId"]!;
+      String imageUrl = imageInfo["imageUrl"]!;
+      String imageId = imageInfo["imageId"]!;
 
-    _createSubmitPost(imageUrl: imageUrl, imageId: imageId);
+      _createSubmitPost(imageUrl: imageUrl, imageId: imageId);
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          _isSubmitting = false;
+        });
+      });
+    }
   }
 
   _createSubmitPost({required String imageUrl, required String imageId}) {

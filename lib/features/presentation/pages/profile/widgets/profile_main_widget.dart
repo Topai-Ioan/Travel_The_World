@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
@@ -29,163 +28,162 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: backgroundColor,
-        title: Text("${widget.currentUser.username}",
-            style: const TextStyle(color: primaryColor)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: InkWell(
-              onTap: () {
-                _openBottomModalSheet(
-                    context: context, user: widget.currentUser);
-              },
-              child: const Icon(Icons.menu, color: primaryColor),
-            ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 80,
-                    height: 80,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: profileWidget(
-                          imageUrl: widget.currentUser.profileUrl),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text('${widget.currentUser.totalPosts}',
-                              style: const TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold)),
-                          sizeVertical(7),
-                          const Text('Posts',
-                              style: TextStyle(color: primaryColor))
-                        ],
-                      ),
-                      sizeHorizontal(25),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, PageRoutes.FollowersPage,
-                              arguments: widget.currentUser);
-                        },
-                        child: Column(
-                          children: [
-                            Text(
-                              "${widget.currentUser.totalFollowers}",
-                              style: const TextStyle(
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            sizeVertical(8),
-                            const Text(
-                              "Followers",
-                              style: TextStyle(color: primaryColor),
-                            )
-                          ],
-                        ),
-                      ),
-                      sizeHorizontal(25),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, PageRoutes.FollowingPage,
-                              arguments: widget.currentUser);
-                        },
-                        child: Column(
-                          children: [
-                            Text(
-                              "${widget.currentUser.totalFollowing}",
-                              style: const TextStyle(
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            sizeVertical(8),
-                            const Text(
-                              "Following",
-                              style: TextStyle(color: primaryColor),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-              sizeVertical(10),
-              Text(
-                '${widget.currentUser.name == '' ? widget.currentUser.username : widget.currentUser.name}',
-                style: const TextStyle(
-                    color: primaryColor, fontWeight: FontWeight.bold),
-              ),
-              sizeVertical(10),
-              Text(
-                '${widget.currentUser.bio}',
-                style: const TextStyle(color: primaryColor),
-              ),
-              sizeVertical(10),
-              BlocBuilder<PostCubit, PostState>(
-                builder: (context, postState) {
-                  if (postState is PostLoaded) {
-                    final posts = postState.posts
-                        .where((element) =>
-                            element.creatorUid == widget.currentUser.uid)
-                        .toList();
-                    return GridView.builder(
-                      itemCount: posts.length,
-                      physics: const ScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 5,
-                      ),
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, PageRoutes.PostDetailPage,
-                              arguments: posts[index].postId),
-                          child: SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: profileWidget(
-                              imageUrl: posts[index].postImageUrl,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  } else if (postState is PostEmpty) {
-                    return const Center(
-                      child: Text("No post yet",
-                          style: TextStyle(color: primaryColor)),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
-            ],
+      appBar: buildAppBar(),
+      body: buildProfileContent(),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      backgroundColor: backgroundColor,
+      title: Text("${widget.currentUser.username}",
+          style: const TextStyle(color: primaryColor)),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: InkWell(
+            onTap: () {
+              _openBottomModalSheet(context: context, user: widget.currentUser);
+            },
+            child: const Icon(Icons.menu, color: primaryColor),
           ),
         ),
+      ],
+    );
+  }
+
+  Widget buildProfileContent() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildUserInfo(),
+            sizeVertical(10),
+            Text(
+              '${widget.currentUser.name == '' ? widget.currentUser.username : widget.currentUser.name}',
+              style: const TextStyle(
+                  color: primaryColor, fontWeight: FontWeight.bold),
+            ),
+            sizeVertical(10),
+            Text(
+              '${widget.currentUser.bio}',
+              style: const TextStyle(color: primaryColor),
+            ),
+            sizeVertical(10),
+            buildUserPosts(),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget buildUserInfo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: 80,
+          height: 80,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: profileWidget(imageUrl: widget.currentUser.profileUrl),
+          ),
+        ),
+        buildUserStats(),
+      ],
+    );
+  }
+
+  Widget buildUserStats() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        buildStat("Posts", widget.currentUser.totalPosts.toString()),
+        sizeHorizontal(25),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, PageRoutes.FollowersPage,
+                arguments: widget.currentUser);
+          },
+          child: buildStat(
+              "Followers", widget.currentUser.totalFollowers.toString()),
+        ),
+        sizeHorizontal(25),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, PageRoutes.FollowingPage,
+                arguments: widget.currentUser);
+          },
+          child: buildStat(
+              "Following", widget.currentUser.totalFollowing.toString()),
+        ),
+      ],
+    );
+  }
+
+  Widget buildStat(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            color: primaryColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        sizeVertical(7),
+        Text(
+          label,
+          style: const TextStyle(color: primaryColor),
+        ),
+      ],
+    );
+  }
+
+  Widget buildUserPosts() {
+    return BlocBuilder<PostCubit, PostState>(
+      builder: (context, postState) {
+        if (postState is PostLoaded) {
+          final posts = postState.posts
+              .where((element) => element.creatorUid == widget.currentUser.uid)
+              .toList();
+          return GridView.builder(
+            itemCount: posts.length,
+            physics: const ScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+            ),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () => Navigator.pushNamed(
+                    context, PageRoutes.PostDetailPage,
+                    arguments: posts[index].postId),
+                child: SizedBox(
+                  width: 175,
+                  height: 175,
+                  child: profileWidget(
+                    imageUrl: posts[index].postImageUrl,
+                    boxFit: BoxFit.cover,
+                  ),
+                ),
+              );
+            },
+          );
+        } else if (postState is PostEmpty) {
+          return const Center(
+            child: Text("No post yet", style: TextStyle(color: primaryColor)),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 

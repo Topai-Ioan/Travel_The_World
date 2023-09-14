@@ -83,6 +83,7 @@ class PostCubit extends Cubit<PostState> {
   Future<void> deletePost({required PostEntity post}) async {
     try {
       await deletePostUseCase.call(post);
+      await getPosts();
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {

@@ -9,6 +9,7 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/pos
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_profile_picture.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_action_handler.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:travel_the_world/profile_widget.dart';
 
@@ -61,6 +62,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final actionHandler = ActionCooldownHandler();
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -75,13 +77,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: GestureDetector(
-              onTap: _updateUserProfileData,
+              onTap: () {
+                actionHandler.handleAction(_updateUserProfileData);
+              },
               child: const Icon(
                 Icons.done,
                 color: blueColor,
@@ -147,17 +152,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
     setState(() => _isUpdating = true);
 
     if (_image == null) {
-      await _updateUserProfile("");
+      await _updateUserProfile(""); // Asynchronous call
     } else {
       final profileUrl = await di
           .sl<UploadImageProfilePictureUseCase>()
-          .call(_image!, "ProfileImages");
+          .call(_image!, "ProfileImages"); // Asynchronous call
 
-      await _updateUserProfile(profileUrl);
-      // TODO MAKE A USECASE UpdateAllPostsFromUser where you update the profile url
-      await di.sl<SyncProfilePictureUseCase>().call(profileUrl);
-
-      //todo dont harcode string
+      await _updateUserProfile(profileUrl); // Asynchronous call
+      await di
+          .sl<SyncProfilePictureUseCase>()
+          .call(profileUrl); // Asynchronous call
     }
   }
 

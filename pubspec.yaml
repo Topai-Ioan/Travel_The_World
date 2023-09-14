@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  async: ^2.11.0
   provider: ^6.0.5
 
   #state management
