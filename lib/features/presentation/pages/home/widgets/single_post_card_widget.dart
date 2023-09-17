@@ -6,9 +6,9 @@ import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/post/widgets/like_animation_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/confirmation_dialog.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_bottom_sheet.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/confirmation_dialog.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
@@ -57,7 +57,6 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: SafeArea(
-        //todo this here was overflowing: update, it is still overflowing
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -76,9 +75,10 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                           width: 40,
                           height: 40,
                           child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(40),
                               child: profileWidget(
-                                  imageUrl: widget.post.userProfileUrl))),
+                                  imageUrl: widget.post.userProfileUrl,
+                                  boxFit: BoxFit.cover))),
                       sizeHorizontal(10),
                       Text('${widget.post.username}',
                           style: const TextStyle(
@@ -278,7 +278,7 @@ _openBottomModalSheet(
     backgroundColor: Colors.transparent.withOpacity(0.5),
     context: context,
     builder: (context) {
-      return CustomBottomSheet(
+      return CustomModalItem(
         children: [
           OptionItem(
             text: "Settings",

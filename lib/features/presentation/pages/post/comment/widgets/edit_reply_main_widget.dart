@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/credential/widgets/button_container_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 
 class EditReplyMainWidget extends StatefulWidget {
@@ -31,7 +31,7 @@ class _EditReplyMainWidgetState extends State<EditReplyMainWidget> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: appBarColor,
         title: const Text("Edit Reply"),
       ),
       body: Padding(

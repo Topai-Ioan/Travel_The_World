@@ -8,8 +8,8 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/use
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/post/widgets/like_animation_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_bottom_sheet.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
@@ -48,7 +48,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(
-                backgroundColor: backgroundColor,
+                backgroundColor: appBarColor,
                 title: const Text(
                   "Post Detail",
                   style: TextStyle(color: primaryColor),
@@ -264,7 +264,7 @@ _openBottomModalSheet(
       backgroundColor: Colors.transparent.withOpacity(0.5),
       context: context,
       builder: (context) {
-        return CustomBottomSheet(
+        return CustomModalItem(
           children: [
             OptionItem(
               text: "Settings",

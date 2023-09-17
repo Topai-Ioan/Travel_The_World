@@ -5,7 +5,7 @@ import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_single_user_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/credential/widgets/button_container_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 

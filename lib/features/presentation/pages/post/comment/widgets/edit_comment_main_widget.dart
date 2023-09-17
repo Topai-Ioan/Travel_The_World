@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/credential/widgets/button_container_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 
 class EditCommentMainWidget extends StatefulWidget {
@@ -32,7 +32,7 @@ class _EditCommentMainWidgetState extends State<EditCommentMainWidget> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: appBarColor,
         title: const Text("Edit Comment"),
       ),
       body: Padding(

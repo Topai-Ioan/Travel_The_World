@@ -7,7 +7,7 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_action_handler.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_action_handler.dart';
 import 'package:travel_the_world/profile_widget.dart';
 
 class UpdatePostMainWidget extends StatefulWidget {
@@ -58,7 +58,7 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: appBarColor,
         title: const Text("EditPost"),
         actions: [
           Padding(

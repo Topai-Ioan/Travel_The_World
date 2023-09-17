@@ -9,7 +9,7 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/pos
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_profile_picture.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_action_handler.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_action_handler.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:travel_the_world/profile_widget.dart';
 
@@ -41,7 +41,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   bool _isUpdating = false;
-
   File? _image;
 
   Future selectImage() async {
@@ -56,7 +55,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         }
       });
     } catch (e) {
-      toast("some error occured $e");
+      toast("some error occurred $e");
     }
   }
 
@@ -65,86 +64,117 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final actionHandler = ActionCooldownHandler();
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: backgroundColor,
-        title: const Text(
-          'Edit Profile',
+      appBar: buildAppBar(),
+      body: buildBody(actionHandler),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      backgroundColor: appBarColor,
+      title: const Text(
+        'Edit Profile',
+      ),
+      leading: GestureDetector(
+        child: const Icon(
+          Icons.close,
+          size: 32,
         ),
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.close,
-            size: 32,
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: GestureDetector(
+            onTap: _updateUserProfileData,
+            child: const Icon(
+              Icons.done,
+              color: primaryColor,
+              size: 32,
+            ),
           ),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          },
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
+      ],
+    );
+  }
+
+  Widget buildBody(ActionCooldownHandler actionHandler) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
+        child: Column(children: [
+          Center(
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: profileWidget(
+                    imageUrl: widget.currentUser.profileUrl,
+                    image: _image,
+                    boxFit: BoxFit.cover),
+              ),
+            ),
+          ),
+          sizeVertical(15),
+          Center(
             child: GestureDetector(
-              onTap: () {
-                actionHandler.handleAction(_updateUserProfileData);
-              },
-              child: const Icon(
-                Icons.done,
-                color: blueColor,
-                size: 32,
+              onTap: selectImage,
+              child: const Text(
+                "Change profile photo",
+                style: TextStyle(
+                    color: blueColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400),
               ),
             ),
           ),
-        ],
+          buildProfileForm(),
+          sizeVertical(10),
+          if (_isUpdating) buildUpdatingProgress()
+        ]),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(children: [
-            Center(
-              child: SizedBox(
-                width: 100,
-                height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: profileWidget(
-                      imageUrl: widget.currentUser.profileUrl, image: _image),
-                ),
-              ),
-            ),
-            sizeVertical(15),
-            Center(
-              child: GestureDetector(
-                onTap: selectImage,
-                child: const Text(
-                  "Change profile photo",
-                  style: TextStyle(
-                      color: blueColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-            ),
-            ProfileFormWidget(title: "Name", controller: _nameController),
-            ProfileFormWidget(
-                title: "Username", controller: _usernameController),
-            ProfileFormWidget(title: "Website", controller: _websiteController),
-            ProfileFormWidget(title: "Bio", controller: _bioController),
-            sizeVertical(10),
-            if (_isUpdating)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Please wait...",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  sizeHorizontal(10),
-                  const CircularProgressIndicator()
-                ],
-              )
-          ]),
+    );
+  }
+
+  Widget buildProfileForm() {
+    return Column(
+      children: [
+        ProfileFormWidget(
+            title: "Name",
+            controller: _nameController,
+            hintText: "Enter your name..."),
+        ProfileFormWidget(
+            title: "Username",
+            controller: _usernameController,
+            hintText: "Enter your new username..."),
+        ProfileFormWidget(
+          title: "Website",
+          controller: _websiteController,
+          hintText: "Enter your Website",
         ),
-      ),
+        ProfileFormWidget(
+            title: "Bio",
+            controller: _bioController,
+            hintText: "Enter your Bio..."),
+      ],
+    );
+  }
+
+  Widget buildUpdatingProgress() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Please wait...",
+          style: TextStyle(color: Colors.white),
+        ),
+        sizeHorizontal(10),
+        const CircularProgressIndicator()
+      ],
     );
   }
 
@@ -152,16 +182,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     setState(() => _isUpdating = true);
 
     if (_image == null) {
-      await _updateUserProfile(""); // Asynchronous call
+      await _updateUserProfile("");
     } else {
       final profileUrl = await di
           .sl<UploadImageProfilePictureUseCase>()
-          .call(_image!, "ProfileImages"); // Asynchronous call
+          .call(_image!, "ProfileImages");
 
-      await _updateUserProfile(profileUrl); // Asynchronous call
-      await di
-          .sl<SyncProfilePictureUseCase>()
-          .call(profileUrl); // Asynchronous call
+      await _updateUserProfile(profileUrl);
+      await di.sl<SyncProfilePictureUseCase>().call(profileUrl);
     }
   }
 
@@ -187,7 +215,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _nameController!.clear();
     });
     Navigator.pop(context);
-    // todo find another way?
-    Navigator.pop(context); // to close the modal bottom sheet
+    Navigator.pop(context);
   }
 }

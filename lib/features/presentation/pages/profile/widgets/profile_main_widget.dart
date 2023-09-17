@@ -4,8 +4,8 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_bottom_sheet.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 
 class ProfileMainWidget extends StatefulWidget {
@@ -35,7 +35,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
 
   AppBar buildAppBar() {
     return AppBar(
-      backgroundColor: backgroundColor,
+      backgroundColor: appBarColor,
       title: Text("${widget.currentUser.username}",
           style: const TextStyle(color: primaryColor)),
       actions: [
@@ -88,7 +88,8 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
           height: 80,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(40),
-            child: profileWidget(imageUrl: widget.currentUser.profileUrl),
+            child: profileWidget(
+                imageUrl: widget.currentUser.profileUrl, boxFit: BoxFit.cover),
           ),
         ),
         buildUserStats(),
@@ -169,7 +170,6 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                   height: 175,
                   child: profileWidget(
                     imageUrl: posts[index].postImageUrl,
-                    boxFit: BoxFit.cover,
                   ),
                 ),
               );
@@ -193,7 +193,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
         backgroundColor: Colors.transparent.withOpacity(0.5),
         context: context,
         builder: (context) {
-          return CustomBottomSheet(
+          return CustomModalItem(
             children: [
               OptionItem(
                 text: "Settings",

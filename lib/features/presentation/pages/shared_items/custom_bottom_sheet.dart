@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class CustomBottomSheet extends StatelessWidget {
+class CustomModalItem extends StatelessWidget {
   final List<Widget> children;
 
-  const CustomBottomSheet({
+  const CustomModalItem({
     super.key,
     required this.children,
   });

@@ -6,7 +6,7 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/use
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
-import 'package:travel_the_world/features/presentation/pages/credential/widgets/button_container_widget.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:travel_the_world/profile_widget.dart';
 
@@ -98,7 +98,8 @@ class _SingleUserProfileMainWidgetState
           height: 80,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(40),
-            child: profileWidget(imageUrl: singleUser.profileUrl),
+            child: profileWidget(
+                imageUrl: singleUser.profileUrl, boxFit: BoxFit.cover),
           ),
         ),
         buildUserStats(singleUser),
@@ -176,44 +177,41 @@ class _SingleUserProfileMainWidgetState
               .where((post) => post.creatorUid == widget.otherUserId)
               .toList();
           return Container(
-            // color: Colors.green,
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
-              child: GridView.builder(
-                  itemCount: posts.length,
-                  physics: const ScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                  ),
-                  itemBuilder: (context, index) {
-                    final postImage = GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          PageRoutes.PostDetailPage,
-                          arguments: posts[index].postId,
-                        );
-                      },
-                      child: Container(
-                        //color: Colors.redAccent,
-                        width: 175,
-                        height: 175,
-                        child: profileWidget(
-                            imageUrl: posts[index].postImageUrl,
-                            boxFit: BoxFit.cover),
+            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+            child: GridView.builder(
+                itemCount: posts.length,
+                physics: const ScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                ),
+                itemBuilder: (context, index) {
+                  final postImage = GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        PageRoutes.PostDetailPage,
+                        arguments: posts[index].postId,
+                      );
+                    },
+                    child: Container(
+                      //color: Colors.redAccent,
+                      width: 175,
+                      height: 175,
+                      child: profileWidget(
+                        imageUrl: posts[index].postImageUrl,
                       ),
-                    );
+                    ),
+                  );
 
-                    return Column(
-                      children: [
-                        postImage,
-                      ],
-                    );
-                  }),
-            ),
+                  return Column(
+                    children: [
+                      postImage,
+                    ],
+                  );
+                }),
           );
         }
         return const Center(

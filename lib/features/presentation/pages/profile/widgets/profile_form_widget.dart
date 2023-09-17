@@ -4,7 +4,14 @@ import 'package:travel_the_world/constants.dart';
 class ProfileFormWidget extends StatelessWidget {
   final TextEditingController? controller;
   final String? title;
-  const ProfileFormWidget({Key? key, this.title, this.controller})
+  final String? hintText;
+  final Color? fillColor;
+  const ProfileFormWidget(
+      {Key? key,
+      this.title,
+      this.controller,
+      this.hintText,
+      this.fillColor = const Color.fromARGB(255, 23, 23, 23)})
       : super(key: key);
 
   @override
@@ -13,16 +20,27 @@ class ProfileFormWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         sizeVertical(15),
-        Text(
-          "$title",
-          style: const TextStyle(color: primaryColor, fontSize: 16),
+        Container(
+          margin: const EdgeInsets.only(left: 8),
+          child: Text(
+            "$title",
+            style: const TextStyle(color: primaryColor, fontSize: 16),
+          ),
         ),
-        TextFormField(
-          controller: controller,
-          style: const TextStyle(color: primaryColor),
-          decoration: const InputDecoration(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            controller: controller,
+            style: const TextStyle(color: primaryColor),
+            decoration: InputDecoration(
+              labelStyle: const TextStyle(color: primaryColor),
               border: InputBorder.none,
-              labelStyle: TextStyle(color: primaryColor)),
+              filled: true,
+              hintText: "$hintText",
+              fillColor: fillColor,
+              hintStyle: const TextStyle(color: Colors.grey),
+            ),
+          ),
         ),
         Container(
           width: double.infinity,

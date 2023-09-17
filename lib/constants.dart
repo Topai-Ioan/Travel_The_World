@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+const appBarColor = Color.fromRGBO(0, 0, 0, 1.0);
 const backgroundColor = Color.fromRGBO(0, 0, 0, 1.0);
 const blueColor = Color.fromRGBO(0, 149, 246, 1);
 const primaryColor = Colors.white;

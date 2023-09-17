@@ -9,10 +9,10 @@ import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_reply_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/confirmation_dialog.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_bottom_sheet.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_text_input.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/confirmation_dialog.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_text_input.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:uuid/uuid.dart';
@@ -266,7 +266,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
         backgroundColor: Colors.transparent.withOpacity(0.5),
         context: context,
         builder: (context) {
-          return CustomBottomSheet(children: [
+          return CustomModalItem(children: [
             OptionItem(
               text: "Delete Reply",
               onTap: () {

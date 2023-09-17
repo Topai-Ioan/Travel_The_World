@@ -11,11 +11,10 @@ import 'package:travel_the_world/features/presentation/cubit/post/get_single_pos
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_comment_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/confirmation_dialog.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_action_handler.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_bottom_sheet.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_text_input.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/option_item.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/confirmation_dialog.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/custom_text_input.dart';
+import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:uuid/uuid.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
@@ -58,7 +57,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: appBarColor,
         title: const Text("Comments"),
       ),
       body: buildCommentContent(),
@@ -218,7 +217,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
       backgroundColor: Colors.transparent.withOpacity(0.5),
       context: context,
       builder: (context) {
-        return CustomBottomSheet(
+        return CustomModalItem(
           children: [
             OptionItem(
               text: "Delete Comment",

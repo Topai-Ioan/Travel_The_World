@@ -22,18 +22,17 @@ class _ButtonContainerWidgetState extends State<ButtonContainerWidget> {
   void _onButtonPressed() {
     if (isButtonActive) {
       setState(() {
-        isButtonActive = false; // Disable the button
+        isButtonActive = false;
       });
 
       if (widget.onTapListener != null) {
         widget.onTapListener!();
       }
 
-      // Enable the button after a delay (2 seconds in this case)
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
           setState(() {
-            isButtonActive = true; // Re-enable the button
+            isButtonActive = true;
           });
         }
       });

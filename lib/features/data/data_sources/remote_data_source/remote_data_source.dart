@@ -217,7 +217,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     try {
       await firebaseAuth
           .createUserWithEmailAndPassword(
-              email: user.email!, password: user.password!)
+              email: user.email!.replaceAll(" ", ""), password: user.password!)
           .then((currentUser) async {
         if (currentUser.user?.uid != null) {
           if (user.imageFile != null) {

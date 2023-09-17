@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
-import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/home/widgets/single_post_card_widget.dart';
-import 'package:travel_the_world/features/presentation/pages/shared_widgets/custom_action_handler.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
 class HomePage extends StatefulWidget {
@@ -22,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         backgroundColor: backgroundColor,
         appBar: AppBar(
-          backgroundColor: backgroundColor,
+          backgroundColor: appBarColor,
           elevation: 0,
           title: Image.asset(
             "assets/images/logo.png",
@@ -39,7 +37,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         body: BlocProvider.value(
-          // todo i think this stay active forever ? XD, investigate it
           value: di.sl<PostCubit>()
             ..getPostsFromFollowingUsers(widget.currentUser),
           child:
