@@ -38,7 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
   File? _image;
   Future selectImage() async {
     try {
-      final pickedFile = await ImagePicker.platform.getImageFromSource(
+      final pickedFile = await ImagePicker().pickImage(
         source: ImageSource.gallery,
       );
       setState(() {
@@ -199,8 +199,6 @@ class _SignUpPageState extends State<SignUpPage> {
             username: _usernameController.text,
             password: _passwordController.text,
             totalPosts: 0,
-            totalFollowers: 0,
-            totalFollowing: 0,
             followers: List.empty(),
             following: List.empty(),
             profileUrl: "",

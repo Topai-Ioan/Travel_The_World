@@ -54,8 +54,6 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
         sourcePath: _pickedFile!.path,
         compressFormat: ImageCompressFormat.png,
         compressQuality: 100,
-        maxHeight: MediaQuery.of(context).size.height.toInt(),
-        maxWidth: MediaQuery.of(context).size.width.toInt(),
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,

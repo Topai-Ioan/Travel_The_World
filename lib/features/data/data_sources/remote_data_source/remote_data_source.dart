@@ -93,34 +93,10 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       if (myFollowingList.contains(user.otherUid)) {
         userCollection.doc(user.uid).update({
           "following": FieldValue.arrayRemove([user.otherUid])
-        }).then((value) {
-          final userCollection = firebaseFirestore
-              .collection(FirebaseConstants.Users)
-              .doc(user.uid);
-
-          userCollection.get().then((value) {
-            if (value.exists) {
-              final totalFollowing = value.get('totalFollowing');
-              userCollection.update({"totalFollowing": totalFollowing - 1});
-              return;
-            }
-          });
         });
       } else {
         userCollection.doc(user.uid).update({
           "following": FieldValue.arrayUnion([user.otherUid])
-        }).then((value) {
-          final userCollection = firebaseFirestore
-              .collection(FirebaseConstants.Users)
-              .doc(user.uid);
-
-          userCollection.get().then((value) {
-            if (value.exists) {
-              final totalFollowing = value.get('totalFollowing');
-              userCollection.update({"totalFollowing": totalFollowing + 1});
-              return;
-            }
-          });
         });
       }
 
@@ -128,34 +104,10 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       if (otherUserFollowersList.contains(user.uid)) {
         userCollection.doc(user.otherUid).update({
           "followers": FieldValue.arrayRemove([user.uid])
-        }).then((value) {
-          final userCollection = firebaseFirestore
-              .collection(FirebaseConstants.Users)
-              .doc(user.otherUid);
-
-          userCollection.get().then((value) {
-            if (value.exists) {
-              final totalFollowers = value.get('totalFollowers');
-              userCollection.update({"totalFollowers": totalFollowers - 1});
-              return;
-            }
-          });
         });
       } else {
         userCollection.doc(user.otherUid).update({
           "followers": FieldValue.arrayUnion([user.uid])
-        }).then((value) {
-          final userCollection = firebaseFirestore
-              .collection(FirebaseConstants.Users)
-              .doc(user.otherUid);
-
-          userCollection.get().then((value) {
-            if (value.exists) {
-              final totalFollowers = value.get('totalFollowers');
-              userCollection.update({"totalFollowers": totalFollowers + 1});
-              return;
-            }
-          });
         });
       }
     }
@@ -265,14 +217,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
       userInformation['name'] = user.name;
     }
 
-    if (user.totalFollowing != null) {
-      userInformation['totalFollowing'] = user.totalFollowing;
-    }
-
-    if (user.totalFollowers != null) {
-      userInformation['totalFollowers'] = user.totalFollowers;
-    }
-
     if (user.totalPosts != null) {
       userInformation['totalPosts'] = user.totalPosts;
     }
@@ -361,7 +305,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         postCollection.doc(post.postId).update(newPost);
       }
     } catch (e) {
-      print("some error occured $e");
+      toast("Some error occurred $e");
     }
   }
 
@@ -395,10 +339,10 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
             .child(imageId);
         await storageRef.delete();
       } else {
-        print("Post does not exist.");
+        toast("Post does not exist.");
       }
     } catch (e) {
-      print("Some error occurred: $e");
+      toast("Some error occurred: $e");
     }
   }
 
@@ -519,7 +463,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         });
       }
     } catch (e) {
-      print("some error occured $e");
+      toast("some error occured $e");
     }
   }
 
@@ -543,7 +487,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         });
       });
     } catch (e) {
-      print("some error occured $e");
+      toast("some error occured $e");
     }
   }
 
@@ -632,7 +576,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         replyCollection.doc(reply.replyId).update(newReply);
       }
     } catch (e) {
-      print("some error occured $e");
+      toast("some error occured $e");
     }
   }
 
@@ -656,7 +600,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
         });
       });
     } catch (e) {
-      print("some error occured $e");
+      toast("some error occured $e");
     }
   }
 

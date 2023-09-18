@@ -118,7 +118,12 @@ class _SingleUserProfileMainWidgetState
             Navigator.pushNamed(context, PageRoutes.FollowersPage,
                 arguments: singleUser);
           },
-          child: buildStat("Followers", singleUser.totalFollowers.toString()),
+          child: buildStat(
+            "Followers",
+            singleUser.followers != null
+                ? "${singleUser.followers!.length}"
+                : "0",
+          ),
         ),
         sizeHorizontal(25),
         GestureDetector(
@@ -126,7 +131,12 @@ class _SingleUserProfileMainWidgetState
             Navigator.pushNamed(context, PageRoutes.FollowingPage,
                 arguments: singleUser);
           },
-          child: buildStat("Following", singleUser.totalFollowing.toString()),
+          child: buildStat(
+            "Following",
+            singleUser.following != null
+                ? "${singleUser.following!.length}"
+                : "0",
+          ),
         ),
       ],
     );
@@ -196,8 +206,7 @@ class _SingleUserProfileMainWidgetState
                         arguments: posts[index].postId,
                       );
                     },
-                    child: Container(
-                      //color: Colors.redAccent,
+                    child: SizedBox(
                       width: 175,
                       height: 175,
                       child: profileWidget(

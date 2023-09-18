@@ -43,5 +43,6 @@ class ImageHelper {
 
       return File(croppedFile.path);
     }
+    return null;
   }
 }

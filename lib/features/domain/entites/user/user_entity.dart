@@ -12,8 +12,6 @@ class UserEntity extends Equatable {
   final String? profileUrl;
   final List? followers;
   final List? following;
-  final num? totalFollowers;
-  final num? totalFollowing;
   final num? totalPosts;
 
   // will not going to store in DB
@@ -32,8 +30,6 @@ class UserEntity extends Equatable {
     this.profileUrl,
     this.followers,
     this.following,
-    this.totalFollowers,
-    this.totalFollowing,
     this.password,
     this.otherUid,
     this.totalPosts,
@@ -50,8 +46,6 @@ class UserEntity extends Equatable {
         profileUrl,
         followers,
         following,
-        totalFollowers,
-        totalFollowing,
         password,
         otherUid,
         totalPosts,

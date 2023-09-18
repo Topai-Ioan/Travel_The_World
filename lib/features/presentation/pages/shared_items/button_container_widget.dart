@@ -13,10 +13,10 @@ class ButtonContainerWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ButtonContainerWidgetState createState() => _ButtonContainerWidgetState();
+  ButtonContainerWidgetState createState() => ButtonContainerWidgetState();
 }
 
-class _ButtonContainerWidgetState extends State<ButtonContainerWidget> {
+class ButtonContainerWidgetState extends State<ButtonContainerWidget> {
   bool isButtonActive = true;
 
   void _onButtonPressed() {

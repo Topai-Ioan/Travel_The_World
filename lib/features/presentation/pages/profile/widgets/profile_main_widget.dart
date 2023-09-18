@@ -110,7 +110,9 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
           },
           child: buildStat(
             "Followers",
-            widget.currentUser.followers?.length.toString() ?? 0.toString(),
+            (widget.currentUser.followers != null)
+                ? "${widget.currentUser.followers!.length}"
+                : "0",
           ),
         ),
         sizeHorizontal(25),
@@ -120,9 +122,10 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                 arguments: widget.currentUser);
           },
           child: buildStat(
-            //TODO delete total following and followers in models
             "Following",
-            widget.currentUser.following?.length.toString() ?? 0.toString(),
+            (widget.currentUser.following != null)
+                ? "${widget.currentUser.following!.length}"
+                : "0",
           ),
         ),
       ],

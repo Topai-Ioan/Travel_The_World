@@ -38,13 +38,11 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
   bool _isUploading = false;
   Future selectImage() async {
     try {
-      final pickedFile = await ImagePicker.platform
-          .getImageFromSource(source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       setState(() {
         if (pickedFile != null) {
           _image = File(pickedFile.path);
-        } else {
-          print("no image has been selected");
         }
       });
     } catch (e) {
