@@ -109,7 +109,9 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                 arguments: widget.currentUser);
           },
           child: buildStat(
-              "Followers", widget.currentUser.totalFollowers.toString()),
+            "Followers",
+            widget.currentUser.followers?.length.toString() ?? 0.toString(),
+          ),
         ),
         sizeHorizontal(25),
         GestureDetector(
@@ -118,7 +120,10 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                 arguments: widget.currentUser);
           },
           child: buildStat(
-              "Following", widget.currentUser.totalFollowing.toString()),
+            //TODO delete total following and followers in models
+            "Following",
+            widget.currentUser.following?.length.toString() ?? 0.toString(),
+          ),
         ),
       ],
     );

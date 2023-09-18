@@ -42,9 +42,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
               website: user.website,
               profileUrl: profileUrl,
               username: user.username,
-              totalFollowers: user.totalFollowers,
               followers: user.followers,
-              totalFollowing: user.totalFollowing,
               totalPosts: user.totalPosts)
           .toJson();
 

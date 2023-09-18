@@ -13,8 +13,6 @@ class UserModel extends UserEntity {
   final String? profileUrl;
   final List? followers;
   final List? following;
-  final num? totalFollowers;
-  final num? totalFollowing;
   final num? totalPosts;
 
   const UserModel({
@@ -27,14 +25,10 @@ class UserModel extends UserEntity {
     this.profileUrl,
     this.followers,
     this.following,
-    this.totalFollowers,
-    this.totalFollowing,
     this.totalPosts,
   }) : super(
           uid: uid,
-          totalFollowing: totalFollowing,
           followers: followers,
-          totalFollowers: totalFollowers,
           username: username,
           profileUrl: profileUrl,
           website: website,
@@ -54,8 +48,6 @@ class UserModel extends UserEntity {
       name: snapshot['name'],
       bio: snapshot['bio'],
       username: snapshot['username'],
-      totalFollowers: snapshot['totalFollowers'],
-      totalFollowing: snapshot['totalFollowing'],
       totalPosts: snapshot['totalPosts'],
       website: snapshot['website'],
       profileUrl: snapshot['profileUrl'],
