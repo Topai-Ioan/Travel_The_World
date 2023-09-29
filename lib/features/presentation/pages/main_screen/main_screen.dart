@@ -112,8 +112,8 @@ class CustomCupertinoTabBar extends StatelessWidget {
       ],
       currentIndex: currentIndex,
       onTap: onTap,
-      activeColor: blueColor, // Highlighted color
-      inactiveColor: primaryColor, // Inactive color
+      activeColor: blueColor,
+      inactiveColor: primaryColor,
     );
   }
 }

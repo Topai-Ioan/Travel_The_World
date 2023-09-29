@@ -128,7 +128,8 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                         Navigator.pushNamed(context, PageRoutes.LikeListPage,
                             arguments: widget.post);
                       },
-                      child: Text('${widget.post.totalLikes} ',
+                      child: Text(
+                          '${widget.post.likes != null ? widget.post.likes!.length : 0}',
                           style: const TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.bold,

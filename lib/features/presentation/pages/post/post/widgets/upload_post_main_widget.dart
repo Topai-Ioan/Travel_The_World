@@ -362,7 +362,6 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
           postId: imageId,
           postImageUrl: imageUrl,
           totalComments: 0,
-          totalLikes: 0,
           username: widget.currentUser.username,
           userProfileUrl: widget.currentUser.profileUrl,
           description: _descriptionController.text,

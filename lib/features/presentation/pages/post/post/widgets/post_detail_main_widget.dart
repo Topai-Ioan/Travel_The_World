@@ -38,177 +38,200 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
     super.initState();
   }
 
+  String formatTimeAgo(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inMinutes < 1) {
+      return 'a few seconds ago';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} minutes ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hours ago';
+    } else {
+      return DateFormat("dd/MMM/yyyy").format(dateTime);
+    }
+  }
+
   bool _isLikeAnimating = false;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetSinglePostCubit, GetSinglePostState>(
-      builder: (context, getSinglePostState) {
-        if (getSinglePostState is GetSinglePostLoaded) {
-          final singlePost = getSinglePostState.post;
-          return SafeArea(
-            child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: appBarColor,
-                title: const Text(
-                  "Post Detail",
-                  style: TextStyle(color: primaryColor),
-                ),
-              ),
-              backgroundColor: backgroundColor,
-              body: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: profileWidget(
-                                        imageUrl: singlePost.userProfileUrl))),
-                            sizeHorizontal(10),
-                            Text('${singlePost.username}',
-                                style: const TextStyle(
+    return BlocBuilder<PostCubit, PostState>(
+      builder: (context, postState) {
+        return BlocBuilder<GetSinglePostCubit, GetSinglePostState>(
+          builder: (context, getSinglePostState) {
+            if (getSinglePostState is GetSinglePostLoaded) {
+              final singlePost = getSinglePostState.post;
+              return SafeArea(
+                child: Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: appBarColor,
+                    title: const Text(
+                      "Post Detail",
+                      style: TextStyle(color: primaryColor),
+                    ),
+                  ),
+                  backgroundColor: backgroundColor,
+                  body: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          child: profileWidget(
+                                              imageUrl:
+                                                  singlePost.userProfileUrl))),
+                                  sizeHorizontal(10),
+                                  Text('${singlePost.username}',
+                                      style: const TextStyle(
+                                          color: primaryColor,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                              if (singlePost.creatorUid == _currentUid)
+                                GestureDetector(
+                                  onTap: () {
+                                    _openBottomModalSheet(context, singlePost,
+                                        BlocProvider.of<PostCubit>(context));
+                                  },
+                                  child: const Icon(Icons.more_vert_rounded,
+                                      color: primaryColor),
+                                )
+                            ],
+                          ),
+                          sizeVertical(10),
+                          GestureDetector(
+                            onDoubleTap: () {
+                              _likePost();
+                              setState(() {
+                                _isLikeAnimating = true;
+                              });
+                            },
+                            child: _animation(singlePost),
+                          ),
+                          sizeVertical(10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      _likePost();
+                                      setState(() {
+                                        _isLikeAnimating = true;
+                                      });
+                                    },
+                                    child: Icon(
+                                      singlePost.likes!.contains(_currentUid)
+                                          ? Icons.favorite
+                                          : Icons.favorite_outline,
+                                      color: singlePost.likes!
+                                              .contains(_currentUid)
+                                          ? Colors.red
+                                          : primaryColor,
+                                    ),
+                                  ),
+                                  sizeHorizontal(10),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        PageRoutes.CommentPage,
+                                        arguments: AppEntity(
+                                            uid: _currentUid,
+                                            postId: singlePost.postId),
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.comment_rounded,
+                                      color: primaryColor,
+                                    ),
+                                  ),
+                                  sizeHorizontal(10),
+                                  const Icon(
+                                    Icons.send,
                                     color: primaryColor,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        singlePost.creatorUid == _currentUid
-                            ? GestureDetector(
-                                onTap: () {
-                                  _openBottomModalSheet(context, singlePost,
-                                      BlocProvider.of<PostCubit>(context));
-                                },
-                                child: const Icon(Icons.more_vert_rounded,
-                                    color: primaryColor),
-                              )
-                            : const SizedBox(
-                                width: 0,
-                                height: 0,
+                                  ),
+                                  sizeHorizontal(10),
+                                ],
                               ),
-                      ],
-                    ),
-                    sizeVertical(10),
-                    GestureDetector(
-                      onDoubleTap: () {
-                        _likePost();
-                        setState(() {
-                          _isLikeAnimating = true;
-                        });
-                      },
-                      child: _animation(singlePost),
-                    ),
-                    sizeVertical(10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                _likePost();
-                              },
-                              child: Icon(
-                                singlePost.likes!.contains(_currentUid)
-                                    ? Icons.favorite
-                                    : Icons.favorite_outline,
-                                color: singlePost.likes!.contains(_currentUid)
-                                    ? Colors.red
-                                    : primaryColor,
+                              const Icon(Icons.bookmark_border_rounded,
+                                  color: primaryColor),
+                            ],
+                          ),
+                          sizeVertical(10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('${singlePost.likes!.length} likes',
+                                  style: const TextStyle(
+                                      color: greenColor,
+                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                DateFormat("dd/MMM/yyyy")
+                                    .format(singlePost.createAt!.toDate()),
+                                style: const TextStyle(color: darkGreyColor),
                               ),
-                            ),
-                            //if (_isLikedButtonPressed) Visibility(child: _animation()),
-                            sizeHorizontal(10),
-                            GestureDetector(
+                            ],
+                          ),
+                          sizeVertical(10),
+                          Row(
+                            children: [
+                              Text("${singlePost.username}",
+                                  style: const TextStyle(
+                                      color: primaryColor,
+                                      fontWeight: FontWeight.w600)),
+                              sizeHorizontal(10),
+                              Text(
+                                "${singlePost.description}",
+                                style: const TextStyle(color: primaryColor),
+                              ),
+                            ],
+                          ),
+                          sizeVertical(10),
+                          GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(
-                                  context,
-                                  PageRoutes.CommentPage,
-                                  arguments: AppEntity(
-                                      uid: _currentUid,
-                                      postId: singlePost.postId),
-                                );
+                                    context, PageRoutes.CommentPage,
+                                    arguments: AppEntity(
+                                        uid: _currentUid,
+                                        postId: singlePost.postId));
                               },
-                              child: const Icon(
-                                Icons.comment_rounded,
-                                color: primaryColor,
-                              ),
-                            ),
-                            sizeHorizontal(10),
-                            const Icon(
-                              Icons.send,
-                              color: primaryColor,
-                            ),
-                            sizeHorizontal(10),
-                          ],
-                        ),
-                        const Icon(Icons.bookmark_border_rounded,
-                            color: primaryColor),
-                      ],
+                              child: Text(
+                                "View all ${singlePost.totalComments} comments",
+                                style: const TextStyle(color: darkGreyColor),
+                              )),
+                          sizeVertical(10),
+                        ],
+                      ),
                     ),
-                    sizeVertical(10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${singlePost.totalLikes} likes',
-                            style: const TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.bold)),
-                        Text(
-                          DateFormat("dd/MMM/yyyy")
-                              .format(singlePost.createAt!.toDate()),
-                          style: const TextStyle(color: darkGreyColor),
-                        ),
-                      ],
-                    ),
-                    sizeVertical(10),
-                    Row(
-                      children: [
-                        Text("${singlePost.username}",
-                            style: const TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.w600)),
-                        sizeHorizontal(10),
-                        Text(
-                          "${singlePost.description}",
-                          style: const TextStyle(color: primaryColor),
-                        ),
-                      ],
-                    ),
-                    sizeVertical(10),
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, PageRoutes.CommentPage,
-                              arguments: AppEntity(
-                                  uid: _currentUid, postId: singlePost.postId));
-                        },
-                        child: Text(
-                          "View all ${singlePost.totalComments} comments",
-                          style: const TextStyle(color: darkGreyColor),
-                        )),
-                    sizeVertical(10),
-                  ],
+                  ),
                 ),
+              );
+            }
+            return const Scaffold(
+              body: Row(
+                children: [
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
               ),
-            ),
-          );
-        }
-        return const Scaffold(
-          body: Row(
-            children: [
-              //Text("Loading...", style: TextStyle(color: Colors.white)),
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -218,10 +241,11 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width * 0.8,
-          child: profileWidget(imageUrl: "${singlePost.postImageUrl}"),
+        Container(
+          constraints: const BoxConstraints(minHeight: 200.0),
+          child: SizedBox(
+            child: profileWidget(imageUrl: "${singlePost.postImageUrl}"),
+          ),
         ),
         AnimatedOpacity(
           duration: const Duration(milliseconds: 200),

@@ -9,13 +9,14 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<PostCubit>.value(
-          value: di.sl<PostCubit>(),
-        ),
-      ],
-      child: const SearchMainWidget(),
-    );
+    return const SearchMainWidget();
+    // return MultiBlocProvider(
+    //   providers: [
+    //     BlocProvider<PostCubit>.value(
+    //       value: di.sl<PostCubit>(),
+    //     ),
+    //   ],
+    //   child: const SearchMainWidget(),
+    // );
   }
 }

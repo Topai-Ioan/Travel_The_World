@@ -274,7 +274,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     final newPost = PostModel(
             userProfileUrl: post.userProfileUrl,
             username: post.username,
-            totalLikes: 0,
             totalComments: 0,
             postImageUrl: post.postImageUrl,
             postId: post.postId,
@@ -357,16 +356,13 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     //todo dont hardcode strings
     if (postRef.exists) {
       List likes = postRef.get("likes");
-      final totalLikes = postRef.get("totalLikes");
       if (likes.contains(currentUid)) {
         postCollection.doc(post.postId).update({
           "likes": FieldValue.arrayRemove([currentUid]),
-          "totalLikes": totalLikes - 1
         });
       } else {
         postCollection.doc(post.postId).update({
           "likes": FieldValue.arrayUnion([currentUid]),
-          "totalLikes": totalLikes + 1
         });
       }
     }
