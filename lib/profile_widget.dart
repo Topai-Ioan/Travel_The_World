@@ -19,7 +19,12 @@ Widget profileWidget({
         imageUrl: imageUrl,
         fit: boxFit, // Use the provided BoxFit directly
         progressIndicatorBuilder: (context, url, downloadProgress) {
-          return const CircularProgressIndicator();
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
+              child: const CircularProgressIndicator(),
+            ),
+          );
         },
         errorWidget: (context, url, error) => Image.asset(
           'assets/images/profile_default.png',

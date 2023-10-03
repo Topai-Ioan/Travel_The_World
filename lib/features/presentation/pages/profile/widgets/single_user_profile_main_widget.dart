@@ -64,8 +64,11 @@ class _SingleUserProfileMainWidgetState
             body: buildProfileContent(singleUser),
           );
         }
-        return const Center(
-          child: CircularProgressIndicator(),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
+            child: const CircularProgressIndicator(),
+          ),
         );
       },
     );
@@ -223,8 +226,11 @@ class _SingleUserProfileMainWidgetState
                 }),
           );
         }
-        return const Center(
-          child: CircularProgressIndicator(),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
+            child: const CircularProgressIndicator(),
+          ),
         );
       },
     );

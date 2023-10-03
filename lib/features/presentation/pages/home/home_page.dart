@@ -51,7 +51,13 @@ class _HomePageState extends State<HomePage> {
               );
             }
             if (postState is PostLoading) {
-              return const CircularProgressIndicator();
+              return Center(
+                child: ConstrainedBox(
+                  constraints:
+                      const BoxConstraints(maxHeight: 15, maxWidth: 15),
+                  child: const CircularProgressIndicator(),
+                ),
+              );
             }
             if (postState is PostFailure) {
               toast("some error occur");
@@ -67,7 +73,8 @@ class _HomePageState extends State<HomePage> {
                   });
             }
             return const Center(
-              child: CircularProgressIndicator(),
+              child: SizedBox(
+                  height: 15, width: 15, child: CircularProgressIndicator()),
             );
           }),
         ));

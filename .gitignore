@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 android/app/google-services.json
+firestore.rules
+firebase.json
+firestore.indexes.json
+.firebaserc

@@ -188,8 +188,11 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
             child: Text("No post yet", style: TextStyle(color: primaryColor)),
           );
         }
-        return const Center(
-          child: CircularProgressIndicator(),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
+            child: const CircularProgressIndicator(),
+          ),
         );
       },
     );

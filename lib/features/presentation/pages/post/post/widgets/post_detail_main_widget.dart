@@ -222,12 +222,16 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                 ),
               );
             }
-            return const Scaffold(
+            return Scaffold(
               body: Row(
                 children: [
                   Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                    child: ConstrainedBox(
+                      constraints:
+                          const BoxConstraints(maxHeight: 15, maxWidth: 15),
+                      child: const CircularProgressIndicator(),
+                    ),
+                  )
                 ],
               ),
             );
