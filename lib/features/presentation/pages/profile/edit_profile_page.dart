@@ -12,6 +12,7 @@ import 'package:travel_the_world/features/presentation/pages/profile/widgets/pro
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_action_handler.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class EditProfilePage extends StatefulWidget {
   final UserEntity currentUser;
@@ -31,13 +32,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   void initState() {
+    super.initState();
     _nameController = TextEditingController(text: widget.currentUser.name);
     _usernameController =
         TextEditingController(text: widget.currentUser.username);
     _websiteController =
         TextEditingController(text: widget.currentUser.website);
     _bioController = TextEditingController(text: widget.currentUser.bio);
-    super.initState();
   }
 
   bool _isUpdating = false;
@@ -180,28 +181,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
     setState(() => _isUpdating = true);
 
     if (_image == null) {
-      await _updateUserProfile("");
+      await _updateUserData();
     } else {
       final profileUrl = await di
           .sl<UploadImageProfilePictureUseCase>()
           .call(_image!, "ProfileImages");
 
-      await _updateUserProfile(profileUrl);
+      await _updateUserProfilePictureAndData(profileUrl: profileUrl);
       await di.sl<SyncProfilePictureUseCase>().call(profileUrl);
     }
   }
 
-  _updateUserProfile(String profileUrl) {
+  _updateUserProfilePictureAndData({required String profileUrl}) async {
+    BlocProvider.of<UserCubit>(context).updateUser(
+      user: UserModel(profileUrl: profileUrl),
+    );
+
+    await _updateUserData();
+  }
+
+  _updateUserData() {
     BlocProvider.of<UserCubit>(context)
         .updateUser(
-            user: UserEntity(
-                uid: widget.currentUser.uid,
-                username: _usernameController!.text,
-                bio: _bioController!.text,
-                website: _websiteController!.text,
-                name: _nameController!.text,
-                profileUrl: profileUrl))
-        .then((value) => _clear());
+          user: UserModel(
+              username: _usernameController!.text,
+              bio: _bioController!.text,
+              website: _websiteController!.text,
+              name: _nameController!.text),
+        )
+        .then(
+          (value) => _clear(),
+        );
   }
 
   _clear() {

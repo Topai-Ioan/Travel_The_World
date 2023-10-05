@@ -10,15 +10,15 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class UploadPostMainWidget extends StatefulWidget {
-  final UserEntity currentUser;
+  final UserModel currentUser;
   const UploadPostMainWidget({Key? key, required this.currentUser})
       : super(key: key);
 

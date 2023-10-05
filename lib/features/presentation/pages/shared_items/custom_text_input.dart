@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class CustomCommentSection extends StatelessWidget {
-  final UserEntity currentUser;
+  final UserModel currentUser;
   final String hintText;
   final TextEditingController descriptionController;
-  final void Function(UserEntity) createComment;
+  final void Function(UserModel) createComment;
 
   const CustomCommentSection({
     super.key,

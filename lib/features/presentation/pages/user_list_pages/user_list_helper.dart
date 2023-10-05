@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_single_user_usecase.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/services/firestore/user_service.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class UserList extends StatelessWidget {
   final List<dynamic> userList;
@@ -27,8 +27,8 @@ class UserList extends StatelessWidget {
         itemCount: userList.length,
         itemBuilder: (context, index) {
           final String userId = userList[index]; // Cast each element to String
-          return StreamBuilder<List<UserEntity>>(
-            stream: di.sl<GetSingleUserUseCase>().call(userId),
+          return StreamBuilder<List<UserModel>>(
+            stream: UserService().getUser(uid: userId),
             builder: (context, snapshot) {
               if (snapshot.hasData == false) {
                 return const CircularProgressIndicator();
@@ -62,7 +62,7 @@ class UserList extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "${singleUserData.username}",
+                          singleUserData.username,
                           style: const TextStyle(
                             color: primaryColor,
                             fontSize: 15,

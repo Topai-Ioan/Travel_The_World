@@ -6,22 +6,6 @@ class UserUseCases {
 
   UserUseCases({required this.repository});
 
-  Future<void> createUser(UserEntity user, String profileUrl) {
-    return repository.createUser(user, profileUrl);
-  }
-
-  Future<String> getCurrentUid() {
-    return repository.getCurrentUid();
-  }
-
-  Stream<List<UserEntity>> getSingleUser(String uid) {
-    return repository.getSingleUser(uid);
-  }
-
-  Stream<List<UserEntity>> getUsers(UserEntity userEntity) {
-    return repository.getUsers(userEntity);
-  }
-
   Future<bool> isSignIn() {
     return repository.isSignIn();
   }
@@ -32,9 +16,5 @@ class UserUseCases {
 
   Future<void> signUpUser(UserEntity userEntity) {
     return repository.signUpUser(userEntity);
-  }
-
-  Future<void> updateUser(UserEntity userEntity) {
-    return repository.updateUser(userEntity);
   }
 }

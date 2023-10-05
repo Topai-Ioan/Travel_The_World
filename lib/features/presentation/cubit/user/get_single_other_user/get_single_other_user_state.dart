@@ -11,7 +11,7 @@ class GetSingleOtherUserInitial extends GetSingleOtherUserState {}
 class GetSingleOtherUserLoading extends GetSingleOtherUserState {}
 
 class GetSingleOtherUserLoaded extends GetSingleOtherUserState {
-  final UserEntity otherUser;
+  final UserModel otherUser;
 
   const GetSingleOtherUserLoaded({required this.otherUser});
   @override

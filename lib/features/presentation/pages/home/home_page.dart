@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/home/widgets/single_post_card_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class HomePage extends StatefulWidget {
-  final UserEntity currentUser;
+  final UserModel currentUser;
   const HomePage({Key? key, required this.currentUser}) : super(key: key);
 
   @override
@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         body: BlocProvider.value(
-          value: di.sl<PostCubit>()
-            ..getPostsFromFollowingUsers(widget.currentUser),
+          value: di.sl<PostCubit>()..getPosts(),
+          //..getPostsFromFollowingUsers(widget.currentUser),
           child:
               BlocBuilder<PostCubit, PostState>(builder: (context, postState) {
             if (postState is PostEmpty) {

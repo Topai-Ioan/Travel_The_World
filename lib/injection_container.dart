@@ -26,17 +26,10 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/rep
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/update_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_profile_picture.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/create_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/follow_unfollow_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_single_other_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_single_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_users_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/is_sign_in_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_in_user_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_out_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_up_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/update_user_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
@@ -54,7 +47,6 @@ Future<void> init() async {
     () => AuthCubit(
       signOutUseCase: sl.call(),
       isSignInUseCase: sl.call(),
-      getCurrentUidUseCase: sl.call(),
     ),
   );
   sl.registerFactory(
@@ -63,19 +55,9 @@ Future<void> init() async {
       signInUserUseCase: sl.call(),
     ),
   );
-  sl.registerFactory(
-    () => UserCubit(
-      updateUserUseCase: sl.call(),
-      getUsersUseCase: sl.call(),
-      followUnFollowUseCase: sl.call(),
-    ),
-  );
-  sl.registerFactory(
-    () => GetSingleUserCubit(getSingleUserUseCase: sl.call()),
-  );
-  sl.registerFactory(
-    () => GetSingleOtherUserCubit(getSingleOtherUserUseCase: sl.call()),
-  );
+  sl.registerFactory<UserCubit>(() => UserCubit());
+  sl.registerFactory<GetSingleUserCubit>(() => GetSingleUserCubit());
+  sl.registerFactory<GetSingleOtherUserCubit>(() => GetSingleOtherUserCubit());
 
   // Post Cubit Injection
   sl.registerFactory(() => PostCubit(
@@ -116,16 +98,8 @@ Future<void> init() async {
   // User
   sl.registerLazySingleton(() => SignOutUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => IsSignInUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => GetCurrentUidUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => SignUpUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => SignInUserUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UpdateUserUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => GetUsersUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => CreateUserUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => GetSingleUserUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => FollowUnFollowUseCase(repository: sl.call()));
-  sl.registerLazySingleton(
-      () => GetSingleOtherUserUseCase(repository: sl.call()));
 
   // Cloud Storage
   sl.registerLazySingleton(

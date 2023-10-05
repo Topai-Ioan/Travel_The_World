@@ -4,14 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/post/widgets/like_animation_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_bottom_sheet.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/services/auth_service.dart';
 
 class PostDetailMainWidget extends StatefulWidget {
   final String postId;
@@ -30,10 +29,9 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
     BlocProvider.of<GetSinglePostCubit>(context)
         .getSinglePost(postId: widget.postId);
 
-    di.sl<GetCurrentUidUseCase>().call().then((value) {
-      setState(() {
-        _currentUid = value;
-      });
+    final currentUid = AuthService().currentUserId!;
+    setState(() {
+      _currentUid = currentUid;
     });
     super.initState();
   }

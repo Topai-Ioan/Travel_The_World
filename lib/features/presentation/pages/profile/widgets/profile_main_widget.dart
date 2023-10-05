@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_bottom_sheet.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class ProfileMainWidget extends StatefulWidget {
-  final UserEntity currentUser;
+  final UserModel currentUser;
   const ProfileMainWidget({Key? key, required this.currentUser})
       : super(key: key);
 
@@ -36,7 +36,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   AppBar buildAppBar() {
     return AppBar(
       backgroundColor: appBarColor,
-      title: Text("${widget.currentUser.username}",
+      title: Text(widget.currentUser.username,
           style: const TextStyle(color: primaryColor)),
       actions: [
         Padding(
@@ -62,13 +62,15 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
             buildUserInfo(),
             sizeVertical(10),
             Text(
-              '${widget.currentUser.name == '' ? widget.currentUser.username : widget.currentUser.name}',
+              widget.currentUser.name == ''
+                  ? widget.currentUser.username
+                  : widget.currentUser.name,
               style: const TextStyle(
                   color: primaryColor, fontWeight: FontWeight.bold),
             ),
             sizeVertical(10),
             Text(
-              '${widget.currentUser.bio}',
+              widget.currentUser.bio,
               style: const TextStyle(color: primaryColor),
             ),
             sizeVertical(10),
@@ -108,12 +110,8 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
             Navigator.pushNamed(context, PageRoutes.FollowersPage,
                 arguments: widget.currentUser);
           },
-          child: buildStat(
-            "Followers",
-            (widget.currentUser.followers != null)
-                ? "${widget.currentUser.followers!.length}"
-                : "0",
-          ),
+          child:
+              buildStat("Followers", "${widget.currentUser.followers.length}"),
         ),
         sizeHorizontal(25),
         GestureDetector(
@@ -121,12 +119,8 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
             Navigator.pushNamed(context, PageRoutes.FollowingPage,
                 arguments: widget.currentUser);
           },
-          child: buildStat(
-            "Following",
-            (widget.currentUser.following != null)
-                ? "${widget.currentUser.following!.length}"
-                : "0",
-          ),
+          child:
+              buildStat("Following", "${widget.currentUser.following.length}"),
         ),
       ],
     );
@@ -199,7 +193,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   }
 
   _openBottomModalSheet(
-      {required BuildContext context, required UserEntity user}) {
+      {required BuildContext context, required UserModel user}) {
     return showModalBottomSheet(
         backgroundColor: Colors.transparent.withOpacity(0.5),
         context: context,

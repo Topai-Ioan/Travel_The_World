@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/services/auth_service.dart';
 
 class SingleReplyWidget extends StatefulWidget {
   final ReplyEntity reply;
@@ -26,10 +25,9 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
 
   @override
   void initState() {
-    di.sl<GetCurrentUidUseCase>().call().then((value) {
-      setState(() {
-        _currentUid = value;
-      });
+    final currentUserId = AuthService().currentUserId!;
+    setState(() {
+      _currentUid = currentUserId;
     });
     super.initState();
   }

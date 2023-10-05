@@ -12,7 +12,7 @@ class GetSingleUserInitial extends GetSingleUserState {}
 class GetSingleUserLoading extends GetSingleUserState {}
 
 class GetSingleUserLoaded extends GetSingleUserState {
-  final UserEntity user;
+  final UserModel user;
   const GetSingleUserLoaded({required this.user});
   @override
   List<Object> get props => [user];

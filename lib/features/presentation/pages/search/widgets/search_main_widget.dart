@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/search/widgets/search_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class SearchMainWidget extends StatefulWidget {
   const SearchMainWidget({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
 
   @override
   void initState() {
-    BlocProvider.of<UserCubit>(context).getUsers(user: const UserEntity());
+    BlocProvider.of<UserCubit>(context).getUsers(user: const UserModel());
 
     BlocProvider.of<PostCubit>(context).getPosts();
     super.initState();
@@ -45,12 +45,12 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
             if (userState is UserLoaded) {
               final filterAllUsers = userState.users
                   .where((user) =>
-                      user.username!.startsWith(_searchController.text) ||
-                      user.username!
+                      user.username.startsWith(_searchController.text) ||
+                      user.username
                           .toLowerCase()
                           .startsWith(_searchController.text.toLowerCase()) ||
-                      user.username!.contains(_searchController.text) ||
-                      user.username!
+                      user.username.contains(_searchController.text) ||
+                      user.username
                           .toLowerCase()
                           .contains(_searchController.text.toLowerCase()))
                   .toList();
@@ -89,7 +89,7 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
                                       ),
                                       sizeHorizontal(10),
                                       Text(
-                                        "${filterAllUsers[index].username}",
+                                        filterAllUsers[index].username,
                                         style: const TextStyle(
                                             color: primaryColor,
                                             fontSize: 15,

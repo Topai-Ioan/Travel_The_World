@@ -7,11 +7,11 @@ import 'package:travel_the_world/features/data/data_sources/remote_data_source/r
 import 'package:travel_the_world/features/data/models/comment/comment_model.dart';
 import 'package:travel_the_world/features/data/models/post/post_model.dart';
 import 'package:travel_the_world/features/data/models/reply/reply_model.dart';
-import 'package:travel_the_world/features/data/models/user/user_model.dart';
 import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
+import 'package:travel_the_world/services/auth_service.dart';
 import 'package:uuid/uuid.dart';
 
 class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
@@ -24,104 +24,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     required this.firebaseFirestore,
     required this.firebaseAuth,
   });
-
-  @override
-  Future<void> createUser(UserEntity user, String profileUrl) async {
-    final userCollection =
-        firebaseFirestore.collection(FirebaseConstants.Users);
-
-    final uid = await getCurrentUid();
-
-    userCollection.doc(uid).get().then((userDoc) {
-      final newUser = UserModel(
-              uid: uid,
-              name: user.name,
-              email: user.email,
-              bio: user.bio,
-              following: user.following,
-              website: user.website,
-              profileUrl: profileUrl,
-              username: user.username,
-              followers: user.followers,
-              totalPosts: user.totalPosts)
-          .toJson();
-
-      if (!userDoc.exists) {
-        userCollection.doc(uid).set(newUser);
-      } else {
-        userCollection.doc(uid).update(newUser);
-      }
-    }).catchError((error) {
-      toast(error.toString());
-      toast("Some error occur");
-    });
-  }
-
-  @override
-  Future<String> getCurrentUid() async => firebaseAuth.currentUser!.uid;
-
-  @override
-  Stream<List<UserEntity>> getSingleUser(String uid) {
-    final userCollection = firebaseFirestore
-        .collection(FirebaseConstants.Users)
-        .where("uid", isEqualTo: uid);
-    return userCollection.snapshots().map((querySnapshot) =>
-        querySnapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList());
-  }
-
-  @override
-  Stream<List<UserEntity>> getUsers(UserEntity user) {
-    final userCollection =
-        firebaseFirestore.collection(FirebaseConstants.Users);
-    return userCollection.snapshots().map((querySnapshot) =>
-        querySnapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList());
-  }
-
-  @override
-  Future<void> followUnFollowUser(UserEntity user) async {
-    final userCollection =
-        firebaseFirestore.collection(FirebaseConstants.Users);
-
-    final myDocRef = await userCollection.doc(user.uid).get();
-    final otherUserDocRef = await userCollection.doc(user.otherUid).get();
-
-    if (myDocRef.exists && otherUserDocRef.exists) {
-      List myFollowingList = myDocRef.get("following");
-      List otherUserFollowersList = otherUserDocRef.get("followers");
-
-      // My Following List
-      if (myFollowingList.contains(user.otherUid)) {
-        userCollection.doc(user.uid).update({
-          "following": FieldValue.arrayRemove([user.otherUid])
-        });
-      } else {
-        userCollection.doc(user.uid).update({
-          "following": FieldValue.arrayUnion([user.otherUid])
-        });
-      }
-
-      // Other User Following List
-      if (otherUserFollowersList.contains(user.uid)) {
-        userCollection.doc(user.otherUid).update({
-          "followers": FieldValue.arrayRemove([user.uid])
-        });
-      } else {
-        userCollection.doc(user.otherUid).update({
-          "followers": FieldValue.arrayUnion([user.uid])
-        });
-      }
-    }
-  }
-
-  @override
-  Stream<List<UserEntity>> getSingleOtherUser(String otherUid) {
-    final userCollection = firebaseFirestore
-        .collection(FirebaseConstants.Users)
-        .where("uid", isEqualTo: otherUid)
-        .limit(1);
-    return userCollection.snapshots().map((querySnapshot) =>
-        querySnapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList());
-  }
 
   @override
   Future<bool> isSignIn() async => firebaseAuth.currentUser?.uid != null;
@@ -174,10 +76,10 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
             // todo don't hardcode it here
             uploadImageProfilePicture(user.imageFile, "ProfileImages")
                 .then((profileUrl) {
-              createUser(user, profileUrl);
+              //createUser(user, profileUrl);
             });
           } else {
-            createUser(user, "");
+            //createUser(user, "");
           }
         }
       });
@@ -185,43 +87,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     } on FirebaseAuthException catch (_) {
       toast("Something went wrong");
     }
-  }
-
-  @override
-  Future<void> updateUser(UserEntity user) async {
-    final userCollection =
-        firebaseFirestore.collection(FirebaseConstants.Users);
-    Map<String, dynamic> userInformation = {};
-
-    if (user.email != "" && user.email != null) {
-      userInformation['email'] = user.email;
-    }
-
-    if (user.username != "" && user.username != null) {
-      userInformation['username'] = user.username;
-    }
-
-    if (user.website != "" && user.website != null) {
-      userInformation['website'] = user.website;
-    }
-
-    if (user.profileUrl != "" && user.profileUrl != null) {
-      userInformation['profileUrl'] = user.profileUrl;
-    }
-
-    if (user.bio != "" && user.bio != null) {
-      userInformation['bio'] = user.bio;
-    }
-
-    if (user.name != "" && user.name != null) {
-      userInformation['name'] = user.name;
-    }
-
-    if (user.totalPosts != null) {
-      userInformation['totalPosts'] = user.totalPosts;
-    }
-
-    userCollection.doc(user.uid).update(userInformation);
   }
 
   @override
@@ -350,7 +215,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     final postCollection =
         firebaseFirestore.collection(FirebaseConstants.Posts);
 
-    final currentUid = await getCurrentUid();
+    final currentUid = AuthService().currentUserId!;
     final postRef = await postCollection.doc(post.postId).get();
 
     //todo dont hardcode strings
@@ -491,7 +356,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   Future<void> likeComment(CommentEntity comment) async {
     final commentCollection =
         firebaseFirestore.collection(FirebaseConstants.Comment);
-    final currentUid = await getCurrentUid();
+    final currentUid = AuthService().currentUserId!;
 
     final commentRef = await commentCollection.doc(comment.commentId).get();
 
@@ -604,7 +469,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   Future<void> likeReply(ReplyEntity reply) async {
     final replyCollection =
         firebaseFirestore.collection(FirebaseConstants.Reply);
-    final currentUid = await getCurrentUid();
+    final currentUid = AuthService().currentUserId!;
     final replyRef = await replyCollection.doc(reply.replyId).get();
     if (replyRef.exists) {
       List likes = replyRef.get("likes");

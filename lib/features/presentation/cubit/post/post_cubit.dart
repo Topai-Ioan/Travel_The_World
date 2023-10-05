@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/create_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/delete_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/like_post_usecase.dart';
@@ -49,26 +48,26 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> getPostsFromFollowingUsers(UserEntity user) async {
-    emit(PostLoading());
-    try {
-      final streamResponse =
-          await readPostsFromFollowingUsersUseCase.call(user);
+  // Future<void> getPostsFromFollowingUsers(UserModel user) async {
+  //   emit(PostLoading());
+  //   try {
+  //     final streamResponse =
+  //         await readPostsFromFollowingUsersUseCase.call(user);
 
-      final subscription = streamResponse.listen((posts) {
-        if (posts.isNotEmpty) {
-          emit(PostLoaded(posts: posts));
-        } else {
-          emit(PostEmpty());
-        }
-      });
-      subscription.resume();
-    } on SocketException catch (_) {
-      emit(PostFailure());
-    } catch (_) {
-      emit(PostFailure());
-    }
-  }
+  //     final subscription = streamResponse.listen((posts) {
+  //       if (posts.isNotEmpty) {
+  //         emit(PostLoaded(posts: posts));
+  //       } else {
+  //         emit(PostEmpty());
+  //       }
+  //     });
+  //     subscription.resume();
+  //   } on SocketException catch (_) {
+  //     emit(PostFailure());
+  //   } catch (_) {
+  //     emit(PostFailure());
+  //   }
+  // }
 
   Future<void> likePost({required PostEntity post}) async {
     try {

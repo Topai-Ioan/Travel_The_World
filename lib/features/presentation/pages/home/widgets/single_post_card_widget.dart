@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/post/widgets/like_animation_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/confirmation_dialog.dart';
@@ -11,7 +10,7 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/custom
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/services/auth_service.dart';
 
 class SinglePostCardWidget extends StatefulWidget {
   final PostEntity post;
@@ -28,10 +27,9 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
 
   @override
   void initState() {
-    di.sl<GetCurrentUidUseCase>().call().then((value) {
-      setState(() {
-        _currentUid = value;
-      });
+    final currentUid = AuthService().currentUserId!;
+    setState(() {
+      _currentUid = currentUid;
     });
     super.initState();
   }

@@ -5,7 +5,6 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
 import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
@@ -16,6 +15,7 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/custom
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_text_input.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
@@ -100,7 +100,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
     );
   }
 
-  Widget buildCommentListView(UserEntity singleUser, PostEntity singlePost,
+  Widget buildCommentListView(UserModel singleUser, PostEntity singlePost,
       List<CommentEntity> comments) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +190,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
     );
   }
 
-  _createComment(UserEntity currentUser) {
+  _createComment(UserModel currentUser) {
     BlocProvider.of<CommentCubit>(context)
         .createComment(
             comment: CommentEntity(

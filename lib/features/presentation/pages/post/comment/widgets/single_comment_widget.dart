@@ -5,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_reply_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/confirmation_dialog.dart';
@@ -14,14 +12,15 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/custom
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_text_input.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 class SingleCommentWidget extends StatefulWidget {
   final CommentEntity comment;
   final VoidCallback? onLongPressListener;
   final VoidCallback? onLikeClickListener;
-  final UserEntity? currentUser;
+  final UserModel? currentUser;
 
   const SingleCommentWidget(
       {Key? key,
@@ -43,10 +42,9 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
 
   @override
   void initState() {
-    di.sl<GetCurrentUidUseCase>().call().then((value) {
-      setState(() {
-        _currentUid = value;
-      });
+    final currentUid = AuthService().currentUserId!;
+    setState(() {
+      _currentUid = currentUid;
     });
     BlocProvider.of<ReplyCubit>(context).getReplies(
         reply: ReplyEntity(
@@ -238,7 +236,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
     return buildCommentWidget();
   }
 
-  _createReply(UserEntity currentUser) {
+  _createReply(UserModel currentUser) {
     BlocProvider.of<ReplyCubit>(context)
         .createReply(
             reply: ReplyEntity(

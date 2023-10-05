@@ -13,21 +13,6 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
   FirebaseRepository({required this.remoteDataSource});
 
   @override
-  Future<void> createUser(UserEntity user, String profileUrl) async =>
-      remoteDataSource.createUser(user, profileUrl);
-
-  @override
-  Future<String> getCurrentUid() async => remoteDataSource.getCurrentUid();
-
-  @override
-  Stream<List<UserEntity>> getSingleUser(String uid) =>
-      remoteDataSource.getSingleUser(uid);
-
-  @override
-  Stream<List<UserEntity>> getUsers(UserEntity user) =>
-      remoteDataSource.getUsers(user);
-
-  @override
   Future<bool> isSignIn() async => remoteDataSource.isSignIn();
 
   @override
@@ -40,18 +25,6 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
   @override
   Future<void> signUpUser(UserEntity user) async =>
       remoteDataSource.signUpUser(user);
-
-  @override
-  Future<void> updateUser(UserEntity user) async =>
-      remoteDataSource.updateUser(user);
-
-  @override
-  Future<void> followUnFollowUser(UserEntity user) async =>
-      remoteDataSource.followUnFollowUser(user);
-
-  @override
-  Stream<List<UserEntity>> getSingleOtherUser(String otherUid) =>
-      remoteDataSource.getSingleOtherUser(otherUid);
 
   @override
   Future<Map<String, String>> uploadImagePost(
