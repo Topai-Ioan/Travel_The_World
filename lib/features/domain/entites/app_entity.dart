@@ -1,12 +1,12 @@
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
+import 'package:travel_the_world/services/models/posts/post_model.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class AppEntity {
-  final UserEntity? currentUser;
-  final PostEntity? postEntity;
+  final UserModel? currentUser;
+  final PostModel? postModel;
 
   final String? uid;
   final String? postId;
 
-  AppEntity({this.currentUser, this.postEntity, this.uid, this.postId});
+  AppEntity({this.currentUser, this.postModel, this.uid, this.postId});
 }

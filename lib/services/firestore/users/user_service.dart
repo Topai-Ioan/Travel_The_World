@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:rxdart/rxdart.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/services/auth_service.dart';
 import 'package:travel_the_world/services/firestore/users/user_service_interface.dart';
@@ -9,16 +8,18 @@ import 'package:travel_the_world/services/models/users/user_model.dart';
 class UserService implements UserServiceInterface {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  @override
   Stream<List<UserModel>> getUser({required String uid}) {
     var ref = _db.collection('Users').where('uid', isEqualTo: uid);
 
     return ref.snapshots().map((querySnapshot) {
       var data = querySnapshot.docs.map((doc) => doc.data());
-      var users = data.map((d) => UserModel.fromJson(d)).toList();
-      return users;
+      var user = data.map((d) => UserModel.fromJson(d)).toList();
+      return user;
     });
   }
 
+  @override
   Stream<List<UserModel>> getUsers() {
     var ref = _db.collection('Users');
 
@@ -29,6 +30,7 @@ class UserService implements UserServiceInterface {
     });
   }
 
+  @override
   Future<void> createUser(
       {required UserModel user, required String profileUrl}) async {
     final userCollection = _db.collection(FirebaseConstants.Users);
@@ -57,6 +59,7 @@ class UserService implements UserServiceInterface {
     });
   }
 
+  @override
   Future<void> updateUser({required UserModel user}) {
     var currentUser = AuthService().getCurrentUser()!;
     var ref = _db.collection('Users').doc(currentUser.uid);
@@ -72,18 +75,16 @@ class UserService implements UserServiceInterface {
     return ref.update(data);
   }
 
+  @override
   Future<String> getUserProfileUrl({required String uid}) async {
     var ref = _db.collection('Users');
     var query = ref.where('uid', isEqualTo: uid);
     var snapshot = await query.get();
 
-    if (snapshot.docs.isNotEmpty) {
-      return snapshot.docs.first.data()['profileUrl'] as String;
-    } else {
-      return '';
-    }
+    return snapshot.docs.first.data()['profileUrl'] as String;
   }
 
+  @override
   Future<void> followUnFollowUser({required String anoterUserId}) async {
     final userCollection = _db.collection(FirebaseConstants.Users);
 

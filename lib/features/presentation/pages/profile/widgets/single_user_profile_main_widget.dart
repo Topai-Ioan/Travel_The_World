@@ -215,6 +215,12 @@ class _SingleUserProfileMainWidgetState
                 }),
           );
         }
+        if (postState is PostEmpty) {
+          return const Center(
+            child: Text("No post yet", style: TextStyle(color: primaryColor)),
+          );
+        }
+
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),

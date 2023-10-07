@@ -11,13 +11,6 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/com
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/like_comment_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/read_comments_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/update_comment_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/create_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/delete_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/like_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_from_following_users_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_single_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_post_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/sync_profile_picture.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/create_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/delete_reply_usecase.dart';
@@ -34,6 +27,8 @@ import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.d
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
+import 'package:travel_the_world/services/firestore/users/user_service.dart';
+import 'package:travel_the_world/services/firestore/users/user_service_interface.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
@@ -49,18 +44,13 @@ Future<void> init() async {
   sl.registerFactory<GetSingleOtherUserCubit>(() => GetSingleOtherUserCubit());
 
   // Post Cubit Injection
-  sl.registerFactory(() => PostCubit(
-        updatePostUseCase: sl.call(),
-        deletePostUseCase: sl.call(),
-        likePostUseCase: sl.call(),
-        createPostUseCase: sl.call(),
-        readPostUseCase: sl.call(),
-        readPostsFromFollowingUsersUseCase: sl.call(),
-      ));
+  sl.registerFactory(() => PostCubit());
 
   sl.registerFactory(
-    () => GetSinglePostCubit(readSinglePostUseCase: sl.call()),
+    () => GetSinglePostCubit(),
   );
+
+  sl.registerLazySingleton<UserServiceInterface>(() => UserService());
 
   // Comment Cubit Injection
   sl.registerFactory(
@@ -90,14 +80,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UploadImagePostUseCase(repository: sl.call()));
 
   // Post
-  sl.registerLazySingleton(() => CreatePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => ReadPostsUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => ReadSinglePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => LikePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UpdatePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => DeletePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(
-      () => ReadPostsFromFollowingUsersUseCase(repository: sl.call()));
   sl.registerLazySingleton(
       () => SyncProfilePictureUseCase(repository: sl.call()));
 

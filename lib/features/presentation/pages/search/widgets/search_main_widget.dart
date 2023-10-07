@@ -19,10 +19,10 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
 
   @override
   void initState() {
+    super.initState();
     BlocProvider.of<UserCubit>(context).getUsers(user: UserModel());
 
     BlocProvider.of<PostCubit>(context).getPosts();
-    super.initState();
 
     _searchController.addListener(() {
       setState(() {});
@@ -42,7 +42,7 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
         backgroundColor: backgroundColor,
         body: BlocBuilder<UserCubit, UserState>(
           builder: (context, userState) {
-            if (userState is UserLoaded) {
+            if (userState is UsersLoaded) {
               final filterAllUsers = userState.users
                   .where((user) =>
                       user.username.startsWith(_searchController.text) ||

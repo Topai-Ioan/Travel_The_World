@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/post/widgets/like_animation_widget.dart';
@@ -11,6 +10,7 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/custom
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/models/posts/post_model.dart';
 
 class PostDetailMainWidget extends StatefulWidget {
   final String postId;
@@ -92,7 +92,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                               imageUrl:
                                                   singlePost.userProfileUrl))),
                                   sizeHorizontal(10),
-                                  Text('${singlePost.username}',
+                                  Text(singlePost.username,
                                       style: const TextStyle(
                                           color: primaryColor,
                                           fontWeight: FontWeight.bold)),
@@ -133,13 +133,13 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                       });
                                     },
                                     child: Icon(
-                                      singlePost.likes!.contains(_currentUid)
+                                      singlePost.likes.contains(_currentUid)
                                           ? Icons.favorite
                                           : Icons.favorite_outline,
-                                      color: singlePost.likes!
-                                              .contains(_currentUid)
-                                          ? Colors.red
-                                          : primaryColor,
+                                      color:
+                                          singlePost.likes.contains(_currentUid)
+                                              ? Colors.red
+                                              : primaryColor,
                                     ),
                                   ),
                                   sizeHorizontal(10),
@@ -174,13 +174,13 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('${singlePost.likes!.length} likes',
+                              Text('${singlePost.likes.length} likes',
                                   style: const TextStyle(
                                       color: greenColor,
                                       fontWeight: FontWeight.bold)),
                               Text(
                                 DateFormat("dd/MMM/yyyy")
-                                    .format(singlePost.createAt!.toDate()),
+                                    .format(singlePost.createAt!),
                                 style: const TextStyle(color: darkGreyColor),
                               ),
                             ],
@@ -188,13 +188,13 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                           sizeVertical(10),
                           Row(
                             children: [
-                              Text("${singlePost.username}",
+                              Text(singlePost.username,
                                   style: const TextStyle(
                                       color: primaryColor,
                                       fontWeight: FontWeight.w600)),
                               sizeHorizontal(10),
                               Text(
-                                "${singlePost.description}",
+                                singlePost.description,
                                 style: const TextStyle(color: primaryColor),
                               ),
                             ],
@@ -272,16 +272,16 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
 
   _likePost() {
     BlocProvider.of<PostCubit>(context)
-        .likePost(post: PostEntity(postId: widget.postId));
+        .likePost(post: PostModel(postId: widget.postId));
   }
 }
 
 _openBottomModalSheet(
-    BuildContext context, PostEntity post, PostCubit postCubit) {
+    BuildContext context, PostModel post, PostCubit postCubit) {
   //
   deletePost() {
     BlocProvider.of<PostCubit>(context)
-        .deletePost(post: PostEntity(postId: post.postId));
+        .deletePost(post: PostModel(postId: post.postId));
     Navigator.pop(context);
     Navigator.pop(context);
   }

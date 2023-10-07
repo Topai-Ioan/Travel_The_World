@@ -1,23 +1,11 @@
 import 'dart:io';
 
 import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 
 abstract class FirebaseRepositoryInterface {
   // Cloud Storage
   Future<Map<String, String>> uploadImagePost(File? file, String childName);
-
-  // Post Features
-  Future<void> createPost(PostEntity post);
-  Stream<List<PostEntity>> readPosts();
-  Stream<List<PostEntity>> readSinglePost(String postId);
-  Future<Stream<List<PostEntity>>> readPostsFromFollowedUsers(
-      UserEntity currentUser);
-  Future<void> updatePost(PostEntity post);
-  Future<void> deletePost(PostEntity post);
-  Future<void> likePost(PostEntity post);
 
   // Comment Features
   Future<void> createComment(CommentEntity comment);

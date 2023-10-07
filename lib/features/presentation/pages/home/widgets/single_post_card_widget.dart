@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/post/widgets/like_animation_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/confirmation_dialog.dart';
@@ -11,9 +10,10 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/option
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/models/posts/post_model.dart';
 
 class SinglePostCardWidget extends StatefulWidget {
-  final PostEntity post;
+  final PostModel post;
   final PostCubit postCubit;
   const SinglePostCardWidget(
       {super.key, required this.post, required this.postCubit});
@@ -78,13 +78,14 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                                   imageUrl: widget.post.userProfileUrl,
                                   boxFit: BoxFit.cover))),
                       sizeHorizontal(10),
-                      Text('${widget.post.username}',
+                      Text(widget.post.username,
                           style: const TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.bold)),
                       sizeHorizontal(5),
                       Text(
-                        formatTimeAgo(widget.post.createAt!.toDate()),
+                        //"test",
+                        formatTimeAgo(widget.post.createAt!),
                         style: const TextStyle(color: darkGreyColor),
                       ),
                     ],
@@ -126,8 +127,7 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                         Navigator.pushNamed(context, PageRoutes.LikeListPage,
                             arguments: widget.post);
                       },
-                      child: Text(
-                          '${widget.post.likes != null ? widget.post.likes!.length : 0}',
+                      child: Text('${widget.post.likes.length}',
                           style: const TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.bold,
@@ -138,10 +138,10 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                         _likePost();
                       },
                       child: Icon(
-                        widget.post.likes!.contains(_currentUid)
+                        widget.post.likes.contains(_currentUid)
                             ? Icons.favorite
                             : Icons.favorite_outline,
-                        color: widget.post.likes!.contains(_currentUid)
+                        color: widget.post.likes.contains(_currentUid)
                             ? Colors.red
                             : primaryColor,
                       ),
@@ -186,15 +186,14 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                 const Icon(Icons.bookmark_border_rounded, color: primaryColor),
               ],
             ),
-            if (widget.post.description != null &&
-                widget.post.description != "")
+            if (widget.post.description != "")
               Column(
                 children: [
                   sizeVertical(10),
                   Row(
                     children: [
                       Text(
-                        "${widget.post.description}",
+                        widget.post.description,
                         style: const TextStyle(color: primaryColor),
                       ),
                     ],
@@ -220,7 +219,7 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
           constraints: const BoxConstraints(minHeight: 200.0),
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: profileWidget(imageUrl: "${widget.post.postImageUrl}"),
+            child: profileWidget(imageUrl: widget.post.postImageUrl),
           ),
         ),
         AnimatedOpacity(
@@ -246,11 +245,11 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
 
   _likePost() {
     BlocProvider.of<PostCubit>(context)
-        .likePost(post: PostEntity(postId: widget.post.postId));
+        .likePost(post: PostModel(postId: widget.post.postId));
   }
 }
 
-_deletePost(BuildContext context, PostEntity post, PostCubit postCubit) {
+_deletePost(BuildContext context, PostModel post, PostCubit postCubit) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -258,7 +257,7 @@ _deletePost(BuildContext context, PostEntity post, PostCubit postCubit) {
         message: 'Are you sure you want to delete this post?',
         onYesPressed: () {
           BlocProvider.of<PostCubit>(context)
-              .deletePost(post: PostEntity(postId: post.postId));
+              .deletePost(post: PostModel(postId: post.postId));
           Navigator.pop(context);
           Navigator.pop(context);
         },
@@ -272,7 +271,7 @@ _deletePost(BuildContext context, PostEntity post, PostCubit postCubit) {
 }
 
 _openBottomModalSheet(
-    BuildContext context, PostEntity post, PostCubit postCubit) {
+    BuildContext context, PostModel post, PostCubit postCubit) {
   showModalBottomSheet(
     backgroundColor: Colors.transparent.withOpacity(0.5),
     context: context,

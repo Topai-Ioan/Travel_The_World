@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/users/user_service.dart';
+import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class UserList extends StatelessWidget {
@@ -129,7 +129,7 @@ class FollowingPageHelper extends StatelessWidget {
 
 class LikesListPageHelper extends StatelessWidget {
   final String title;
-  final PostEntity post;
+  final PostModel post;
 
   const LikesListPageHelper({
     Key? key,
@@ -150,7 +150,7 @@ class LikesListPageHelper extends StatelessWidget {
         child: Column(
           children: [
             UserList(
-              userList: post.likes!,
+              userList: post.likes,
               title: title,
             ),
           ],

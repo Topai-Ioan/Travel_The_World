@@ -77,7 +77,6 @@ class AuthService {
     String childName,
   ) async {
     if (file == null) return '';
-
     Reference ref = firebaseStorage
         .ref()
         .child(childName)

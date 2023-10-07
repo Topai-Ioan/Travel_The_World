@@ -6,33 +6,33 @@ import 'package:flutter/material.dart';
 Widget profileWidget({
   String? imageUrl,
   File? image,
-  BoxFit boxFit = BoxFit.contain, // Provide a default value
+  BoxFit boxFit = BoxFit.contain,
 }) {
   if (image == null) {
     if (imageUrl == null || imageUrl == "") {
       return Image.asset(
         'assets/images/profile_default.png',
-        fit: boxFit, // Use the provided BoxFit directly
+        fit: boxFit,
       );
     } else {
       return CachedNetworkImage(
         imageUrl: imageUrl,
-        fit: boxFit, // Use the provided BoxFit directly
+        fit: boxFit,
         progressIndicatorBuilder: (context, url, downloadProgress) {
+          double progress = downloadProgress.progress ?? 0.0;
           return Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
-              child: const CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              value: progress,
             ),
           );
         },
         errorWidget: (context, url, error) => Image.asset(
           'assets/images/profile_default.png',
-          fit: boxFit, // Use the provided BoxFit directly
+          fit: boxFit,
         ),
       );
     }
   } else {
-    return Image.file(image, fit: boxFit); // Use the provided BoxFit directly
+    return Image.file(image, fit: boxFit);
   }
 }

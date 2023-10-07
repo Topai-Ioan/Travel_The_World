@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_action_handler.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/models/posts/post_model.dart';
 
 class UpdatePostMainWidget extends StatefulWidget {
-  final PostEntity post;
+  final PostModel post;
   const UpdatePostMainWidget({super.key, required this.post});
 
   @override
@@ -86,7 +86,7 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
               ),
               sizeVertical(10),
               Text(
-                "${widget.post.username}",
+                widget.post.username,
                 style: const TextStyle(
                     color: primaryColor,
                     fontSize: 16,
@@ -135,7 +135,7 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
   _submitUpdateDescription() {
     BlocProvider.of<PostCubit>(context)
         .updatePost(
-          post: PostEntity(
+          post: PostModel(
             postId: widget.post.postId,
             description: _descriptionController!.text,
           ),

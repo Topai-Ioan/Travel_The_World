@@ -11,7 +11,7 @@ class GetSinglePostInitial extends GetSinglePostState {}
 class GetSinglePostLoading extends GetSinglePostState {}
 
 class GetSinglePostLoaded extends GetSinglePostState {
-  final PostEntity post;
+  final PostModel post;
 
   const GetSinglePostLoaded({required this.post});
 }

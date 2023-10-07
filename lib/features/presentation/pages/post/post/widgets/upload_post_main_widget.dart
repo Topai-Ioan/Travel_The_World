@@ -2,19 +2,18 @@
 
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
+import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class UploadPostMainWidget extends StatefulWidget {
@@ -355,8 +354,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
   _createSubmitPost({required String imageUrl, required String imageId}) {
     BlocProvider.of<PostCubit>(context)
         .createPost(
-            post: PostEntity(
-          createAt: Timestamp.now(),
+            post: PostModel(
           creatorUid: widget.currentUser.uid,
           likes: const [],
           postId: imageId,

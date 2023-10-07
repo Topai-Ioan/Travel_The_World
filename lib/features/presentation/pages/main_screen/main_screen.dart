@@ -71,8 +71,12 @@ class _MainScreenState extends State<MainScreen> {
           );
         } else {
           return const Center(
-              child: SizedBox(
-                  height: 15, width: 15, child: CircularProgressIndicator()));
+            child: SizedBox(
+              height: 15,
+              width: 15,
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
       },
     );

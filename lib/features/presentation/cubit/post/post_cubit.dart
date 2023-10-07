@@ -2,36 +2,20 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/create_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/delete_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/like_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_from_following_users_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_post_usecase.dart';
+import 'package:travel_the_world/services/firestore/posts/post_service.dart';
+import 'package:travel_the_world/services/models/posts/post_model.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 part 'post_state.dart';
 
 class PostCubit extends Cubit<PostState> {
-  final CreatePostUseCase createPostUseCase;
-  final DeletePostUseCase deletePostUseCase;
-  final LikePostUseCase likePostUseCase;
-  final ReadPostsUseCase readPostUseCase;
-  ReadPostsFromFollowingUsersUseCase readPostsFromFollowingUsersUseCase;
-  final UpdatePostUseCase updatePostUseCase;
-  PostCubit(
-      {required this.updatePostUseCase,
-      required this.deletePostUseCase,
-      required this.likePostUseCase,
-      required this.createPostUseCase,
-      required this.readPostUseCase,
-      required this.readPostsFromFollowingUsersUseCase})
-      : super(PostInitial());
+  PostCubit() : super(PostInitial());
+  final PostService _postService = PostService();
 
   Future<void> getPosts() async {
     emit(PostLoading());
     try {
-      final streamResponse = readPostUseCase.call();
+      final streamResponse = _postService.getPosts();
 
       final subscription = streamResponse.listen((posts) {
         if (posts.isNotEmpty) {
@@ -48,30 +32,20 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  // Future<void> getPostsFromFollowingUsers(UserModel user) async {
-  //   emit(PostLoading());
-  //   try {
-  //     final streamResponse =
-  //         await readPostsFromFollowingUsersUseCase.call(user);
-
-  //     final subscription = streamResponse.listen((posts) {
-  //       if (posts.isNotEmpty) {
-  //         emit(PostLoaded(posts: posts));
-  //       } else {
-  //         emit(PostEmpty());
-  //       }
-  //     });
-  //     subscription.resume();
-  //   } on SocketException catch (_) {
-  //     emit(PostFailure());
-  //   } catch (_) {
-  //     emit(PostFailure());
-  //   }
-  // }
-
-  Future<void> likePost({required PostEntity post}) async {
+  Future<void> getPostsFromFollowingUsers(UserModel user) async {
+    emit(PostLoading());
     try {
-      await likePostUseCase.call(post);
+      final streamResponse =
+          await _postService.getPostsFromFollowedUsers(currentUser: user);
+
+      final subscription = streamResponse.listen((posts) {
+        if (posts.isNotEmpty) {
+          emit(PostLoaded(posts: posts));
+        } else {
+          emit(PostEmpty());
+        }
+      });
+      subscription.resume();
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
@@ -79,9 +53,9 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> deletePost({required PostEntity post}) async {
+  Future<void> likePost({required PostModel post}) async {
     try {
-      await deletePostUseCase.call(post);
+      await _postService.likePost(post: post);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
@@ -89,9 +63,9 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> createPost({required PostEntity post}) async {
+  Future<void> deletePost({required PostModel post}) async {
     try {
-      await createPostUseCase.call(post);
+      await _postService.deletePost(post: post);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
@@ -99,9 +73,19 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> updatePost({required PostEntity post}) async {
+  Future<void> createPost({required PostModel post}) async {
     try {
-      await updatePostUseCase.call(post);
+      await _postService.createPost(post: post);
+    } on SocketException catch (_) {
+      emit(PostFailure());
+    } catch (_) {
+      emit(PostFailure());
+    }
+  }
+
+  Future<void> updatePost({required PostModel post}) async {
+    try {
+      await _postService.updatePost(post: post);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
