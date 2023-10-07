@@ -4,18 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/sync_profile_picture.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_profile_picture.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_action_handler.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/auth_service.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class EditProfilePage extends StatefulWidget {
-  final UserEntity currentUser;
+  final UserModel currentUser;
 
   const EditProfilePage({Key? key, required this.currentUser})
       : super(key: key);
@@ -183,9 +182,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (_image == null) {
       await _updateUserData();
     } else {
-      final profileUrl = await di
-          .sl<UploadImageProfilePictureUseCase>()
-          .call(_image!, "ProfileImages");
+      final profileUrl = await AuthService()
+          .uploadImageProfilePicture(_image, "ProfileImages");
 
       await _updateUserProfilePictureAndData(profileUrl: profileUrl);
       await di.sl<SyncProfilePictureUseCase>().call(profileUrl);

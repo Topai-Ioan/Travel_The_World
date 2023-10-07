@@ -4,7 +4,6 @@ import 'package:travel_the_world/features/domain/entites/app_entity.dart';
 import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/post/post_entity.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_in_page.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_up_page.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/comment_page.dart';
@@ -17,20 +16,20 @@ import 'package:travel_the_world/features/presentation/pages/profile/edit_profil
 import 'package:travel_the_world/features/presentation/pages/user_list_pages/followers_page.dart';
 import 'package:travel_the_world/features/presentation/pages/user_list_pages/following_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/single_user_profile_page.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class OnGenerateRoute {
   static Route<dynamic>? route(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
       case PageRoutes.EditProfilePage:
-        if (args is UserEntity) {
+        if (args is UserModel) {
           return routeBuilder(EditProfilePage(currentUser: args));
         } else {
           return routeBuilder(const NoPageFound());
         }
       case PageRoutes.UpdatePostPage:
         {
-          //return routeBuilder(UpdatePostPage());
           if (args is PostEntity) {
             return routeBuilder(UpdatePostPage(post: args));
           } else {
@@ -89,7 +88,7 @@ class OnGenerateRoute {
 
       case PageRoutes.FollowingPage:
         {
-          if (args is UserEntity) {
+          if (args is UserModel) {
             return routeBuilder(FollowingPage(
               user: args,
             ));
@@ -98,7 +97,7 @@ class OnGenerateRoute {
         }
       case PageRoutes.FollowersPage:
         {
-          if (args is UserEntity) {
+          if (args is UserModel) {
             return routeBuilder(FollowersPage(
               user: args,
             ));

@@ -42,7 +42,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
 
   @override
   void initState() {
-    final currentUid = AuthService().currentUserId!;
+    final currentUid = AuthService().getCurrentUserId()!;
     setState(() {
       _currentUid = currentUid;
     });

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/main_screen/main_screen.dart';
@@ -12,6 +11,7 @@ import 'package:travel_the_world/features/presentation/pages/credential/widgets/
 import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -194,7 +194,7 @@ class _SignUpPageState extends State<SignUpPage> {
     });
     BlocProvider.of<CredentialCubit>(context)
         .signUpUser(
-          user: UserEntity(
+          user: UserModel(
             email: _emailController.text,
             username: _usernameController.text,
             password: _passwordController.text,

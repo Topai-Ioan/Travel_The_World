@@ -26,88 +26,6 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   });
 
   @override
-  Future<bool> isSignIn() async => firebaseAuth.currentUser?.uid != null;
-
-  @override
-  Future<void> signInUser(UserEntity user) async {
-    try {
-      if (user.email!.isNotEmpty || user.password!.isNotEmpty) {
-        await firebaseAuth.signInWithEmailAndPassword(
-            email: user.email!.replaceAll(" ", ""), password: user.password!);
-      } else {
-        toast("fields cannot be empty");
-      }
-    } on FirebaseAuthException catch (_) {
-      //todo log exceptions
-
-      toast("Invalid credentials");
-    }
-  }
-
-  @override
-  Future<void> signOut() async {
-    await firebaseAuth.signOut();
-  }
-
-  @override
-  Future<void> signUpUser(UserEntity user) async {
-    final passwordPattern = RegExp(
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*(),.?":{}|<>])[A-Za-z0-9!@#$%^&*(),.?":{}|<>]{8,}$');
-
-    if (!passwordPattern.hasMatch(user.password!)) {
-      toast(
-          "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.");
-      return;
-    }
-
-    if (!user.password!
-        .contains(RegExp(r'^[A-Za-z0-9!@#$%^&*(),.?":{}|<>]+$'))) {
-      toast("Only English characters allowed");
-      return;
-    }
-
-    try {
-      await firebaseAuth
-          .createUserWithEmailAndPassword(
-              email: user.email!.replaceAll(" ", ""), password: user.password!)
-          .then((currentUser) async {
-        if (currentUser.user?.uid != null) {
-          if (user.imageFile != null) {
-            // todo don't hardcode it here
-            uploadImageProfilePicture(user.imageFile, "ProfileImages")
-                .then((profileUrl) {
-              //createUser(user, profileUrl);
-            });
-          } else {
-            //createUser(user, "");
-          }
-        }
-      });
-      return;
-    } on FirebaseAuthException catch (_) {
-      toast("Something went wrong");
-    }
-  }
-
-  @override
-  Future<String> uploadImageProfilePicture(
-    File? file,
-    String childName,
-  ) async {
-    Reference ref = firebaseStorage
-        .ref()
-        .child(childName)
-        .child(firebaseAuth.currentUser!.uid);
-
-    final uploadTask = ref.putFile(file!);
-
-    final imageUrl =
-        (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
-
-    return await imageUrl;
-  }
-
-  @override
   Future<Map<String, String>> uploadImagePost(
     File? file,
     String childName,
@@ -215,7 +133,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
     final postCollection =
         firebaseFirestore.collection(FirebaseConstants.Posts);
 
-    final currentUid = AuthService().currentUserId!;
+    final currentUid = AuthService().getCurrentUserId()!;
     final postRef = await postCollection.doc(post.postId).get();
 
     //todo dont hardcode strings
@@ -356,7 +274,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   Future<void> likeComment(CommentEntity comment) async {
     final commentCollection =
         firebaseFirestore.collection(FirebaseConstants.Comment);
-    final currentUid = AuthService().currentUserId!;
+    final currentUid = AuthService().getCurrentUserId();
 
     final commentRef = await commentCollection.doc(comment.commentId).get();
 
@@ -469,7 +387,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
   Future<void> likeReply(ReplyEntity reply) async {
     final replyCollection =
         firebaseFirestore.collection(FirebaseConstants.Reply);
-    final currentUid = AuthService().currentUserId!;
+    final currentUid = AuthService().getCurrentUserId()!;
     final replyRef = await replyCollection.doc(reply.replyId).get();
     if (replyRef.exists) {
       List likes = replyRef.get("likes");

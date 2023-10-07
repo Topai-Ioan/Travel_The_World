@@ -25,7 +25,7 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
 
   @override
   void initState() {
-    final currentUserId = AuthService().currentUserId!;
+    final currentUserId = AuthService().getCurrentUserId()!;
     setState(() {
       _currentUid = currentUserId;
     });

@@ -12,29 +12,29 @@ class FirebaseRepository implements FirebaseRepositoryInterface {
 
   FirebaseRepository({required this.remoteDataSource});
 
-  @override
-  Future<bool> isSignIn() async => remoteDataSource.isSignIn();
+  // @override
+  // Future<bool> isSignIn() async => remoteDataSource.isSignIn();
 
-  @override
-  Future<void> signInUser(UserEntity user) async =>
-      remoteDataSource.signInUser(user);
+  // @override
+  // Future<void> signInUser(UserEntity user) async =>
+  //     remoteDataSource.signInUser(user);
 
-  @override
-  Future<void> signOut() async => remoteDataSource.signOut();
+  // @override
+  // Future<void> signOut() async => remoteDataSource.signOut();
 
-  @override
-  Future<void> signUpUser(UserEntity user) async =>
-      remoteDataSource.signUpUser(user);
+  // @override
+  // Future<void> signUpUser(UserEntity user) async =>
+  //     remoteDataSource.signUpUser(user);
 
   @override
   Future<Map<String, String>> uploadImagePost(
           File? file, String childName) async =>
       remoteDataSource.uploadImagePost(file, childName);
 
-  @override
-  Future<String> uploadImageProfilePicture(
-          File? file, String childName) async =>
-      remoteDataSource.uploadImageProfilePicture(file, childName);
+  // @override
+  // Future<String> uploadImageProfilePicture(
+  //         File? file, String childName) async =>
+  //     remoteDataSource.uploadImageProfilePicture(file, childName);
 
 // todo separate files
   @override

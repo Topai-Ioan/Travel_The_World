@@ -25,11 +25,6 @@ import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/rep
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/read_replies_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/update_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_profile_picture.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/is_sign_in_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_in_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_out_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_up_user_usecase.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
@@ -44,16 +39,10 @@ final sl = GetIt.instance;
 Future<void> init() async {
   // Cubits
   sl.registerFactory(
-    () => AuthCubit(
-      signOutUseCase: sl.call(),
-      isSignInUseCase: sl.call(),
-    ),
+    () => AuthCubit(),
   );
   sl.registerFactory(
-    () => CredentialCubit(
-      signUpUseCase: sl.call(),
-      signInUserUseCase: sl.call(),
-    ),
+    () => CredentialCubit(),
   );
   sl.registerFactory<UserCubit>(() => UserCubit());
   sl.registerFactory<GetSingleUserCubit>(() => GetSingleUserCubit());
@@ -96,14 +85,8 @@ Future<void> init() async {
 
   // Use Cases
   // User
-  sl.registerLazySingleton(() => SignOutUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => IsSignInUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => SignUpUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => SignInUserUseCase(repository: sl.call()));
 
   // Cloud Storage
-  sl.registerLazySingleton(
-      () => UploadImageProfilePictureUseCase(repository: sl.call()));
   sl.registerLazySingleton(() => UploadImagePostUseCase(repository: sl.call()));
 
   // Post

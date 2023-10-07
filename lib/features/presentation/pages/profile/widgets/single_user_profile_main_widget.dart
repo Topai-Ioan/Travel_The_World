@@ -39,7 +39,7 @@ class _SingleUserProfileMainWidgetState
       _dataLoaded = true;
     }
 
-    final uid = AuthService().currentUserId!;
+    final uid = AuthService().getCurrentUserId()!;
 
     if (mounted) {
       setState(() {

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:rxdart/rxdart.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/services/auth_service.dart';
-import 'package:travel_the_world/services/firestore/user_service_interface.dart';
+import 'package:travel_the_world/services/firestore/users/user_service_interface.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class UserService implements UserServiceInterface {
@@ -33,21 +33,21 @@ class UserService implements UserServiceInterface {
       {required UserModel user, required String profileUrl}) async {
     final userCollection = _db.collection(FirebaseConstants.Users);
 
-    final uid = AuthService().currentUserId!;
+    final uid = AuthService().getCurrentUserId()!;
 
     userCollection.doc(uid).get().then((userDoc) {
       final newUser = UserModel(
-              uid: uid,
-              name: user.name,
-              email: user.email,
-              bio: user.bio,
-              following: user.following,
-              website: user.website,
-              profileUrl: profileUrl,
-              username: user.username,
-              followers: user.followers,
-              totalPosts: user.totalPosts)
-          .toJson();
+        uid: uid,
+        name: user.name,
+        email: user.email,
+        bio: user.bio,
+        following: user.following,
+        website: user.website,
+        profileUrl: profileUrl,
+        username: user.username,
+        followers: user.followers,
+        totalPosts: user.totalPosts,
+      ).toJson();
 
       if (!userDoc.exists) {
         userCollection.doc(uid).set(newUser);
@@ -58,7 +58,7 @@ class UserService implements UserServiceInterface {
   }
 
   Future<void> updateUser({required UserModel user}) {
-    var currentUser = AuthService().user!;
+    var currentUser = AuthService().getCurrentUser()!;
     var ref = _db.collection('Users').doc(currentUser.uid);
 
     var data = {
@@ -87,7 +87,7 @@ class UserService implements UserServiceInterface {
   Future<void> followUnFollowUser({required String anoterUserId}) async {
     final userCollection = _db.collection(FirebaseConstants.Users);
 
-    final currentUserId = AuthService().currentUserId!;
+    final currentUserId = AuthService().getCurrentUserId();
     final myDocRef = await userCollection.doc(currentUserId).get();
     final otherUserDocRef = await userCollection.doc(anoterUserId).get();
 

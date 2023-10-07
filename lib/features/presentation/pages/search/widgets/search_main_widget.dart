@@ -19,7 +19,7 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
 
   @override
   void initState() {
-    BlocProvider.of<UserCubit>(context).getUsers(user: const UserModel());
+    BlocProvider.of<UserCubit>(context).getUsers(user: UserModel());
 
     BlocProvider.of<PostCubit>(context).getPosts();
     super.initState();

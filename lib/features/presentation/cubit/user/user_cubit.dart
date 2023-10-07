@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:travel_the_world/services/firestore/user_service.dart';
+import 'package:travel_the_world/services/firestore/users/user_service.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
 part 'user_state.dart';

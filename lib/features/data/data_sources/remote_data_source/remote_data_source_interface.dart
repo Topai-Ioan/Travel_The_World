@@ -6,15 +6,8 @@ import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart
 import 'package:travel_the_world/features/domain/entites/user/user_entity.dart';
 
 abstract class FirebaseRemoteDataSourceInterface {
-  // Credential Features
-  Future<void> signInUser(UserEntity user);
-  Future<void> signUpUser(UserEntity user);
-  Future<bool> isSignIn();
-  Future<void> signOut();
-
   // Cloud Storage
   Future<Map<String, String>> uploadImagePost(File? file, String childName);
-  Future<String> uploadImageProfilePicture(File? file, String childName);
 
   // Post Features
   Future<void> createPost(PostEntity post);

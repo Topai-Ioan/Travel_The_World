@@ -1,4 +1,4 @@
-// ignore_for_file: annotate_overrides, overridden_fields
+import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
 
@@ -17,7 +17,13 @@ class UserModel {
   final List following;
   final num totalPosts;
 
-  const UserModel({
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final String password;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final File? imageFile;
+
+  UserModel({
     this.uid = '',
     this.username = '',
     this.name = '',
@@ -28,6 +34,8 @@ class UserModel {
     this.followers = const [],
     this.following = const [],
     this.totalPosts = 0,
+    this.password = '',
+    this.imageFile,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

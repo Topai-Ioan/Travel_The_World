@@ -27,7 +27,7 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
 
   @override
   void initState() {
-    final currentUid = AuthService().currentUserId!;
+    final currentUid = AuthService().getCurrentUserId()!;
     setState(() {
       _currentUid = currentUid;
     });

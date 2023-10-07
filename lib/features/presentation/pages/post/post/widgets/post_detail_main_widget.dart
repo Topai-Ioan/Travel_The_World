@@ -29,7 +29,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
     BlocProvider.of<GetSinglePostCubit>(context)
         .getSinglePost(postId: widget.postId);
 
-    final currentUid = AuthService().currentUserId!;
+    final currentUid = AuthService().getCurrentUserId()!;
     setState(() {
       _currentUid = currentUid;
     });
