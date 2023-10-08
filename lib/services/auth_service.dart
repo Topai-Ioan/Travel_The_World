@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/services/firestore/users/user_service.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/services/store_service.dart';
 
 class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -61,8 +60,8 @@ class AuthService {
               email: user.email.replaceAll(" ", ""), password: user.password)
           .then((currentUser) async {
         if (currentUser.user?.uid != null) {
-          final profileUrl =
-              await uploadImageProfilePicture(user.imageFile, "ProfileImages");
+          final profileUrl = await StoreService()
+              .uploadImageProfilePicture(user.imageFile, "ProfileImages");
           UserService().createUser(user: user, profileUrl: profileUrl);
         }
       });
@@ -70,23 +69,5 @@ class AuthService {
     } on FirebaseAuthException catch (_) {
       toast("Something went wrong");
     }
-  }
-
-  Future<String> uploadImageProfilePicture(
-    File? file,
-    String childName,
-  ) async {
-    if (file == null) return '';
-    Reference ref = firebaseStorage
-        .ref()
-        .child(childName)
-        .child(firebaseAuth.currentUser!.uid);
-
-    final uploadTask = ref.putFile(file);
-
-    final imageUrl =
-        (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
-
-    return await imageUrl;
   }
 }
