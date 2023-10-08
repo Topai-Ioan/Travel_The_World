@@ -6,11 +6,6 @@ import 'package:travel_the_world/features/data/data_sources/remote_data_source/r
 import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source_interface.dart';
 import 'package:travel_the_world/features/data/repository/firebase_repository.dart';
 import 'package:travel_the_world/features/domain/repository/firebase_repository_interface.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/create_comment_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/delete_comment_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/like_comment_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/read_comments_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/update_comment_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/sync_profile_picture.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/create_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/delete_reply_usecase.dart';
@@ -81,13 +76,6 @@ Future<void> init() async {
   // Post
   sl.registerLazySingleton(
       () => SyncProfilePictureUseCase(repository: sl.call()));
-
-  // Comment
-  sl.registerLazySingleton(() => CreateCommentUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => ReadCommentsUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => LikeCommentUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UpdateCommentUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => DeleteCommentUseCase(repository: sl.call()));
 
   // Reply
   sl.registerLazySingleton(() => CreateReplyUseCase(repository: sl.call()));
