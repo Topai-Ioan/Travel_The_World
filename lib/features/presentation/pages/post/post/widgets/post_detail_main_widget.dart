@@ -180,7 +180,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                       fontWeight: FontWeight.bold)),
                               Text(
                                 DateFormat("dd/MMM/yyyy")
-                                    .format(singlePost.createAt!),
+                                    .format(singlePost.createdAt!),
                                 style: const TextStyle(color: darkGreyColor),
                               ),
                             ],

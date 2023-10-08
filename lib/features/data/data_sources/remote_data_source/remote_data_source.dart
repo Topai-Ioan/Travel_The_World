@@ -60,7 +60,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
             likes: const [],
             description: comment.description,
             creatorUid: comment.creatorUid,
-            createAt: comment.createAt)
+            createdAt: comment.createdAt)
         .toJson();
 
     try {
@@ -173,7 +173,7 @@ class FirebaseRemoteDataSource implements FirebaseRemoteDataSourceInterface {
             likes: const [],
             description: reply.description,
             creatorUid: reply.creatorUid,
-            createAt: reply.createAt)
+            createdAt: reply.createdAt)
         .toJson();
     try {
       final replyDocRef = await replyCollection.doc(reply.replyId).get();

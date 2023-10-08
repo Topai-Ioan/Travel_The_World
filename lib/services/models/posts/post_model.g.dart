@@ -17,7 +17,8 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
               const [],
       totalComments: json['totalComments'] as num? ?? 0,
       userProfileUrl: json['userProfileUrl'] as String? ?? '',
-      createAt: PostModel._timestampToDateTime(json['createAt'] as Timestamp?),
+      createdAt:
+          PostModel._timestampToDateTime(json['createdAt'] as Timestamp?),
     );
 
 Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
@@ -29,5 +30,5 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'likes': instance.likes,
       'totalComments': instance.totalComments,
       'userProfileUrl': instance.userProfileUrl,
-      'createAt': PostModel._dateTimeToTimestamp(instance.createAt),
+      'createdAt': PostModel._dateTimeToTimestamp(instance.createdAt),
     };

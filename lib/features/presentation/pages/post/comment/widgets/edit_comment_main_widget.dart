@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
+import 'package:travel_the_world/services/models/comments/comment_model.dart';
 
 class EditCommentMainWidget extends StatefulWidget {
-  final CommentEntity comment;
+  final CommentModel comment;
   const EditCommentMainWidget({Key? key, required this.comment})
       : super(key: key);
 
@@ -74,7 +74,7 @@ class _EditCommentMainWidgetState extends State<EditCommentMainWidget> {
     });
     BlocProvider.of<CommentCubit>(context)
         .updateComment(
-            comment: CommentEntity(
+            comment: CommentModel(
                 postId: widget.comment.postId,
                 commentId: widget.comment.commentId,
                 description: _descriptionController!.text))

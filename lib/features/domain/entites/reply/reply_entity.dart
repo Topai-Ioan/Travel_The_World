@@ -10,7 +10,7 @@ class ReplyEntity extends Equatable {
   final String? username;
   final String? userProfileUrl;
   final List<String>? likes;
-  final Timestamp? createAt;
+  final Timestamp? createdAt;
 
   const ReplyEntity({
     this.creatorUid,
@@ -21,7 +21,7 @@ class ReplyEntity extends Equatable {
     this.username,
     this.userProfileUrl,
     this.likes,
-    this.createAt,
+    this.createdAt,
   });
 
   @override
@@ -34,6 +34,6 @@ class ReplyEntity extends Equatable {
         username,
         userProfileUrl,
         likes,
-        createAt,
+        createdAt,
       ];
 }

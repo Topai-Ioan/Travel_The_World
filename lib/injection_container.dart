@@ -27,6 +27,7 @@ import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.d
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
+import 'package:travel_the_world/services/firestore/comments/comment_service.dart';
 import 'package:travel_the_world/services/firestore/users/user_service.dart';
 import 'package:travel_the_world/services/firestore/users/user_service_interface.dart';
 
@@ -39,7 +40,11 @@ Future<void> init() async {
   sl.registerFactory(
     () => CredentialCubit(),
   );
-  sl.registerFactory<UserCubit>(() => UserCubit());
+
+  sl.registerLazySingleton<UserServiceInterface>(() => UserService());
+  sl.registerFactory<UserCubit>(
+      () => UserCubit(userService: sl<UserServiceInterface>()));
+
   sl.registerFactory<GetSingleUserCubit>(() => GetSingleUserCubit());
   sl.registerFactory<GetSingleOtherUserCubit>(() => GetSingleOtherUserCubit());
 
@@ -50,17 +55,11 @@ Future<void> init() async {
     () => GetSinglePostCubit(),
   );
 
-  sl.registerLazySingleton<UserServiceInterface>(() => UserService());
+  //sl.registerLazySingleton<CommentServiceInterface>(() => UserService());
 
   // Comment Cubit Injection
   sl.registerFactory(
-    () => CommentCubit(
-      createCommentUseCase: sl.call(),
-      deleteCommentUseCase: sl.call(),
-      likeCommentUseCase: sl.call(),
-      readCommentsUseCase: sl.call(),
-      updateCommentUseCase: sl.call(),
-    ),
+    () => CommentCubit(commentService: CommentService()),
   );
 
   // Reply Cubit Injection

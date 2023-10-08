@@ -12,7 +12,7 @@ class CommentInitial extends CommentState {}
 class CommentLoading extends CommentState {}
 
 class CommentLoaded extends CommentState {
-  final List<CommentEntity> comments;
+  final List<CommentModel> comments;
 
   const CommentLoaded({required this.comments});
   @override

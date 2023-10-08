@@ -84,8 +84,7 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                               fontWeight: FontWeight.bold)),
                       sizeHorizontal(5),
                       Text(
-                        //"test",
-                        formatTimeAgo(widget.post.createAt!),
+                        formatTimeAgo(widget.post.createdAt!),
                         style: const TextStyle(color: darkGreyColor),
                       ),
                     ],

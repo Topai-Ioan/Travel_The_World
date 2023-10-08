@@ -15,7 +15,7 @@ class PostModel {
   final String userProfileUrl;
 
   @JsonKey(fromJson: _timestampToDateTime, toJson: _dateTimeToTimestamp)
-  final DateTime? createAt; // Change to nullable DateTime
+  final DateTime? createdAt;
 
   PostModel({
     this.postId = '',
@@ -26,8 +26,12 @@ class PostModel {
     this.likes = const [],
     this.totalComments = 0,
     this.userProfileUrl = '',
-    this.createAt,
+    this.createdAt,
   });
+
+  factory PostModel.fromJson(Map<String, dynamic> json) =>
+      _$PostModelFromJson(json);
+  Map<String, dynamic> toJson() => _$PostModelToJson(this);
 
   static DateTime? _timestampToDateTime(Timestamp? timestamp) {
     if (timestamp == null) {
@@ -42,9 +46,4 @@ class PostModel {
     }
     return Timestamp.fromDate(dateTime);
   }
-
-  factory PostModel.fromJson(Map<String, dynamic> json) =>
-      _$PostModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PostModelToJson(this);
 }

@@ -1,39 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'comment_model.g.dart';
+part 'reply_model.g.dart';
 
 @JsonSerializable()
-class CommentModel {
+class ReplyModel {
+  final String creatorUid;
+  final String replyId;
   final String commentId;
   final String postId;
-  final String creatorUid;
   final String description;
   final String username;
   final String userProfileUrl;
   final List<String> likes;
-  final num totalReplies;
-  final bool edited;
 
   @JsonKey(fromJson: _timestampToDateTime, toJson: _dateTimeToTimestamp)
   final DateTime? createdAt;
 
-  CommentModel({
+  const ReplyModel({
+    this.creatorUid = '',
+    this.replyId = '',
     this.commentId = '',
     this.postId = '',
-    this.creatorUid = '',
     this.description = '',
     this.username = '',
     this.userProfileUrl = '',
     this.likes = const [],
-    this.totalReplies = 0,
-    this.edited = false,
     this.createdAt,
   });
-
-  factory CommentModel.fromJson(Map<String, dynamic> json) =>
-      _$CommentModelFromJson(json);
-  Map<String, dynamic> toJson() => _$CommentModelToJson(this);
+  factory ReplyModel.fromJson(Map<String, dynamic> json) =>
+      _$ReplyModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ReplyModelToJson(this);
 
   static DateTime? _timestampToDateTime(Timestamp? timestamp) {
     if (timestamp == null) {

@@ -10,7 +10,7 @@ class CommentModel extends CommentEntity {
   final String? description;
   final String? username;
   final String? userProfileUrl;
-  final Timestamp? createAt;
+  final Timestamp? createdAt;
   final List<String>? likes;
   final num? totalReplies;
 
@@ -21,7 +21,7 @@ class CommentModel extends CommentEntity {
     this.description,
     this.username,
     this.userProfileUrl,
-    this.createAt,
+    this.createdAt,
     this.likes,
     this.totalReplies,
   }) : super(
@@ -31,7 +31,7 @@ class CommentModel extends CommentEntity {
             userProfileUrl: userProfileUrl,
             username: username,
             likes: likes,
-            createAt: createAt,
+            createdAt: createdAt,
             commentId: commentId,
             totalReplies: totalReplies);
 
@@ -44,7 +44,7 @@ class CommentModel extends CommentEntity {
       description: snapshot['description'],
       userProfileUrl: snapshot['userProfileUrl'],
       commentId: snapshot['commentId'],
-      createAt: snapshot['createAt'],
+      createdAt: snapshot['createdAt'],
       totalReplies: snapshot['totalReplies'],
       username: snapshot['username'],
       likes: List.from(snap.get("likes")),
@@ -56,7 +56,7 @@ class CommentModel extends CommentEntity {
         "description": description,
         "userProfileUrl": userProfileUrl,
         "commentId": commentId,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "totalReplies": totalReplies,
         "postId": postId,
         "likes": likes,

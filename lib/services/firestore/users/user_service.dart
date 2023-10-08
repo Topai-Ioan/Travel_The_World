@@ -49,6 +49,7 @@ class UserService implements UserServiceInterface {
         username: user.username,
         followers: user.followers,
         totalPosts: user.totalPosts,
+        createdAt: DateTime.now().toUtc(),
       ).toJson();
 
       if (!userDoc.exists) {

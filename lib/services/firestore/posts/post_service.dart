@@ -22,7 +22,7 @@ class PostService {
       likes: const [],
       description: post.description,
       creatorUid: post.creatorUid,
-      createAt: DateTime.now(),
+      createdAt: DateTime.now().toUtc(),
     ).toJson();
 
     try {
@@ -105,7 +105,7 @@ class PostService {
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .where("postId", isEqualTo: postId)
-        .orderBy("createAt", descending: true);
+        .orderBy("createdAt", descending: true);
 
     return ref.snapshots().map((querySnapshot) {
       var data = querySnapshot.docs.map((doc) => doc.data());
@@ -117,7 +117,7 @@ class PostService {
   Stream<List<PostModel>> getPosts() {
     final ref = _db
         .collection(FirebaseConstants.Posts)
-        .orderBy("createAt", descending: true);
+        .orderBy("createdAt", descending: true);
 
     return ref.snapshots().map((querySnapshot) {
       var data = querySnapshot.docs.map((doc) => doc.data());
@@ -135,7 +135,7 @@ class PostService {
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .where('creatorUid', whereIn: followingList)
-        .orderBy("createAt", descending: true);
+        .orderBy("createdAt", descending: true);
 
     return ref.snapshots().map((querySnapshot) {
       var data = querySnapshot.docs.map((doc) => doc.data());

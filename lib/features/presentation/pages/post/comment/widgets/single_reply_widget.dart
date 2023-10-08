@@ -92,7 +92,7 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
                       children: [
                         Text(
                           DateFormat("dd/MMM/yyy")
-                              .format(widget.reply.createAt!.toDate()),
+                              .format(widget.reply.createdAt!.toDate()),
                           style: const TextStyle(color: darkGreyColor),
                         ),
                         Text(

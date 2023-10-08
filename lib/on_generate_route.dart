@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
-import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_in_page.dart';
 import 'package:travel_the_world/features/presentation/pages/credential/sign_up_page.dart';
@@ -15,6 +14,7 @@ import 'package:travel_the_world/features/presentation/pages/profile/edit_profil
 import 'package:travel_the_world/features/presentation/pages/user_list_pages/followers_page.dart';
 import 'package:travel_the_world/features/presentation/pages/user_list_pages/following_page.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/single_user_profile_page.dart';
+import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
@@ -39,7 +39,7 @@ class OnGenerateRoute {
 
       case PageRoutes.UpdateCommentPage:
         {
-          if (args is CommentEntity) {
+          if (args is CommentModel) {
             return routeBuilder(EditCommentPage(
               comment: args,
             ));

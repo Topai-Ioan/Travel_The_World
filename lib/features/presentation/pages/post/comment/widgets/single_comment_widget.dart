@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_reply_widget.dart';
@@ -13,11 +12,12 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/custom
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 class SingleCommentWidget extends StatefulWidget {
-  final CommentEntity comment;
+  final CommentModel comment;
   final VoidCallback? onLongPressListener;
   final VoidCallback? onLikeClickListener;
   final UserModel? currentUser;
@@ -60,7 +60,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "${widget.comment.username}",
+          widget.comment.username,
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
@@ -70,11 +70,11 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
         GestureDetector(
           onTap: widget.onLikeClickListener,
           child: Icon(
-            widget.comment.likes!.contains(_currentUid)
+            widget.comment.likes.contains(_currentUid)
                 ? Icons.favorite
                 : Icons.favorite_outline,
             size: 20,
-            color: widget.comment.likes!.contains(_currentUid)
+            color: widget.comment.likes.contains(_currentUid)
                 ? Colors.red
                 : darkGreyColor,
           ),
@@ -85,7 +85,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
 
   Widget buildCommentText() {
     return Text(
-      "${widget.comment.description}",
+      widget.comment.description,
       style: const TextStyle(color: primaryColor),
     );
   }
@@ -94,7 +94,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
     return Row(
       children: [
         Text(
-          DateFormat("dd/MMM/yyy").format(widget.comment.createAt!.toDate()),
+          DateFormat("dd/MMM/yyy").format(widget.comment.createdAt!),
           style: const TextStyle(color: darkGreyColor),
         ),
         sizeHorizontal(15),
@@ -138,7 +138,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
         ),
         const Spacer(),
         Text(
-          "${widget.comment.likes?.length} Likes",
+          "${widget.comment.likes.length} Likes",
           style: const TextStyle(color: darkGreyColor, fontSize: 12),
         ),
       ],
@@ -241,7 +241,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
         .createReply(
             reply: ReplyEntity(
       replyId: const Uuid().v1(),
-      createAt: Timestamp.now(),
+      createdAt: Timestamp.now(),
       likes: const [],
       username: widget.currentUser!.username,
       userProfileUrl: widget.currentUser!.profileUrl,

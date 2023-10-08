@@ -8,7 +8,7 @@ class CommentEntity extends Equatable {
   final String? description;
   final String? username;
   final String? userProfileUrl;
-  final Timestamp? createAt;
+  final Timestamp? createdAt;
   final List<String>? likes;
   final num? totalReplies;
 
@@ -19,7 +19,7 @@ class CommentEntity extends Equatable {
     this.description,
     this.username,
     this.userProfileUrl,
-    this.createAt,
+    this.createdAt,
     this.likes,
     this.totalReplies,
   });
@@ -32,7 +32,7 @@ class CommentEntity extends Equatable {
         description,
         username,
         userProfileUrl,
-        createAt,
+        createdAt,
         likes,
         totalReplies,
       ];

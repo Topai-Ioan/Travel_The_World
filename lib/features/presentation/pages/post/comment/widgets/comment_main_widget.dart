@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/domain/entites/app_entity.dart';
-import 'package:travel_the_world/features/domain/entites/comment/comment_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
@@ -14,6 +12,7 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/custom
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_text_input.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:uuid/uuid.dart';
@@ -33,13 +32,13 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   @override
   void initState() {
     BlocProvider.of<GetSingleUserCubit>(context)
-        .getSingleUser(uid: widget.appEntity.uid!);
+        .getSingleUser(uid: widget.appEntity.uid);
 
     BlocProvider.of<GetSinglePostCubit>(context)
-        .getSinglePost(postId: widget.appEntity.postId!);
+        .getSinglePost(postId: widget.appEntity.postId);
 
     BlocProvider.of<CommentCubit>(context)
-        .getComments(postId: widget.appEntity.postId!);
+        .getComments(postId: widget.appEntity.postId);
 
     super.initState();
   }
@@ -100,8 +99,8 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
     );
   }
 
-  Widget buildCommentListView(UserModel singleUser, PostModel singlePost,
-      List<CommentEntity> comments) {
+  Widget buildCommentListView(
+      UserModel singleUser, PostModel singlePost, List<CommentModel> comments) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -193,10 +192,10 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   _createComment(UserModel currentUser) {
     BlocProvider.of<CommentCubit>(context)
         .createComment(
-            comment: CommentEntity(
+            comment: CommentModel(
       totalReplies: 0,
       commentId: const Uuid().v1(),
-      createAt: Timestamp.now(),
+      createdAt: DateTime.now().toUtc(),
       likes: const [],
       username: currentUser.username,
       userProfileUrl: currentUser.profileUrl,
@@ -212,7 +211,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   }
 
   _openBottomModalSheet(
-      {required BuildContext context, required CommentEntity comment}) {
+      {required BuildContext context, required CommentModel comment}) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent.withOpacity(0.5),
       context: context,
@@ -222,8 +221,8 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
             OptionItem(
               text: "Delete Comment",
               onTap: () => _deleteComment(
-                commentId: comment.commentId!,
-                postId: comment.postId!,
+                commentId: comment.commentId,
+                postId: comment.postId,
               ),
             ),
             OptionItem(
@@ -252,7 +251,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
           message: 'Are you sure you want to delete this comment?',
           onYesPressed: () {
             BlocProvider.of<CommentCubit>(currentContext).deleteComment(
-              comment: CommentEntity(commentId: commentId, postId: postId),
+              comment: CommentModel(commentId: commentId, postId: postId),
             );
             Navigator.pop(context);
             Navigator.pop(context);
@@ -266,9 +265,9 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
     );
   }
 
-  _likeComment({required CommentEntity comment}) {
+  _likeComment({required CommentModel comment}) {
     BlocProvider.of<CommentCubit>(context).likeComment(
-        comment: CommentEntity(
-            commentId: comment.commentId, postId: comment.postId));
+        comment:
+            CommentModel(commentId: comment.commentId, postId: comment.postId));
   }
 }

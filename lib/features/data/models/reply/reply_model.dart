@@ -12,7 +12,7 @@ class ReplyModel extends ReplyEntity {
   final String? username;
   final String? userProfileUrl;
   final List<String>? likes;
-  final Timestamp? createAt;
+  final Timestamp? createdAt;
 
   const ReplyModel({
     this.creatorUid,
@@ -23,7 +23,7 @@ class ReplyModel extends ReplyEntity {
     this.username,
     this.userProfileUrl,
     this.likes,
-    this.createAt,
+    this.createdAt,
   }) : super(
             description: description,
             commentId: commentId,
@@ -32,7 +32,7 @@ class ReplyModel extends ReplyEntity {
             userProfileUrl: userProfileUrl,
             username: username,
             likes: likes,
-            createAt: createAt,
+            createdAt: createdAt,
             replyId: replyId);
 
   factory ReplyModel.fromSnapshot(DocumentSnapshot snap) {
@@ -45,7 +45,7 @@ class ReplyModel extends ReplyEntity {
       userProfileUrl: snapshot['userProfileUrl'],
       commentId: snapshot['commentId'],
       replyId: snapshot['replyId'],
-      createAt: snapshot['createAt'],
+      createdAt: snapshot['createdAt'],
       username: snapshot['username'],
       likes: List.from(snap.get("likes")),
     );
@@ -56,7 +56,7 @@ class ReplyModel extends ReplyEntity {
         "description": description,
         "userProfileUrl": userProfileUrl,
         "commentId": commentId,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "replyId": replyId,
         "postId": postId,
         "likes": likes,
