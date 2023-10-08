@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/post/comment/widgets/single_reply_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/confirmation_dialog.dart';
@@ -13,6 +11,7 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/option
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
+import 'package:travel_the_world/services/models/replies/reply_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -47,7 +46,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
       _currentUid = currentUid;
     });
     BlocProvider.of<ReplyCubit>(context).getReplies(
-        reply: ReplyEntity(
+        reply: ReplyModel(
             postId: widget.comment.postId,
             commentId: widget.comment.commentId));
     super.initState();
@@ -119,7 +118,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
               widget.comment.totalReplies == 0
                   ? toast("no replies")
                   : BlocProvider.of<ReplyCubit>(context).getReplies(
-                      reply: ReplyEntity(
+                      reply: ReplyModel(
                         postId: widget.comment.postId,
                         commentId: widget.comment.commentId,
                       ),
@@ -239,9 +238,9 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   _createReply(UserModel currentUser) {
     BlocProvider.of<ReplyCubit>(context)
         .createReply(
-            reply: ReplyEntity(
+            reply: ReplyModel(
       replyId: const Uuid().v1(),
-      createdAt: Timestamp.now(),
+      createdAt: DateTime.now().toUtc(),
       likes: const [],
       username: widget.currentUser!.username,
       userProfileUrl: widget.currentUser!.profileUrl,
@@ -259,7 +258,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   }
 
   _openBottomModalSheet(
-      {required BuildContext context, required ReplyEntity reply}) {
+      {required BuildContext context, required ReplyModel reply}) {
     return showModalBottomSheet(
         backgroundColor: Colors.transparent.withOpacity(0.5),
         context: context,
@@ -285,7 +284,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
         });
   }
 
-  _deleteReply({required ReplyEntity reply}) {
+  _deleteReply({required ReplyModel reply}) {
     final currentContext = context;
     showDialog(
       context: context,
@@ -294,7 +293,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
           message: 'Are you sure you want to delete this post?',
           onYesPressed: () {
             BlocProvider.of<ReplyCubit>(currentContext).deleteReply(
-                reply: ReplyEntity(
+                reply: ReplyModel(
                     postId: reply.postId,
                     commentId: reply.commentId,
                     replyId: reply.replyId));
@@ -310,9 +309,9 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
     );
   }
 
-  _likeReply({required ReplyEntity reply}) {
+  _likeReply({required ReplyModel reply}) {
     BlocProvider.of<ReplyCubit>(context).likeReply(
-        reply: ReplyEntity(
+        reply: ReplyModel(
             postId: reply.postId,
             commentId: reply.commentId,
             replyId: reply.replyId));

@@ -13,6 +13,7 @@ class ReplyModel {
   final String username;
   final String userProfileUrl;
   final List<String> likes;
+  final bool edited;
 
   @JsonKey(fromJson: _timestampToDateTime, toJson: _dateTimeToTimestamp)
   final DateTime? createdAt;
@@ -26,6 +27,7 @@ class ReplyModel {
     this.username = '',
     this.userProfileUrl = '',
     this.likes = const [],
+    this.edited = false,
     this.createdAt,
   });
   factory ReplyModel.fromJson(Map<String, dynamic> json) =>

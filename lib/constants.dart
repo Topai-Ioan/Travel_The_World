@@ -49,9 +49,9 @@ class FirebaseConstants {
 void toast(String message) {
   Fluttertoast.showToast(
       msg: message,
-      toastLength: Toast.LENGTH_SHORT,
+      toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
+      timeInSecForIosWeb: 3,
       backgroundColor: blueColor,
       textColor: Colors.white,
       fontSize: 16.0);

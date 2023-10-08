@@ -7,11 +7,6 @@ import 'package:travel_the_world/features/data/data_sources/remote_data_source/r
 import 'package:travel_the_world/features/data/repository/firebase_repository.dart';
 import 'package:travel_the_world/features/domain/repository/firebase_repository_interface.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/sync_profile_picture.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/create_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/delete_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/like_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/read_replies_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/update_reply_usecase.dart';
 import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
 import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
@@ -59,12 +54,7 @@ Future<void> init() async {
 
   // Reply Cubit Injection
   sl.registerFactory(
-    () => ReplyCubit(
-        createReplyUseCase: sl.call(),
-        deleteReplyUseCase: sl.call(),
-        likeReplyUseCase: sl.call(),
-        readRepliesUseCase: sl.call(),
-        updateReplyUseCase: sl.call()),
+    () => ReplyCubit(),
   );
 
   // Use Cases
@@ -76,13 +66,6 @@ Future<void> init() async {
   // Post
   sl.registerLazySingleton(
       () => SyncProfilePictureUseCase(repository: sl.call()));
-
-  // Reply
-  sl.registerLazySingleton(() => CreateReplyUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => ReadRepliesUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => LikeReplyUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UpdateReplyUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => DeleteReplyUseCase(repository: sl.call()));
 
   // Repository
 

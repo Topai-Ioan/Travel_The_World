@@ -12,7 +12,7 @@ class ReplyInitial extends ReplyState {}
 class ReplyLoading extends ReplyState {}
 
 class ReplyLoaded extends ReplyState {
-  final List<ReplyEntity> replies;
+  final List<ReplyModel> replies;
 
   const ReplyLoaded({required this.replies});
 

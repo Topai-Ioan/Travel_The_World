@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
 import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
+import 'package:travel_the_world/services/models/replies/reply_model.dart';
 
 class EditReplyMainWidget extends StatefulWidget {
-  final ReplyEntity reply;
+  final ReplyModel reply;
   const EditReplyMainWidget({Key? key, required this.reply}) : super(key: key);
 
   @override
@@ -79,7 +79,7 @@ class _EditReplyMainWidgetState extends State<EditReplyMainWidget> {
     });
     BlocProvider.of<ReplyCubit>(context)
         .updateReply(
-            reply: ReplyEntity(
+            reply: ReplyModel(
                 postId: widget.reply.postId,
                 commentId: widget.reply.commentId,
                 replyId: widget.reply.replyId,

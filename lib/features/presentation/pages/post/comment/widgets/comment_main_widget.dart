@@ -12,6 +12,7 @@ import 'package:travel_the_world/features/presentation/pages/shared_items/custom
 import 'package:travel_the_world/features/presentation/pages/shared_items/custom_text_input.dart';
 import 'package:travel_the_world/features/presentation/pages/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
@@ -251,7 +252,10 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
           message: 'Are you sure you want to delete this comment?',
           onYesPressed: () {
             BlocProvider.of<CommentCubit>(currentContext).deleteComment(
-              comment: CommentModel(commentId: commentId, postId: postId),
+              comment: CommentModel(
+                  commentId: commentId,
+                  postId: postId,
+                  creatorUid: AuthService().getCurrentUserId()!),
             );
             Navigator.pop(context);
             Navigator.pop(context);

@@ -37,7 +37,7 @@ class CommentCubit extends Cubit<CommentState> {
 
   Future<void> deleteComment({required CommentModel comment}) async {
     try {
-      await commentService.deleteComment(comment);
+      await commentService.deleteComment(commentId: comment.commentId);
     } on SocketException catch (_) {
       emit(CommentFailure());
     } catch (_) {

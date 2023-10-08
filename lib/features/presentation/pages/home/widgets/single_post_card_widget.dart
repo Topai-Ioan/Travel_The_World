@@ -255,8 +255,7 @@ _deletePost(BuildContext context, PostModel post, PostCubit postCubit) {
       return ConfirmationDialog(
         message: 'Are you sure you want to delete this post?',
         onYesPressed: () {
-          BlocProvider.of<PostCubit>(context)
-              .deletePost(post: PostModel(postId: post.postId));
+          BlocProvider.of<PostCubit>(context).deletePost(postId: post.postId);
           Navigator.pop(context);
           Navigator.pop(context);
         },

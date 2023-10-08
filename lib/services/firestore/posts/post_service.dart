@@ -9,7 +9,6 @@ class PostService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final _authService = AuthService();
-
   Future<void> createPost({required PostModel post}) async {
     final postCollection = _db.collection(FirebaseConstants.Posts);
 
@@ -48,11 +47,11 @@ class PostService {
     }
   }
 
-  Future<void> deletePost({required PostModel post}) async {
+  Future<void> deletePost({required String postId}) async {
     final postCollection = _db.collection(FirebaseConstants.Posts);
 
     try {
-      final postDoc = await postCollection.doc(post.postId).get();
+      final postDoc = await postCollection.doc(postId).get();
       if (postDoc.exists) {
         final creatorUid = postDoc.data()!['creatorUid'];
         final userCollection =
@@ -63,15 +62,39 @@ class PostService {
           await userCollection.update({"totalPosts": FieldValue.increment(-1)});
         }
 
-        postCollection.doc(post.postId).delete();
+        postCollection.doc(postId).delete();
 
-        final imageId = post.postId;
+        final imageId = postId;
         final storageRef = _firebaseStorage
             .ref()
             .child("Posts")
             .child(_authService.getCurrentUserId()!)
             .child(imageId);
         await storageRef.delete();
+
+        final totalComments = postDoc.data()!['totalComments'];
+        if (totalComments != 0) {
+          final commentCollection = _db.collection(FirebaseConstants.Comment);
+
+          final commentsQuery =
+              await commentCollection.where('postId', isEqualTo: postId).get();
+
+          for (final commentDoc in commentsQuery.docs) {
+            final totalReplies = commentDoc.data()['totalReplies'];
+
+            if (totalReplies != 0) {
+              final replyCollection = _db.collection(FirebaseConstants.Reply);
+              final repliesQuery = await replyCollection
+                  .where('commentId', isEqualTo: commentDoc.id)
+                  .get();
+
+              for (final replyDoc in repliesQuery.docs) {
+                await replyDoc.reference.delete();
+              }
+            }
+            await commentDoc.reference.delete();
+          }
+        }
       } else {
         toast("Post does not exist.");
       }
@@ -80,21 +103,21 @@ class PostService {
     }
   }
 
-  Future<void> likePost({required PostModel post}) async {
+  Future<void> likePost({required String postId}) async {
     final postCollection = _db.collection(FirebaseConstants.Posts);
 
     final currentUid = AuthService().getCurrentUserId()!;
-    final postRef = await postCollection.doc(post.postId).get();
+    final postRef = await postCollection.doc(postId).get();
 
     //todo dont hardcode strings
     if (postRef.exists) {
       List likes = postRef.get("likes");
       if (likes.contains(currentUid)) {
-        postCollection.doc(post.postId).update({
+        postCollection.doc(postId).update({
           "likes": FieldValue.arrayRemove([currentUid]),
         });
       } else {
-        postCollection.doc(post.postId).update({
+        postCollection.doc(postId).update({
           "likes": FieldValue.arrayUnion([currentUid]),
         });
       }

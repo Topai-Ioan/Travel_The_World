@@ -2,34 +2,19 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:travel_the_world/features/domain/entites/reply/reply_entity.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/create_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/delete_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/like_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/read_replies_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/update_reply_usecase.dart';
+import 'package:travel_the_world/services/firestore/replies/reply_service.dart';
+import 'package:travel_the_world/services/models/replies/reply_model.dart';
 
 part 'reply_state.dart';
 
 class ReplyCubit extends Cubit<ReplyState> {
-  final CreateReplyUseCase createReplyUseCase;
-  final DeleteReplyUseCase deleteReplyUseCase;
-  final LikeReplyUseCase likeReplyUseCase;
-  final ReadRepliesUseCase readRepliesUseCase;
-  final UpdateReplyUseCase updateReplyUseCase;
+  final ReplyService replyService = ReplyService();
+  ReplyCubit() : super(ReplyInitial());
 
-  ReplyCubit(
-      {required this.createReplyUseCase,
-      required this.updateReplyUseCase,
-      required this.readRepliesUseCase,
-      required this.likeReplyUseCase,
-      required this.deleteReplyUseCase})
-      : super(ReplyInitial());
-
-  Future<void> getReplies({required ReplyEntity reply}) async {
+  Future<void> getReplies({required ReplyModel reply}) async {
     emit(ReplyLoading());
     try {
-      final streamResponse = readRepliesUseCase.call(reply);
+      final streamResponse = replyService.getReplies(reply.commentId);
       streamResponse.listen((replies) {
         emit(ReplyLoaded(replies: replies));
       });
@@ -40,9 +25,9 @@ class ReplyCubit extends Cubit<ReplyState> {
     }
   }
 
-  Future<void> likeReply({required ReplyEntity reply}) async {
+  Future<void> likeReply({required ReplyModel reply}) async {
     try {
-      await likeReplyUseCase.call(reply);
+      await replyService.likeReply(reply);
     } on SocketException catch (_) {
       emit(ReplyFailure());
     } catch (_) {
@@ -50,9 +35,9 @@ class ReplyCubit extends Cubit<ReplyState> {
     }
   }
 
-  Future<void> createReply({required ReplyEntity reply}) async {
+  Future<void> createReply({required ReplyModel reply}) async {
     try {
-      await createReplyUseCase.call(reply);
+      await replyService.createReply(reply);
     } on SocketException catch (_) {
       emit(ReplyFailure());
     } catch (_) {
@@ -60,9 +45,9 @@ class ReplyCubit extends Cubit<ReplyState> {
     }
   }
 
-  Future<void> deleteReply({required ReplyEntity reply}) async {
+  Future<void> deleteReply({required ReplyModel reply}) async {
     try {
-      await deleteReplyUseCase.call(reply);
+      await replyService.deleteReply(reply);
     } on SocketException catch (_) {
       emit(ReplyFailure());
     } catch (_) {
@@ -70,9 +55,9 @@ class ReplyCubit extends Cubit<ReplyState> {
     }
   }
 
-  Future<void> updateReply({required ReplyEntity reply}) async {
+  Future<void> updateReply({required ReplyModel reply}) async {
     try {
-      await updateReplyUseCase.call(reply);
+      await replyService.updateReply(reply);
     } on SocketException catch (_) {
       emit(ReplyFailure());
     } catch (_) {

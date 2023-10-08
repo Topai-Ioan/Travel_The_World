@@ -6,7 +6,6 @@ import 'package:travel_the_world/services/models/comments/comment_model.dart';
 class CommentService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _authService = AuthService();
-
   Future<void> createComment(CommentModel comment) async {
     final commentCollection = _db.collection(FirebaseConstants.Comment);
 
@@ -44,26 +43,39 @@ class CommentService {
     }
   }
 
-  Future<void> deleteComment(CommentModel comment) async {
+  Future<void> deleteComment({required String commentId}) async {
     final commentCollection = _db.collection(FirebaseConstants.Comment);
-
+    final comment = await getCommentById(commentId);
     try {
       if (comment.creatorUid == _authService.getCurrentUserId()) {
-        commentCollection.doc(comment.commentId).delete().then((value) {
-          final postCollection =
-              _db.collection(FirebaseConstants.Posts).doc(comment.postId);
+        await commentCollection.doc(commentId).delete();
 
-          postCollection.get().then((value) {
-            if (value.exists) {
-              postCollection
-                  .update({"totalComments": FieldValue.increment(-1)});
-              return;
-            }
-          });
-        });
+        final postCollection =
+            _db.collection(FirebaseConstants.Posts).doc(comment.postId);
+
+        final postDoc = await postCollection.get();
+        if (postDoc.exists) {
+          await postCollection
+              .update({"totalComments": FieldValue.increment(-1)});
+        }
+
+        final commentDoc = await commentCollection.doc(commentId).get();
+        final totalReplies = commentDoc.data()?['totalReplies'];
+
+        if (totalReplies != 0) {
+          final replyCollection = _db.collection(FirebaseConstants.Reply);
+
+          final repliesQuery = await replyCollection
+              .where('commentId', isEqualTo: commentId)
+              .get();
+
+          for (final replyDoc in repliesQuery.docs) {
+            await replyDoc.reference.delete();
+          }
+        }
       }
     } catch (e) {
-      toast("some error occured $e");
+      toast("Some error occurred: $e");
     }
   }
 
@@ -97,6 +109,22 @@ class CommentService {
       var comment = data.map((d) => CommentModel.fromJson(d)).toList();
       return comment;
     });
+  }
+
+  Future<CommentModel> getCommentById(String commentId) async {
+    final commentDoc =
+        await _db.collection(FirebaseConstants.Comment).doc(commentId).get();
+
+    if (commentDoc.exists) {
+      final commentData = commentDoc.data();
+      if (commentData != null) {
+        return CommentModel.fromJson(commentData);
+      }
+    }
+
+    return CommentModel(
+      commentId: commentId,
+    );
   }
 
   Future<void> editComment(CommentModel comment) async {

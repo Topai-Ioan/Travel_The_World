@@ -280,8 +280,7 @@ _openBottomModalSheet(
     BuildContext context, PostModel post, PostCubit postCubit) {
   //
   deletePost() {
-    BlocProvider.of<PostCubit>(context)
-        .deletePost(post: PostModel(postId: post.postId));
+    BlocProvider.of<PostCubit>(context).deletePost(postId: post.postId);
     Navigator.pop(context);
     Navigator.pop(context);
   }

@@ -17,6 +17,7 @@ ReplyModel _$ReplyModelFromJson(Map<String, dynamic> json) => ReplyModel(
       likes:
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
+      edited: json['edited'] as bool? ?? false,
       createdAt:
           ReplyModel._timestampToDateTime(json['createdAt'] as Timestamp?),
     );
@@ -31,5 +32,6 @@ Map<String, dynamic> _$ReplyModelToJson(ReplyModel instance) =>
       'username': instance.username,
       'userProfileUrl': instance.userProfileUrl,
       'likes': instance.likes,
+      'edited': instance.edited,
       'createdAt': ReplyModel._dateTimeToTimestamp(instance.createdAt),
     };

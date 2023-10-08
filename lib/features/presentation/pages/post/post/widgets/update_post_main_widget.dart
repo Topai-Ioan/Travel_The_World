@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/features/presentation/pages/profile/widgets/profile_form_widget.dart';
@@ -36,19 +35,6 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
 
   File? _image;
   bool _isUploading = false;
-  Future selectImage() async {
-    try {
-      final pickedFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      setState(() {
-        if (pickedFile != null) {
-          _image = File(pickedFile.path);
-        }
-      });
-    } catch (e) {
-      toast("some error occured $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +89,7 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
               ProfileFormWidget(
                 controller: _descriptionController,
                 title: "Description",
+                hintText: "Enter the description...",
               ),
               sizeVertical(10),
               if (_isUploading)
