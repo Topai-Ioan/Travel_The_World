@@ -2,20 +2,20 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:travel_the_world/services/firestore/posts/post_service.dart';
+import 'package:travel_the_world/services/firestore/posts/post_service_interface.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
 part 'post_state.dart';
 
 class PostCubit extends Cubit<PostState> {
-  PostCubit() : super(PostInitial());
-  final PostService _postService = PostService();
+  final PostServiceInterface postService;
+  PostCubit({required this.postService}) : super(PostInitial());
 
   Future<void> getPosts() async {
     emit(PostLoading());
     try {
-      final streamResponse = _postService.getPosts();
+      final streamResponse = postService.getPosts();
 
       final subscription = streamResponse.listen((posts) {
         if (posts.isNotEmpty) {
@@ -36,7 +36,7 @@ class PostCubit extends Cubit<PostState> {
     emit(PostLoading());
     try {
       final streamResponse =
-          await _postService.getPostsFromFollowedUsers(currentUser: user);
+          await postService.getPostsFromFollowedUsers(currentUser: user);
 
       final subscription = streamResponse.listen((posts) {
         if (posts.isNotEmpty) {
@@ -55,7 +55,7 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> likePost({required PostModel post}) async {
     try {
-      await _postService.likePost(postId: post.postId);
+      await postService.likePost(postId: post.postId);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
@@ -65,7 +65,7 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> deletePost({required String postId}) async {
     try {
-      await _postService.deletePost(postId: postId);
+      await postService.deletePost(postId: postId);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
@@ -75,7 +75,7 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> createPost({required PostModel post}) async {
     try {
-      await _postService.createPost(post: post);
+      await postService.createPost(post: post);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
@@ -85,7 +85,7 @@ class PostCubit extends Cubit<PostState> {
 
   Future<void> updatePost({required PostModel post}) async {
     try {
-      await _postService.updatePost(post: post);
+      await postService.updatePost(post: post);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {

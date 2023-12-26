@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
+import 'package:travel_the_world/services/firestore/comments/comment_service_interface.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
 
-class CommentService {
+class CommentService implements CommentServiceInterface {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _authService = AuthService();
-  Future<void> createComment(CommentModel comment) async {
+  @override
+  Future<void> createComment({required CommentModel comment}) async {
     final commentCollection = _db.collection(FirebaseConstants.Comment);
 
     final newComment = CommentModel(
@@ -43,9 +45,10 @@ class CommentService {
     }
   }
 
+  @override
   Future<void> deleteComment({required String commentId}) async {
     final commentCollection = _db.collection(FirebaseConstants.Comment);
-    final comment = await getCommentById(commentId);
+    final comment = await getCommentById(commentId: commentId);
     try {
       if (comment.creatorUid == _authService.getCurrentUserId()) {
         await commentCollection.doc(commentId).delete();
@@ -79,7 +82,8 @@ class CommentService {
     }
   }
 
-  Future<void> likeComment(CommentModel comment) async {
+  @override
+  Future<void> likeComment({required CommentModel comment}) async {
     final commentCollection = _db.collection(FirebaseConstants.Comment);
     final currentUid = _authService.getCurrentUserId();
 
@@ -99,7 +103,8 @@ class CommentService {
     }
   }
 
-  Stream<List<CommentModel>> getComments(String postId) {
+  @override
+  Stream<List<CommentModel>> getComments({required String postId}) {
     final ref = _db
         .collection(FirebaseConstants.Comment)
         .where("postId", isEqualTo: postId);
@@ -111,7 +116,8 @@ class CommentService {
     });
   }
 
-  Future<CommentModel> getCommentById(String commentId) async {
+  @override
+  Future<CommentModel> getCommentById({required String commentId}) async {
     final commentDoc =
         await _db.collection(FirebaseConstants.Comment).doc(commentId).get();
 
@@ -127,7 +133,8 @@ class CommentService {
     );
   }
 
-  Future<void> editComment(CommentModel comment) async {
+  @override
+  Future<void> editComment({required CommentModel comment}) async {
     final ref = _db.collection(FirebaseConstants.Comment);
 
     var data = {

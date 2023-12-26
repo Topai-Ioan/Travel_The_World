@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
+import 'package:travel_the_world/services/firestore/replies/reply_service_interface.dart';
 import 'package:travel_the_world/services/models/replies/reply_model.dart';
 
-class ReplyService {
+class ReplyService implements ReplyServiceInterface {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _authService = AuthService();
 
-  Future<void> createReply(ReplyModel reply) async {
+  @override
+  Future<void> createReply({required ReplyModel reply}) async {
     final replyCollection = _db.collection(FirebaseConstants.Reply);
     final newReply = ReplyModel(
             userProfileUrl: reply.userProfileUrl,
@@ -44,7 +46,8 @@ class ReplyService {
     }
   }
 
-  Future<void> deleteReply(ReplyModel reply) async {
+  @override
+  Future<void> deleteReply({required ReplyModel reply}) async {
     final replyCollection = _db.collection(FirebaseConstants.Reply);
 
     try {
@@ -63,7 +66,8 @@ class ReplyService {
     }
   }
 
-  Future<void> likeReply(ReplyModel reply) async {
+  @override
+  Future<void> likeReply({required ReplyModel reply}) async {
     final replyCollection = _db.collection(FirebaseConstants.Reply);
     final currentUid = _authService.getCurrentUserId()!;
     final replyRef = await replyCollection.doc(reply.replyId).get();
@@ -81,7 +85,8 @@ class ReplyService {
     }
   }
 
-  Stream<List<ReplyModel>> getReplies(String commentId) {
+  @override
+  Stream<List<ReplyModel>> getReplies({required String commentId}) {
     final ref = _db
         .collection(FirebaseConstants.Reply)
         .where("CommentId", isEqualTo: commentId);
@@ -93,7 +98,8 @@ class ReplyService {
     });
   }
 
-  Future<void> updateReply(ReplyModel reply) async {
+  @override
+  Future<void> updateReply({required ReplyModel reply}) async {
     final replyCollection = _db.collection(FirebaseConstants.Reply);
 
     var data = {

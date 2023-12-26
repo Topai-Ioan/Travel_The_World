@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'on_generate_route.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

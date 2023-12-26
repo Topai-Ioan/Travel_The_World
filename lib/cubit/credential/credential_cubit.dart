@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
 part 'credential_state.dart';
 
 class CredentialCubit extends Cubit<CredentialState> {
+  //final AuthServiceInterface authService;
   CredentialCubit() : super(CredentialInitial());
 
   Future<void> signInUser(

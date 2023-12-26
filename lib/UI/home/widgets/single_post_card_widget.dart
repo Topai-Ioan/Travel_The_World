@@ -9,7 +9,7 @@ import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
 import 'package:travel_the_world/UI/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 
 class SinglePostCardWidget extends StatefulWidget {

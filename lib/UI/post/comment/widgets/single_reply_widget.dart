@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/replies/reply_model.dart';
 
 class SingleReplyWidget extends StatefulWidget {

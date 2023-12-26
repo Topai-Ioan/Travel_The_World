@@ -2,19 +2,19 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:travel_the_world/services/firestore/comments/comment_service.dart';
+import 'package:travel_the_world/services/firestore/comments/comment_service_interface.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
 
 part 'comment_state.dart';
 
 class CommentCubit extends Cubit<CommentState> {
-  final CommentService commentService;
+  final CommentServiceInterface commentService;
   CommentCubit({required this.commentService}) : super(CommentInitial());
 
   Future<void> getComments({required String postId}) async {
     emit(CommentLoading());
     try {
-      final streamResponse = commentService.getComments(postId);
+      final streamResponse = commentService.getComments(postId: postId);
       streamResponse.listen((comments) {
         emit(CommentLoaded(comments: comments));
       });
@@ -27,7 +27,7 @@ class CommentCubit extends Cubit<CommentState> {
 
   Future<void> likeComment({required CommentModel comment}) async {
     try {
-      await commentService.likeComment(comment);
+      await commentService.likeComment(comment: comment);
     } on SocketException catch (_) {
       emit(CommentFailure());
     } catch (_) {
@@ -47,7 +47,7 @@ class CommentCubit extends Cubit<CommentState> {
 
   Future<void> createComment({required CommentModel comment}) async {
     try {
-      await commentService.createComment(comment);
+      await commentService.createComment(comment: comment);
     } on SocketException catch (_) {
       emit(CommentFailure());
     } catch (_) {
@@ -57,7 +57,7 @@ class CommentCubit extends Cubit<CommentState> {
 
   Future<void> updateComment({required CommentModel comment}) async {
     try {
-      await commentService.editComment(comment);
+      await commentService.editComment(comment: comment);
     } on SocketException catch (_) {
       emit(CommentFailure());
     } catch (_) {

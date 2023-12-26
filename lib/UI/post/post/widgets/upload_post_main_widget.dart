@@ -295,7 +295,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
                               onTapListener: () {
                                 _pickImage(ImageSource.camera);
                               },
-                              text: 'Make Image',
+                              text: 'Take Photo',
                             ),
                           ),
                         ),

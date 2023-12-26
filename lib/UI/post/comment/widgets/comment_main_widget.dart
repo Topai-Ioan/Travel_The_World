@@ -12,7 +12,7 @@ import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
 import 'package:travel_the_world/UI/shared_items/custom_text_input.dart';
 import 'package:travel_the_world/UI/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';

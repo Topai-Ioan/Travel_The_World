@@ -9,7 +9,7 @@ import 'package:travel_the_world/UI/post/post/widgets/like_animation_widget.dart
 import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
 import 'package:travel_the_world/UI/shared_items/option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 
 class PostDetailMainWidget extends StatefulWidget {
@@ -54,7 +54,6 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
   Widget build(BuildContext context) {
     BlocProvider.of<GetSinglePostCubit>(context)
         .getSinglePost(postId: widget.postId);
-    print("test");
     return BlocBuilder<PostCubit, PostState>(
       builder: (context, postState) {
         return BlocBuilder<GetSinglePostCubit, GetSinglePostState>(
@@ -114,9 +113,6 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                           GestureDetector(
                             onDoubleTap: () {
                               _likePost();
-                              setState(() {
-                                _isLikeAnimating = true;
-                              });
                             },
                             child: _animation(singlePost),
                           ),
@@ -129,9 +125,6 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                   GestureDetector(
                                     onTap: () {
                                       _likePost();
-                                      setState(() {
-                                        _isLikeAnimating = true;
-                                      });
                                     },
                                     child: Icon(
                                       singlePost.likes.contains(_currentUid)
@@ -251,16 +244,12 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
           ),
         ),
         AnimatedOpacity(
-          duration: const Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 200),
           opacity: _isLikeAnimating ? 1 : 0,
           child: LikeAnimationWidget(
-            duration: const Duration(milliseconds: 100),
+            duration: const Duration(milliseconds: 200),
             isAnimating: _isLikeAnimating,
-            onAnimationComplete: () {
-              setState(() {
-                _isLikeAnimating = false;
-              });
-            },
+            onAnimationComplete: () {},
             child: const Icon(
               Icons.favorite,
               size: 100,

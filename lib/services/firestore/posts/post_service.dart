@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:travel_the_world/constants.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
+import 'package:travel_the_world/services/firestore/posts/post_service_interface.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
-class PostService {
+class PostService implements PostServiceInterface {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final _authService = AuthService();
+  @override
   Future<void> createPost({required PostModel post}) async {
     final postCollection = _db.collection(FirebaseConstants.Posts);
 
@@ -47,6 +49,7 @@ class PostService {
     }
   }
 
+  @override
   Future<void> deletePost({required String postId}) async {
     final postCollection = _db.collection(FirebaseConstants.Posts);
 
@@ -103,6 +106,7 @@ class PostService {
     }
   }
 
+  @override
   Future<void> likePost({required String postId}) async {
     final postCollection = _db.collection(FirebaseConstants.Posts);
 
@@ -124,6 +128,7 @@ class PostService {
     }
   }
 
+  @override
   Stream<List<PostModel>> getPost({required String postId}) {
     final ref = _db
         .collection(FirebaseConstants.Posts)
@@ -137,6 +142,7 @@ class PostService {
     });
   }
 
+  @override
   Stream<List<PostModel>> getPosts() {
     final ref = _db
         .collection(FirebaseConstants.Posts)
@@ -149,6 +155,7 @@ class PostService {
     });
   }
 
+  @override
   Future<Stream<List<PostModel>>> getPostsFromFollowedUsers(
       {required UserModel currentUser}) async {
     final followingList = List<String>.from(currentUser.following);
@@ -167,6 +174,7 @@ class PostService {
     });
   }
 
+  @override
   Future<void> updatePost({required PostModel post}) async {
     final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
 

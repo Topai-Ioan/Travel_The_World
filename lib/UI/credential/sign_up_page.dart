@@ -71,6 +71,9 @@ class _SignUpPageState extends State<SignUpPage> {
               return BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, authState) {
                 if (authState is Authenticated) {
+                  _emailController.dispose();
+                  _usernameController.dispose();
+                  _passwordController.dispose();
                   return MainScreen(uid: authState.uid);
                 } else {
                   return _bodyWidget();
@@ -213,8 +216,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   _clear() {
     setState(() {
-      _emailController.clear();
-      _usernameController.clear();
       _passwordController.clear();
 
       _isSigningUp = false;

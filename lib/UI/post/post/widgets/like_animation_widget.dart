@@ -42,9 +42,8 @@ class _LikeAnimationWidgetState extends State<LikeAnimationWidget>
 
   @override
   void dispose() {
-    // Your custom disposal logic goes here, if needed
     _controller.dispose();
-    super.dispose(); // Call super.dispose() at the end
+    super.dispose();
   }
 
   beginLikeAnimation() async {

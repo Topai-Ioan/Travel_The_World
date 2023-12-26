@@ -6,7 +6,7 @@ import 'package:travel_the_world/cubit/user/get_single_other_user/get_single_oth
 import 'package:travel_the_world/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/services/auth_service.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class SingleUserProfileMainWidget extends StatefulWidget {

@@ -64,6 +64,7 @@ dependencies:
   image_cropper: ^5.0.0
   dotted_border: ^2.0.0+3
   flutter_image_compress: ^2.0.4
+  firebase_in_app_messaging: ^0.7.3+7
 
 dev_dependencies:
   flutter_test:
