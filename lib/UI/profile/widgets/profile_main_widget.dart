@@ -202,7 +202,9 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
             children: [
               OptionItem(
                 text: "Settings",
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, PageRoutes.SettingsPage);
+                },
               ),
               OptionItem(
                 text: "Edit Profile",

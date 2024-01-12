@@ -37,22 +37,19 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: colorScheme.background,
         body: BlocBuilder<UserCubit, UserState>(
           builder: (context, userState) {
             if (userState is UsersLoaded) {
+              final searchText = _searchController.text.toLowerCase();
               final filterAllUsers = userState.users
                   .where((user) =>
-                      user.username.startsWith(_searchController.text) ||
-                      user.username
-                          .toLowerCase()
-                          .startsWith(_searchController.text.toLowerCase()) ||
-                      user.username.contains(_searchController.text) ||
-                      user.username
-                          .toLowerCase()
-                          .contains(_searchController.text.toLowerCase()))
+                      user.username.toLowerCase().startsWith(searchText) ||
+                      user.username.toLowerCase().contains(searchText))
                   .toList();
               return Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -103,6 +100,11 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
                           )
                         : BlocBuilder<PostCubit, PostState>(
                             builder: (context, postState) {
+                              if (postState is PostLoading) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
                               if (postState is PostLoaded) {
                                 final posts = postState.posts;
                                 return Expanded(

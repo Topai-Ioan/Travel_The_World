@@ -37,6 +37,7 @@ class PageRoutes {
   static const String FollowingPage = "FollowingPage";
   static const String FollowersPage = "FollowersPage";
   static const String LikeListPage = "LikeListPage";
+  static const String SettingsPage = "SettingsPage";
 }
 
 class FirebaseConstants {

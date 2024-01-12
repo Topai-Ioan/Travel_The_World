@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_the_world/UI/profile/settings_page.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/services/models/app_entity.dart';
 import 'package:travel_the_world/UI/credential/sign_in_page.dart';
@@ -113,6 +114,11 @@ class OnGenerateRoute {
             ));
           }
           return routeBuilder(const NoPageFound());
+        }
+
+      case PageRoutes.SettingsPage:
+        {
+          return routeBuilder(const SettingsPage());
         }
       case PageRoutes.SignInPage:
         return routeBuilder(const SignInPage());
