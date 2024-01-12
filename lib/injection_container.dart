@@ -2,172 +2,49 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source.dart';
-import 'package:travel_the_world/features/data/data_sources/remote_data_source/remote_data_source_interface.dart';
-import 'package:travel_the_world/features/data/repository/firebase_repository.dart';
-import 'package:travel_the_world/features/domain/repository/firebase_repository_interface.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/create_comment_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/delete_comment_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/like_comment_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/read_comments_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/comment/update_comment_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/create_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/delete_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/like_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_from_following_users_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_posts_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/read_single_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/update_post_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/post/sync_profile_picture.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/create_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/delete_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/like_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/read_replies_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/reply/update_reply_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_post.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/storage/upload_image_profile_picture.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/create_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/follow_unfollow_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_current_user_id_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_single_other_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_single_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/get_users_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/is_sign_in_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_in_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_out_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/sign_up_user_usecase.dart';
-import 'package:travel_the_world/features/domain/usecases/firebase_usecasses/user/update_user_usecase.dart';
-import 'package:travel_the_world/features/presentation/cubit/auth/auth_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/comment/comment_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/credential/credential_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/post/post_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/reply/reply_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/user/get_single_user/get_single_user_cubit.dart';
-import 'package:travel_the_world/features/presentation/cubit/user/user_cubit.dart';
+import 'package:travel_the_world/cubit/auth/auth_cubit.dart';
+import 'package:travel_the_world/cubit/comment/comment_cubit.dart';
+import 'package:travel_the_world/cubit/credential/credential_cubit.dart';
+import 'package:travel_the_world/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
+import 'package:travel_the_world/cubit/post/post_cubit.dart';
+import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
+import 'package:travel_the_world/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
+import 'package:travel_the_world/cubit/user/get_single_user/get_single_user_cubit.dart';
+import 'package:travel_the_world/cubit/user/user_cubit.dart';
+import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
+import 'package:travel_the_world/services/firestore/comments/comment_service.dart';
+import 'package:travel_the_world/services/firestore/comments/comment_service_interface.dart';
+import 'package:travel_the_world/services/firestore/posts/post_service.dart';
+import 'package:travel_the_world/services/firestore/posts/post_service_interface.dart';
+import 'package:travel_the_world/services/firestore/replies/reply_service.dart';
+import 'package:travel_the_world/services/firestore/replies/reply_service_interface.dart';
+import 'package:travel_the_world/services/firestore/users/user_service.dart';
+import 'package:travel_the_world/services/firestore/users/user_service_interface.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
-  // Cubits
+  sl.registerLazySingleton<UserServiceInterface>(() => UserService());
+  sl.registerLazySingleton<ReplyServiceInterface>(() => ReplyService());
+  sl.registerLazySingleton<PostServiceInterface>(() => PostService());
+  sl.registerLazySingleton<CommentServiceInterface>(() => CommentService());
+
+  sl.registerFactory<UserCubit>(
+      () => UserCubit(userService: sl<UserServiceInterface>()));
+  sl.registerFactory<GetSingleUserCubit>(
+      () => GetSingleUserCubit(userService: sl<UserServiceInterface>()));
+  sl.registerFactory<GetSingleOtherUserCubit>(
+      () => GetSingleOtherUserCubit(userService: sl<UserServiceInterface>()));
+  sl.registerFactory(() => PostCubit(postService: sl<PostServiceInterface>()));
   sl.registerFactory(
-    () => AuthCubit(
-      signOutUseCase: sl.call(),
-      isSignInUseCase: sl.call(),
-      getCurrentUidUseCase: sl.call(),
-    ),
-  );
+      () => GetSinglePostCubit(postService: sl<PostServiceInterface>()));
+  sl.registerFactory(() => CommentCubit(commentService: CommentService()));
   sl.registerFactory(
-    () => CredentialCubit(
-      signUpUseCase: sl.call(),
-      signInUserUseCase: sl.call(),
-    ),
-  );
-  sl.registerFactory(
-    () => UserCubit(
-      updateUserUseCase: sl.call(),
-      getUsersUseCase: sl.call(),
-      followUnFollowUseCase: sl.call(),
-    ),
-  );
-  sl.registerFactory(
-    () => GetSingleUserCubit(getSingleUserUseCase: sl.call()),
-  );
-  sl.registerFactory(
-    () => GetSingleOtherUserCubit(getSingleOtherUserUseCase: sl.call()),
-  );
+      () => ReplyCubit(replyService: sl<ReplyServiceInterface>()));
 
-  // Post Cubit Injection
-  sl.registerFactory(() => PostCubit(
-        updatePostUseCase: sl.call(),
-        deletePostUseCase: sl.call(),
-        likePostUseCase: sl.call(),
-        createPostUseCase: sl.call(),
-        readPostUseCase: sl.call(),
-        readPostsFromFollowingUsersUseCase: sl.call(),
-      ));
+  //todo
+  sl.registerFactory(() => AuthCubit(authService: AuthService()));
+  sl.registerFactory(() => CredentialCubit());
 
-  sl.registerFactory(
-    () => GetSinglePostCubit(readSinglePostUseCase: sl.call()),
-  );
-
-  // Comment Cubit Injection
-  sl.registerFactory(
-    () => CommentCubit(
-      createCommentUseCase: sl.call(),
-      deleteCommentUseCase: sl.call(),
-      likeCommentUseCase: sl.call(),
-      readCommentsUseCase: sl.call(),
-      updateCommentUseCase: sl.call(),
-    ),
-  );
-
-  // Reply Cubit Injection
-  sl.registerFactory(
-    () => ReplyCubit(
-        createReplyUseCase: sl.call(),
-        deleteReplyUseCase: sl.call(),
-        likeReplyUseCase: sl.call(),
-        readRepliesUseCase: sl.call(),
-        updateReplyUseCase: sl.call()),
-  );
-
-  // Use Cases
-  // User
-  sl.registerLazySingleton(() => SignOutUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => IsSignInUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => GetCurrentUidUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => SignUpUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => SignInUserUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UpdateUserUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => GetUsersUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => CreateUserUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => GetSingleUserUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => FollowUnFollowUseCase(repository: sl.call()));
-  sl.registerLazySingleton(
-      () => GetSingleOtherUserUseCase(repository: sl.call()));
-
-  // Cloud Storage
-  sl.registerLazySingleton(
-      () => UploadImageProfilePictureUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UploadImagePostUseCase(repository: sl.call()));
-
-  // Post
-  sl.registerLazySingleton(() => CreatePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => ReadPostsUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => ReadSinglePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => LikePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UpdatePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => DeletePostUseCase(repository: sl.call()));
-  sl.registerLazySingleton(
-      () => ReadPostsFromFollowingUsersUseCase(repository: sl.call()));
-  sl.registerLazySingleton(
-      () => SyncProfilePictureUseCase(repository: sl.call()));
-
-  // Comment
-  sl.registerLazySingleton(() => CreateCommentUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => ReadCommentsUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => LikeCommentUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UpdateCommentUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => DeleteCommentUseCase(repository: sl.call()));
-
-  // Reply
-  sl.registerLazySingleton(() => CreateReplyUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => ReadRepliesUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => LikeReplyUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => UpdateReplyUseCase(repository: sl.call()));
-  sl.registerLazySingleton(() => DeleteReplyUseCase(repository: sl.call()));
-
-  // Repository
-
-  sl.registerLazySingleton<FirebaseRepositoryInterface>(
-      () => FirebaseRepository(remoteDataSource: sl.call()));
-  // Remote Data Source
-  sl.registerLazySingleton<FirebaseRemoteDataSourceInterface>(() =>
-      FirebaseRemoteDataSource(
-          firebaseFirestore: sl.call(),
-          firebaseAuth: sl.call(),
-          firebaseStorage: sl.call()));
   // Externals
   final firebaseFirestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;

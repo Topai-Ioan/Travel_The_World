@@ -37,6 +37,7 @@ class PageRoutes {
   static const String FollowingPage = "FollowingPage";
   static const String FollowersPage = "FollowersPage";
   static const String LikeListPage = "LikeListPage";
+  static const String SettingsPage = "SettingsPage";
 }
 
 class FirebaseConstants {
@@ -49,9 +50,9 @@ class FirebaseConstants {
 void toast(String message) {
   Fluttertoast.showToast(
       msg: message,
-      toastLength: Toast.LENGTH_SHORT,
+      toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
+      timeInSecForIosWeb: 3,
       backgroundColor: blueColor,
       textColor: Colors.white,
       fontSize: 16.0);
