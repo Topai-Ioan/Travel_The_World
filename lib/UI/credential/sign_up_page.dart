@@ -12,6 +12,7 @@ import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/themes.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -56,7 +57,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: BlocConsumer<CredentialCubit, CredentialState>(
           listener: (context, credentialState) {
             if (credentialState is CredentialSuccess) {
@@ -115,9 +116,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   bottom: -15,
                   child: IconButton(
                     onPressed: selectImage,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.add_a_photo,
-                      color: blueColor,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -142,8 +143,10 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           sizeVertical(15),
           ButtonContainerWidget(
-            color: blueColor,
+            color: Theme.of(context).colorScheme.secondary,
             text: "Sign Up",
+            textColor: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w600,
             onTapListener: () {
               _signUpUser();
             },
@@ -169,19 +172,20 @@ class _SignUpPageState extends State<SignUpPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Already have and account? ",
-                style: TextStyle(color: primaryColor),
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
               InkWell(
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
                       context, PageRoutes.SignInPage, (route) => false);
                 },
-                child: const Text(
+                child: Text(
                   "Sign In.",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: primaryColor),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColorDark),
                 ),
               ),
             ],

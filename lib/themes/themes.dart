@@ -3,19 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Themes {
-  final Color lightPrimaryColor;
-  final Color lightSecondaryColor;
-  final Color darkPrimaryColor;
-  final Color darkSecondaryColor;
-
-  Themes({
-    this.lightPrimaryColor = Colors.purple,
-    this.lightSecondaryColor = Colors.green,
-    this.darkPrimaryColor = Colors.black,
-    this.darkSecondaryColor = Colors.white,
-  });
-
-  static final Themes _themes = Themes();
+  static const Color green = Color.fromARGB(255, 0, 255, 0);
+  static const Color darkgreen = Color.fromARGB(255, 4, 56, 4);
 
   static ThemeData get systemTheme {
     Brightness platformBrightness =
@@ -29,20 +18,41 @@ class Themes {
   }
 
   static final ThemeData darkTheme = ThemeData.dark().copyWith(
+    useMaterial3: true,
+    primaryColor: Colors.white,
+    primaryColorDark: const Color.fromARGB(255, 4, 56, 4),
+    primaryColorLight: const Color.fromARGB(255, 0, 255, 0),
+    //bottomAppBarTheme: const BottomAppBarTheme(color: Colors.black),
+    //appBarTheme: const AppBarTheme(color: Colors.black),
+
     colorScheme: const ColorScheme.dark().copyWith(
-      primary: _themes.darkPrimaryColor,
-      secondary: _themes.darkSecondaryColor,
+      background: Colors.black,
+      primary: Colors.white,
+      secondary: const Color.fromARGB(255, 4, 56, 4),
+      tertiary: Colors.grey[800],
+      onTertiary: Colors.white,
     ),
     textTheme: ThemeData.dark().textTheme.apply(
-          bodyColor: _themes.darkSecondaryColor,
-          displayColor: _themes.darkSecondaryColor,
+          bodyColor: Colors.black,
+          displayColor: Colors.white,
         ),
   );
 
   static final ThemeData lightTheme = ThemeData.light().copyWith(
+    primaryColor: Colors.black,
+    primaryColorDark: const Color.fromARGB(255, 4, 56, 4),
+    primaryColorLight: const Color.fromARGB(255, 0, 255, 0),
+    useMaterial3: true,
     colorScheme: const ColorScheme.light().copyWith(
-      primary: _themes.lightPrimaryColor,
-      secondary: _themes.lightSecondaryColor,
+      background: Colors.white,
+      primary: Colors.black,
+      secondary: const Color.fromARGB(255, 21, 145, 21),
+      tertiary: Colors.grey[300],
+      onTertiary: Colors.white,
     ),
+    textTheme: ThemeData.light().textTheme.apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.black,
+        ),
   );
 }

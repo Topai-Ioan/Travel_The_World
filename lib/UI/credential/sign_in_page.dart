@@ -7,6 +7,7 @@ import 'package:travel_the_world/cubit/credential/credential_cubit.dart';
 import 'package:travel_the_world/UI/main_screen/main_screen.dart';
 import 'package:travel_the_world/UI/credential/widgets/form_container_widget.dart';
 import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
+import 'package:travel_the_world/themes/themes.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _SignInPageState extends State<SignInPage> {
   //todo duplicate code as in sign_up_page.dart, make something to hold this code and give _bodyWidget as a parameter
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: BlocConsumer<CredentialCubit, CredentialState>(
           listener: (context, credentialState) {
             if (credentialState is CredentialSuccess) {
@@ -86,25 +87,29 @@ class _SignInPageState extends State<SignInPage> {
           ),
           sizeVertical(15),
           ButtonContainerWidget(
-            color: blueColor,
+            color: Theme.of(context).colorScheme.secondary,
             text: "Sign In",
+            textColor: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w600,
             onTapListener: () {
               _signInUser();
             },
           ),
           sizeVertical(10),
           if (_isSigningIn)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Please wait",
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400)),
-                sizeHorizontal(10),
-                const CircularProgressIndicator()
-              ],
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Please wait",
+                      style: TextStyle(
+                          color: primaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400)),
+                  sizeHorizontal(10),
+                  const CircularProgressIndicator()
+                ],
+              ),
             ),
           Flexible(flex: 2, child: Container()),
           const Divider(
@@ -113,19 +118,20 @@ class _SignInPageState extends State<SignInPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Don't have and account? ",
-                style: TextStyle(color: primaryColor),
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
               InkWell(
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
                       context, PageRoutes.SignUpPage, (route) => false);
                 },
-                child: const Text(
+                child: Text(
                   "Sign Up.",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: primaryColor),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColorDark),
                 ),
               ),
             ],
@@ -145,7 +151,6 @@ class _SignInPageState extends State<SignInPage> {
 
   _clear() {
     setState(() {
-      _emailController.clear();
       _passwordController.clear();
       _isSigningIn = false;
     });
