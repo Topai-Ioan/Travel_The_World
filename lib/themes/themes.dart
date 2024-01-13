@@ -36,6 +36,10 @@ class Themes {
           bodyColor: Colors.black,
           displayColor: Colors.white,
         ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.black,
+      foregroundColor: Colors.white,
+    ),
   );
 
   static final ThemeData lightTheme = ThemeData.light().copyWith(
@@ -54,5 +58,10 @@ class Themes {
           bodyColor: Colors.white,
           displayColor: Colors.black,
         ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.grey[300],
+      foregroundColor: Colors.black,
+      surfaceTintColor: Colors.grey[500],
+    ),
   );
 }

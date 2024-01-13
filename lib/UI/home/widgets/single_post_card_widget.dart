@@ -80,13 +80,16 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                                   boxFit: BoxFit.cover))),
                       sizeHorizontal(10),
                       Text(widget.post.username,
-                          style: const TextStyle(
-                              color: primaryColor,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold)),
                       sizeHorizontal(5),
                       Text(
                         formatTimeAgo(widget.post.createdAt!),
-                        style: const TextStyle(color: darkGreyColor),
+                        style: TextStyle(
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withOpacity(0.7)),
                       ),
                     ],
                   ),
@@ -97,8 +100,8 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                           _openBottomModalSheet(
                               context, widget.post, widget.postCubit);
                         },
-                        child: const Icon(Icons.more_vert_rounded,
-                            color: primaryColor),
+                        child: Icon(Icons.more_vert_rounded,
+                            color: Theme.of(context).primaryColor),
                       )
                     : const SizedBox(
                         width: 0,
@@ -128,8 +131,8 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                             arguments: widget.post);
                       },
                       child: Text('${widget.post.likes.length}',
-                          style: const TextStyle(
-                              color: primaryColor,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 18)),
                     ),
@@ -143,14 +146,14 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                             : Icons.favorite_outline,
                         color: widget.post.likes.contains(_currentUid)
                             ? Colors.red
-                            : primaryColor,
+                            : Theme.of(context).primaryColor,
                       ),
                     ),
                     sizeHorizontal(10),
                     Text(
                       "${widget.post.totalComments} ",
-                      style: const TextStyle(
-                          color: primaryColor,
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
                     ),
@@ -163,22 +166,22 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                               uid: _currentUid, postId: widget.post.postId),
                         );
                       },
-                      child: const Icon(
+                      child: Icon(
                         Icons.comment_rounded,
-                        color: primaryColor,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     sizeHorizontal(10),
-                    const Text(
+                    Text(
                       "0 ",
                       style: TextStyle(
-                          color: primaryColor,
+                          color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.send,
-                      color: primaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                     sizeHorizontal(10),
                   ],
@@ -194,7 +197,7 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                     children: [
                       Text(
                         widget.post.description,
-                        style: const TextStyle(color: primaryColor),
+                        style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
                     ],
                   ),

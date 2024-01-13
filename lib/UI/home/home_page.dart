@@ -18,20 +18,32 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          backgroundColor: appBarColor,
+          backgroundColor: AppBarTheme.of(context).backgroundColor,
           elevation: 0,
-          title: Image.asset(
-            "assets/images/logo.png",
-            height: 30,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/images/logo.png",
+                height: 30,
+              ),
+              Text(
+                "Travel the world",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            ],
           ),
           actions: [
             IconButton(
               onPressed: () {},
-              icon: const Icon(
+              icon: Icon(
                 Icons.message_outlined,
-                color: primaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ],
@@ -42,10 +54,10 @@ class _HomePageState extends State<HomePage> {
           child:
               BlocBuilder<PostCubit, PostState>(builder: (context, postState) {
             if (postState is PostEmpty) {
-              return const Center(
-                child: Text("no posts",
+              return Center(
+                child: Text("No posts, yet",
                     style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 18,
                         fontWeight: FontWeight.bold)),
               );

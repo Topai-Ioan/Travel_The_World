@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel_the_world/themes/themes.dart';
@@ -15,12 +14,10 @@ class ThemeProvider extends ChangeNotifier with WidgetsBindingObserver {
 
   @override
   void didChangePlatformBrightness() {
-    getThemeName().then((theme) {
+    getThemeName().then((theme) async {
       if (theme == 'system') {
-        Brightness platformBrightness =
-            PlatformDispatcher.instance.platformBrightness;
-        var isDarkMode = platformBrightness == Brightness.dark;
-        setThemeAsync(isDarkMode ? 'dark' : 'light');
+        _themeData = Themes.systemTheme;
+        notifyListeners();
       }
     });
 

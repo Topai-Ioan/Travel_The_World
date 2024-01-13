@@ -12,7 +12,6 @@ import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
-import 'package:travel_the_world/themes/themes.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
