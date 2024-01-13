@@ -37,130 +37,132 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textScheme = Theme.of(context).textTheme;
-    return SafeArea(
-      child: RefreshIndicator(
-        onRefresh: () {
-          if (_searchController.text.isEmpty) {
-            _refreshPage(context);
-          }
-          return Future.value();
-        },
-        child: Scaffold(
-          backgroundColor: colorScheme.background,
-          body: BlocBuilder<UserCubit, UserState>(
-            builder: (context, userState) {
-              if (userState is UsersLoaded) {
-                final searchText = _searchController.text.toLowerCase();
-                final filterAllUsers = userState.users
-                    .where((user) =>
-                        user.username.toLowerCase().startsWith(searchText) ||
-                        user.username.toLowerCase().contains(searchText))
-                    .toList();
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SearchWidget(controller: _searchController),
-                      sizeVertical(10),
-                      _searchController.text.isNotEmpty
-                          ? Expanded(
-                              child: ListView.builder(
-                                itemCount: filterAllUsers.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(context,
-                                          PageRoutes.SingleUserProfilePage,
-                                          arguments: filterAllUsers[index].uid);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 10),
-                                          width: 40,
-                                          height: 40,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: profileWidget(
-                                                imageUrl: filterAllUsers[index]
-                                                    .profileUrl),
-                                          ),
+    return RefreshIndicator(
+      onRefresh: () {
+        if (_searchController.text.isEmpty) {
+          _refreshPage(context);
+        }
+        return Future.value();
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: BlocBuilder<UserCubit, UserState>(
+          builder: (context, userState) {
+            if (userState is UsersLoaded) {
+              final searchText = _searchController.text.toLowerCase();
+              final filterAllUsers = userState.users
+                  .where((user) =>
+                      user.username.toLowerCase().startsWith(searchText) ||
+                      user.username.toLowerCase().contains(searchText))
+                  .toList();
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SearchWidget(controller: _searchController),
+                    _searchController.text.isNotEmpty
+                        ? Expanded(
+                            child: ListView.builder(
+                              itemCount: filterAllUsers.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context,
+                                        PageRoutes.SingleUserProfilePage,
+                                        arguments: filterAllUsers[index].uid);
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        width: 40,
+                                        height: 40,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: profileWidget(
+                                              imageUrl: filterAllUsers[index]
+                                                  .profileUrl,
+                                              boxFit: BoxFit.cover),
                                         ),
-                                        sizeHorizontal(10),
-                                        Text(
-                                          filterAllUsers[index].username,
-                                          style: textScheme.bodyMedium,
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          : BlocBuilder<PostCubit, PostState>(
-                              builder: (context, postState) {
-                                if (postState is PostLoading) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                                if (postState is PostLoaded) {
-                                  final posts = postState.posts;
-                                  return Expanded(
-                                    child: GridView.builder(
-                                      itemCount: posts.length,
-                                      physics: const ScrollPhysics(),
-                                      shrinkWrap: true,
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 5,
-                                        mainAxisSpacing: 5,
                                       ),
-                                      itemBuilder: (context, index) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(context,
-                                                PageRoutes.PostDetailPage,
-                                                arguments: posts[index].postId);
-                                          },
-                                          child: SizedBox(
-                                            width: 100,
-                                            height: 100,
-                                            child: profileWidget(
-                                                boxFit: BoxFit.cover,
-                                                imageUrl:
-                                                    posts[index].postImageUrl),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                }
-                                return const Text(
-                                  'No data found!',
-                                  style: TextStyle(color: Colors.red),
+                                      sizeHorizontal(10),
+                                      Text(
+                                        filterAllUsers[index].username,
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    ],
+                                  ),
                                 );
                               },
                             ),
-                    ],
-                  ),
-                );
-              }
-              return Center(
-                child: ConstrainedBox(
-                  constraints:
-                      const BoxConstraints(maxHeight: 15, maxWidth: 15),
-                  child: const CircularProgressIndicator(),
+                          )
+                        : BlocBuilder<PostCubit, PostState>(
+                            builder: (context, postState) {
+                              if (postState is PostLoading) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                );
+                              }
+                              if (postState is PostLoaded) {
+                                final posts = postState.posts;
+                                return Expanded(
+                                  child: GridView.builder(
+                                    itemCount: posts.length,
+                                    physics: const ScrollPhysics(),
+                                    shrinkWrap: true,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 5,
+                                      mainAxisSpacing: 5,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushNamed(context,
+                                              PageRoutes.PostDetailPage,
+                                              arguments: posts[index].postId);
+                                        },
+                                        child: SizedBox(
+                                          width: 100,
+                                          height: 100,
+                                          child: profileWidget(
+                                              boxFit: BoxFit.cover,
+                                              imageUrl:
+                                                  posts[index].postImageUrl),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                              return const Text(
+                                'No data found!',
+                                style: TextStyle(color: Colors.red),
+                              );
+                            },
+                          ),
+                  ],
                 ),
               );
-            },
-          ),
+            }
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
+                child: const CircularProgressIndicator(),
+              ),
+            );
+          },
         ),
       ),
     );
