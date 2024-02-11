@@ -8,7 +8,7 @@ import 'package:travel_the_world/services/models/users/user_model.dart';
 class UploadPostPage extends StatelessWidget {
   final UserModel currentUser;
 
-  const UploadPostPage({Key? key, required this.currentUser}) : super(key: key);
+  const UploadPostPage({super.key, required this.currentUser});
 
   @override
   Widget build(BuildContext context) {

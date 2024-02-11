@@ -11,6 +11,7 @@ class PostModel {
   final String description;
   final String postImageUrl;
   final List<String> likes;
+  final List<String> tags;
   final num totalComments;
   final String userProfileUrl;
 
@@ -24,6 +25,7 @@ class PostModel {
     this.description = '',
     this.postImageUrl = '',
     this.likes = const [],
+    this.tags = const [],
     this.totalComments = 0,
     this.userProfileUrl = '',
     this.createdAt,

@@ -9,7 +9,7 @@ import 'package:travel_the_world/UI/credential/widgets/form_container_widget.dar
 import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  const SignInPage({super.key});
 
   @override
   State<SignInPage> createState() => _SignInPageState();

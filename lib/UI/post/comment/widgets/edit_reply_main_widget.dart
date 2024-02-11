@@ -8,7 +8,7 @@ import 'package:travel_the_world/services/models/replies/reply_model.dart';
 
 class EditReplyMainWidget extends StatefulWidget {
   final ReplyModel reply;
-  const EditReplyMainWidget({Key? key, required this.reply}) : super(key: key);
+  const EditReplyMainWidget({super.key, required this.reply});
 
   @override
   State<EditReplyMainWidget> createState() => _EditReplyMainWidgetState();

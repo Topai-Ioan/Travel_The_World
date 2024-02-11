@@ -8,13 +8,13 @@ class ButtonContainerWidget extends StatefulWidget {
   final FontWeight? fontWeight;
 
   const ButtonContainerWidget({
-    Key? key,
+    super.key,
     this.color,
     this.text,
     this.textColor,
     this.fontWeight,
     this.onTapListener,
-  }) : super(key: key);
+  });
 
   @override
   ButtonContainerWidgetState createState() => ButtonContainerWidgetState();

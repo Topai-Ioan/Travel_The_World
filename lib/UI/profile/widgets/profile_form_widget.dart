@@ -7,12 +7,11 @@ class ProfileFormWidget extends StatelessWidget {
   final String? hintText;
   final Color? fillColor;
   const ProfileFormWidget(
-      {Key? key,
+      {super.key,
       this.title,
       this.controller,
       this.hintText,
-      this.fillColor = const Color.fromARGB(255, 23, 23, 23)})
-      : super(key: key);
+      this.fillColor = const Color.fromARGB(255, 23, 23, 23)});
 
   @override
   Widget build(BuildContext context) {

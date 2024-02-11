@@ -8,8 +8,7 @@ import 'package:travel_the_world/services/models/comments/comment_model.dart';
 
 class EditCommentMainWidget extends StatefulWidget {
   final CommentModel comment;
-  const EditCommentMainWidget({Key? key, required this.comment})
-      : super(key: key);
+  const EditCommentMainWidget({super.key, required this.comment});
 
   @override
   State<EditCommentMainWidget> createState() => _EditCommentMainWidgetState();

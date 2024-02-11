@@ -10,8 +10,7 @@ import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class ProfileMainWidget extends StatefulWidget {
   final UserModel currentUser;
-  const ProfileMainWidget({Key? key, required this.currentUser})
-      : super(key: key);
+  const ProfileMainWidget({super.key, required this.currentUser});
 
   @override
   State<ProfileMainWidget> createState() => _ProfileMainWidgetState();

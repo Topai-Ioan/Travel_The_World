@@ -14,8 +14,7 @@ import 'package:travel_the_world/services/models/posts/post_model.dart';
 
 class PostDetailMainWidget extends StatefulWidget {
   final String postId;
-  const PostDetailMainWidget({Key? key, required this.postId})
-      : super(key: key);
+  const PostDetailMainWidget({super.key, required this.postId});
 
   @override
   State<PostDetailMainWidget> createState() => _PostDetailMainWidgetState();

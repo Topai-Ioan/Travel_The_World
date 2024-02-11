@@ -10,11 +10,10 @@ class SingleReplyWidget extends StatefulWidget {
   final VoidCallback? onLongPressListener;
   final VoidCallback? onLikeClickListener;
   const SingleReplyWidget(
-      {Key? key,
+      {super.key,
       required this.reply,
       this.onLongPressListener,
-      this.onLikeClickListener})
-      : super(key: key);
+      this.onLikeClickListener});
 
   @override
   State<SingleReplyWidget> createState() => _SingleReplyWidgetState();

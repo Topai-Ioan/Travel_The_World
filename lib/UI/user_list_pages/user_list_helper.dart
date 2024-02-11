@@ -10,10 +10,10 @@ class UserList extends StatelessWidget {
   final String title;
 
   const UserList({
-    Key? key,
+    super.key,
     required this.userList,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +99,10 @@ class FollowingPageHelper extends StatelessWidget {
   final String title;
 
   const FollowingPageHelper({
-    Key? key,
+    super.key,
     required this.user,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -132,10 +132,10 @@ class LikesListPageHelper extends StatelessWidget {
   final PostModel post;
 
   const LikesListPageHelper({
-    Key? key,
+    super.key,
     required this.post,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -165,10 +165,10 @@ class FollowersPageHelper extends StatelessWidget {
   final UserModel user;
 
   const FollowersPageHelper({
-    Key? key,
+    super.key,
     required this.user,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

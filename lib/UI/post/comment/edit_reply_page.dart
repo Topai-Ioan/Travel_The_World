@@ -8,7 +8,7 @@ import 'package:travel_the_world/services/models/replies/reply_model.dart';
 class EditReplyPage extends StatelessWidget {
   final ReplyModel reply;
 
-  const EditReplyPage({Key? key, required this.reply}) : super(key: key);
+  const EditReplyPage({super.key, required this.reply});
 
   @override
   Widget build(BuildContext context) {

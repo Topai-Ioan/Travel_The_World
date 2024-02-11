@@ -14,8 +14,7 @@ import 'package:travel_the_world/services/store_service.dart';
 class EditProfilePage extends StatefulWidget {
   final UserModel currentUser;
 
-  const EditProfilePage({Key? key, required this.currentUser})
-      : super(key: key);
+  const EditProfilePage({super.key, required this.currentUser});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();

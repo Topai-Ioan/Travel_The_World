@@ -15,8 +15,7 @@ import 'package:travel_the_world/services/store_service.dart';
 
 class UploadPostMainWidget extends StatefulWidget {
   final UserModel currentUser;
-  const UploadPostMainWidget({Key? key, required this.currentUser})
-      : super(key: key);
+  const UploadPostMainWidget({super.key, required this.currentUser});
 
   @override
   State<UploadPostMainWidget> createState() => _UploadPostMainWidgetState();

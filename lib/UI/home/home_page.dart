@@ -8,7 +8,7 @@ import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel currentUser;
-  const HomePage({Key? key, required this.currentUser}) : super(key: key);
+  const HomePage({super.key, required this.currentUser});
 
   @override
   State<HomePage> createState() => _HomePageState();

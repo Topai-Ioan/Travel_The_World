@@ -12,8 +12,7 @@ import 'package:travel_the_world/services/models/users/user_model.dart';
 class SingleUserProfileMainWidget extends StatefulWidget {
   final String otherUserId;
 
-  const SingleUserProfileMainWidget({Key? key, required this.otherUserId})
-      : super(key: key);
+  const SingleUserProfileMainWidget({super.key, required this.otherUserId});
 
   @override
   State<SingleUserProfileMainWidget> createState() =>
