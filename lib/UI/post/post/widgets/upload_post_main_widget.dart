@@ -55,7 +55,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
 
     final inputImage = InputImage.fromFilePath(image.path);
     ImageLabeler imageLabeler =
-        ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.5));
+        ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.75));
     try {
       List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
 
