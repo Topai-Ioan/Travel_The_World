@@ -185,4 +185,16 @@ class PostService implements PostServiceInterface {
     };
     return ref.update(data);
   }
+
+  @override
+  Future<void> addTags({required PostModel post}) async {
+    final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
+
+    var data = {
+      if (post.tags != List.empty()) 'tags': post.tags,
+      if (post.tagsConfidence != List.empty())
+        'tagsConfidence': post.tagsConfidence,
+    };
+    return ref.update(data);
+  }
 }

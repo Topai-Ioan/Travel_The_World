@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/constants.dart';
@@ -22,10 +23,13 @@ class UploadPostMainWidget extends StatefulWidget {
 }
 
 class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
-  File? _pickedFile;
-  File? _croppedFile;
+  XFile? _pickedFile;
+  XFile? _croppedFile;
   final TextEditingController _descriptionController = TextEditingController();
-  bool _isUploading = false;
+  final ValueNotifier<bool> _isUploading = ValueNotifier<bool>(false);
+
+  List<String> imageTags = [];
+  List<double> tagsConfidence = [];
 
   @override
   void dispose() {
@@ -37,10 +41,32 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     XFile? pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile == null) return;
 
-    File? file = File(pickedFile.path);
+    await getImageLabels(pickedFile);
+
+    XFile? file = XFile(pickedFile.path);
     setState(() {
       _pickedFile = file;
     });
+  }
+
+  Future<void> getImageLabels(XFile image) async {
+    imageTags.clear();
+    tagsConfidence.clear();
+
+    final inputImage = InputImage.fromFilePath(image.path);
+    ImageLabeler imageLabeler =
+        ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.5));
+    try {
+      List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
+
+      for (ImageLabel imgLabel in labels) {
+        imageTags.add(imgLabel.label);
+        tagsConfidence
+            .add(double.parse(imgLabel.confidence.toStringAsFixed(2)));
+      }
+    } finally {
+      imageLabeler.close();
+    }
   }
 
   Future<void> _cropImage() async {
@@ -66,8 +92,9 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
         ],
       );
       if (croppedFile == null) return;
+      await getImageLabels(XFile(croppedFile.path));
 
-      File? file = File(croppedFile.path);
+      XFile? file = XFile(croppedFile.path);
       setState(() {
         _croppedFile = file;
       });
@@ -78,7 +105,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     setState(() {
       _pickedFile = null;
       _croppedFile = null;
-      _isUploading = false;
+      _isUploading.value = false;
       _descriptionController.clear();
     });
   }
@@ -206,7 +233,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
           ],
         ),
       ),
-      if (_isUploading)
+      if (_isUploading.value)
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           child: LinearProgressIndicator(
@@ -310,8 +337,8 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     );
   }
 
-  Widget _uploadButon(File? file) {
-    if (_isUploading) {
+  Widget _uploadButon(XFile? file) {
+    if (_isUploading.value) {
       return IgnorePointer(
           ignoring: true,
           child: FloatingActionButton(
@@ -332,35 +359,45 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     );
   }
 
-  _submitPost(File? file) async {
+  _submitPost(XFile? file) async {
     setState(() {
-      _isUploading = true;
+      _isUploading.value = true;
     });
+    if (file == null) return;
 
     Map<String, String> imageInfo =
-        await StoreService().uploadImagePost(file, "Posts");
+        await StoreService().uploadImagePost(File(file.path), "Posts");
 
     String imageUrl = imageInfo["imageUrl"]!;
     String imageId = imageInfo["imageId"]!;
 
-    _createSubmitPost(imageUrl: imageUrl, imageId: imageId);
+    _createPost(imageUrl: imageUrl, imageId: imageId);
     Future.delayed(const Duration(seconds: 2), () {});
   }
 
-  _createSubmitPost({required String imageUrl, required String imageId}) {
+  _createPost({required String imageUrl, required String imageId}) {
     BlocProvider.of<PostCubit>(context)
         .createPost(
             post: PostModel(
-          creatorUid: widget.currentUser.uid,
-          likes: const [],
-          postId: imageId,
-          postImageUrl: imageUrl,
-          totalComments: 0,
-          username: widget.currentUser.username,
-          userProfileUrl: widget.currentUser.profileUrl,
-          description: _descriptionController.text,
-        ))
-        .then((value) => _clear());
+      creatorUid: widget.currentUser.uid,
+      likes: const [],
+      postId: imageId,
+      postImageUrl: imageUrl,
+      totalComments: 0,
+      username: widget.currentUser.username,
+      userProfileUrl: widget.currentUser.profileUrl,
+      description: _descriptionController.text,
+      tags: imageTags,
+      tagsConfidence: tagsConfidence,
+    ))
+        .then((value) {
+      BlocProvider.of<PostCubit>(context).addTags(
+          post: PostModel(
+              postId: imageId,
+              tags: imageTags,
+              tagsConfidence: tagsConfidence));
+      _clear();
+    });
     return;
   }
 }

@@ -92,4 +92,14 @@ class PostCubit extends Cubit<PostState> {
       emit(PostFailure());
     }
   }
+
+  Future<void> addTags({required PostModel post}) async {
+    try {
+      await postService.addTags(post: post);
+    } on SocketException catch (_) {
+      emit(PostFailure());
+    } catch (_) {
+      emit(PostFailure());
+    }
+  }
 }

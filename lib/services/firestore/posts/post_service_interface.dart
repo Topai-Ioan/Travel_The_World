@@ -3,6 +3,7 @@ import 'package:travel_the_world/services/models/users/user_model.dart';
 
 abstract class PostServiceInterface {
   Future<void> updatePost({required PostModel post});
+  Future<void> addTags({required PostModel post});
 
   Stream<List<PostModel>> getPosts();
   Stream<List<PostModel>> getPost({required String postId});
