@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class StoreService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -15,22 +16,36 @@ class StoreService {
     File? file,
     String childName,
   ) async {
-    Reference ref = firebaseStorage
-        .ref()
-        .child(childName)
-        .child(firebaseAuth.currentUser!.uid);
+    try {
+      final result = await FlutterImageCompress.compressWithFile(
+        file!.path,
+        quality: 75,
+      );
+      final compressedFile = File(file.path)
+        ..writeAsBytesSync(result!.toList());
+      Reference ref = firebaseStorage
+          .ref()
+          .child(childName)
+          .child(firebaseAuth.currentUser!.uid);
 
-    String id = const Uuid().v4();
-    ref = ref.child(id);
+      String id = const Uuid().v4();
+      ref = ref.child(id);
 
-    final uploadTask = ref.putFile(file!);
+      final uploadTask = ref.putFile(compressedFile);
 
-    final imageUrl =
-        await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+      final imageUrl =
+          await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
 
+      return {
+        "imageId": id,
+        "imageUrl": imageUrl,
+      };
+    } catch (e) {
+      toast("Error uploading image");
+    }
     return {
-      "imageId": id,
-      "imageUrl": imageUrl,
+      "imageId": '',
+      "imageUrl": '',
     };
   }
 
@@ -75,20 +90,31 @@ class StoreService {
   }
 
   Future<String> uploadImageProfilePicture(
-    File? file,
+    File file,
     String childName,
   ) async {
-    if (file == null) return '';
-    Reference ref = firebaseStorage
-        .ref()
-        .child(childName)
-        .child(firebaseAuth.currentUser!.uid);
+    try {
+      final result = await FlutterImageCompress.compressWithFile(
+        file.path,
+        quality: 75,
+      );
+      final compressedFile = File(file.path)
+        ..writeAsBytesSync(result!.toList());
 
-    final uploadTask = ref.putFile(file);
+      Reference ref = firebaseStorage
+          .ref()
+          .child(childName)
+          .child(firebaseAuth.currentUser!.uid);
 
-    final imageUrl =
-        (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+      final uploadTask = ref.putFile(compressedFile);
 
-    return await imageUrl;
+      final imageUrl =
+          (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+
+      return await imageUrl;
+    } catch (e) {
+      toast("Error uploading profile picture");
+      return '';
+    }
   }
 }

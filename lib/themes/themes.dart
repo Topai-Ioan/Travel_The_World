@@ -18,7 +18,6 @@ class Themes {
   }
 
   static final ThemeData darkTheme = ThemeData.dark().copyWith(
-    useMaterial3: true,
     primaryColor: Colors.white,
     primaryColorDark: const Color.fromARGB(255, 4, 56, 4),
     primaryColorLight: const Color.fromARGB(255, 0, 255, 0),
@@ -46,7 +45,6 @@ class Themes {
     primaryColor: Colors.black,
     primaryColorDark: const Color.fromARGB(255, 4, 56, 4),
     primaryColorLight: const Color.fromARGB(255, 0, 255, 0),
-    useMaterial3: true,
     colorScheme: const ColorScheme.light().copyWith(
       background: Colors.white,
       primary: Colors.black,

@@ -20,9 +20,13 @@ Widget profileWidget({
         fit: boxFit,
         progressIndicatorBuilder: (context, url, downloadProgress) {
           double progress = downloadProgress.progress ?? 0.0;
-          return Center(
-            child: CircularProgressIndicator(
-              value: progress,
+          return ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 10, maxWidth: 10),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+                value: progress,
+              ),
             ),
           );
         },

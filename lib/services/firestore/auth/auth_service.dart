@@ -60,8 +60,11 @@ class AuthService {
               email: user.email.replaceAll(" ", ""), password: user.password)
           .then((currentUser) async {
         if (currentUser.user?.uid != null) {
-          final profileUrl = await StoreService()
-              .uploadImageProfilePicture(user.imageFile, "ProfileImages");
+          String profileUrl = '';
+          if (user.imageFile != null) {
+            profileUrl = await StoreService()
+                .uploadImageProfilePicture(user.imageFile!, "ProfileImages");
+          }
           UserService().createUser(user: user, profileUrl: profileUrl);
         }
       });

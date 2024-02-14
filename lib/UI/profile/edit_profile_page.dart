@@ -180,7 +180,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       await _updateUserData();
     } else {
       final profileUrl = await StoreService()
-          .uploadImageProfilePicture(_image, "ProfileImages");
+          .uploadImageProfilePicture(_image!, "ProfileImages");
 
       await _updateUserProfilePictureAndData(profileUrl: profileUrl);
       await StoreService().syncProfilePicture(profileUrl);

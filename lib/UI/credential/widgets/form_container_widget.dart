@@ -28,10 +28,10 @@ class FormContainerWidget extends StatefulWidget {
   });
 
   @override
-  _FormContainerWidgetState createState() => _FormContainerWidgetState();
+  FormContainerWidgetState createState() => FormContainerWidgetState();
 }
 
-class _FormContainerWidgetState extends State<FormContainerWidget> {
+class FormContainerWidgetState extends State<FormContainerWidget> {
   bool _obscureText = true;
 
   @override
@@ -103,7 +103,7 @@ class PasswordVisibilityIcon extends StatelessWidget {
   }
 }
 
-class FormContainerWidgetState extends State<FormContainerWidget> {
+class FormContainerWidgetAlternateState extends State<FormContainerWidget> {
   bool _obscureText = true;
 
   @override

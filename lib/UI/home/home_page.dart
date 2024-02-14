@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
         ),
         body: BlocProvider.value(
           value: di.sl<PostCubit>()
-            ..getPostsFromFollowingUsers(widget.currentUser),
+            ..getPostsFromFollowingUsersInTheLast24h(widget.currentUser),
           child:
               BlocBuilder<PostCubit, PostState>(builder: (context, postState) {
             if (postState is PostEmpty) {

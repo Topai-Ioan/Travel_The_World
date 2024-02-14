@@ -55,5 +55,5 @@ void toast(String message) {
       timeInSecForIosWeb: 3,
       backgroundColor: blueColor,
       textColor: Colors.white,
-      fontSize: 16.0);
+      fontSize: 14.0);
 }
