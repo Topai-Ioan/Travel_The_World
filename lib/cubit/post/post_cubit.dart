@@ -52,11 +52,11 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> getPostsFromFollowingUsers(UserModel user) async {
+  Future<void> getPostsFromFollowingUsersInTheLast24h(UserModel user) async {
     emit(PostLoading());
     try {
-      final streamResponse =
-          await postService.getPostsFromFollowedUsers(currentUser: user);
+      final streamResponse = await postService
+          .getPostsFromFollowedUsersInTheLast24h(currentUser: user);
 
       final subscription = streamResponse.listen((posts) {
         if (posts.isNotEmpty) {
@@ -113,9 +113,9 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> addTags({required PostModel post}) async {
+  Future<void> addcategory({required PostModel post}) async {
     try {
-      await postService.addTags(post: post);
+      await postService.addcategory(post: post);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {

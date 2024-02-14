@@ -167,14 +167,19 @@ class PostService implements PostServiceInterface {
 
       for (var doc in querySnapshot.docs) {
         var data = doc.data();
-        var tags = (data['tags'] as List<dynamic>)
+        var category = (data['category'] as List<dynamic>)
             .cast<String>()
             .map((tag) => tag.toLowerCase())
             .toList();
 
-        for (var tag in tags) {
+        var addedPhotoIDs = <String>{};
+        for (var tag in category) {
           if (tag.contains(text) || tag.startsWith(text)) {
-            posts.add(PostModel.fromJson(data));
+            var postModel = PostModel.fromJson(data);
+            if (!addedPhotoIDs.contains(postModel.postId)) {
+              posts.add(postModel);
+              addedPhotoIDs.add(postModel.postId);
+            }
           }
         }
       }
@@ -184,15 +189,19 @@ class PostService implements PostServiceInterface {
   }
 
   @override
-  Future<Stream<List<PostModel>>> getPostsFromFollowedUsers(
+  Future<Stream<List<PostModel>>> getPostsFromFollowedUsersInTheLast24h(
       {required UserModel currentUser}) async {
     final followingList = List<String>.from(currentUser.following);
     if (!followingList.contains(currentUser.uid)) {
       followingList.add(currentUser.uid);
     }
+
+    final twentyFourHoursAgo =
+        DateTime.now().subtract(const Duration(hours: 24));
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .where('creatorUid', whereIn: followingList)
+        .where('createdAt', isGreaterThan: twentyFourHoursAgo)
         .orderBy("createdAt", descending: true);
 
     return ref.snapshots().map((querySnapshot) {
@@ -215,14 +224,16 @@ class PostService implements PostServiceInterface {
   }
 
   @override
-  Future<void> addTags({required PostModel post}) async {
+  Future<void> addcategory({required PostModel post}) async {
     final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
 
-    final lowercaseTags = post.tags.map((tag) => tag.toLowerCase()).toList();
+    final lowercasecategory =
+        post.category.map((tag) => tag.toLowerCase()).toList();
 
     var data = {
-      if (lowercaseTags.isNotEmpty) 'tags': lowercaseTags,
-      if (post.tagsConfidence.isNotEmpty) 'tagsConfidence': post.tagsConfidence,
+      if (lowercasecategory.isNotEmpty) 'category': lowercasecategory,
+      if (post.categoryConfidence.isNotEmpty)
+        'categoryConfidence': post.categoryConfidence,
     };
 
     return ref.update(data);

@@ -11,8 +11,8 @@ class PostModel {
   final String description;
   final String postImageUrl;
   final List<String> likes;
-  final List<String> tags;
-  final List<double> tagsConfidence;
+  final List<String> category;
+  final List<double> categoryConfidence;
   final num totalComments;
   final String userProfileUrl;
 
@@ -26,8 +26,8 @@ class PostModel {
     this.description = '',
     this.postImageUrl = '',
     this.likes = const [],
-    this.tags = const [],
-    this.tagsConfidence = const [],
+    this.category = const [],
+    this.categoryConfidence = const [],
     this.totalComments = 0,
     this.userProfileUrl = '',
     this.createdAt,

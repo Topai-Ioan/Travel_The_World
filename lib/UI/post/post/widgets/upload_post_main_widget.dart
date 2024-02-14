@@ -28,8 +28,8 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
   final TextEditingController _descriptionController = TextEditingController();
   final ValueNotifier<bool> _isUploading = ValueNotifier<bool>(false);
 
-  List<String> imageTags = [];
-  List<double> tagsConfidence = [];
+  List<String> imageCategory = [];
+  List<double> categoryConfidence = [];
 
   @override
   void dispose() {
@@ -50,8 +50,8 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
   }
 
   Future<void> getImageLabels(XFile image) async {
-    imageTags.clear();
-    tagsConfidence.clear();
+    imageCategory.clear();
+    categoryConfidence.clear();
 
     final inputImage = InputImage.fromFilePath(image.path);
     ImageLabeler imageLabeler =
@@ -60,8 +60,8 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
 
       for (ImageLabel imgLabel in labels) {
-        imageTags.add(imgLabel.label);
-        tagsConfidence
+        imageCategory.add(imgLabel.label);
+        categoryConfidence
             .add(double.parse(imgLabel.confidence.toStringAsFixed(2)));
       }
     } finally {
@@ -387,15 +387,15 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       username: widget.currentUser.username,
       userProfileUrl: widget.currentUser.profileUrl,
       description: _descriptionController.text,
-      tags: imageTags,
-      tagsConfidence: tagsConfidence,
+      category: imageCategory,
+      categoryConfidence: categoryConfidence,
     ))
         .then((value) {
-      BlocProvider.of<PostCubit>(context).addTags(
+      BlocProvider.of<PostCubit>(context).addcategory(
           post: PostModel(
               postId: imageId,
-              tags: imageTags,
-              tagsConfidence: tagsConfidence));
+              category: imageCategory,
+              categoryConfidence: categoryConfidence));
       _clear();
     });
     return;

@@ -15,10 +15,11 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
       likes:
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
-      tags:
-          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              const [],
-      tagsConfidence: (json['tagsConfidence'] as List<dynamic>?)
+      category: (json['category'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      categoryConfidence: (json['categoryConfidence'] as List<dynamic>?)
               ?.map((e) => (e as num).toDouble())
               .toList() ??
           const [],
@@ -35,8 +36,8 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'description': instance.description,
       'postImageUrl': instance.postImageUrl,
       'likes': instance.likes,
-      'tags': instance.tags,
-      'tagsConfidence': instance.tagsConfidence,
+      'category': instance.category,
+      'categoryConfidence': instance.categoryConfidence,
       'totalComments': instance.totalComments,
       'userProfileUrl': instance.userProfileUrl,
       'createdAt': PostModel._dateTimeToTimestamp(instance.createdAt),

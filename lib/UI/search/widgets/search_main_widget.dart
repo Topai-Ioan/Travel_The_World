@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:travel_the_world/UI/search/search_page.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/cubit/user/user_cubit.dart';
@@ -23,6 +24,33 @@ class UserSearchResultsWidget extends StatefulWidget {
   @override
   State<UserSearchResultsWidget> createState() =>
       _UserSearchResultsWidgetState();
+}
+
+class CustomElevatedButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String label;
+
+  const CustomElevatedButton(
+      {super.key, required this.onPressed, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey[800],
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
 }
 
 class _UserSearchResultsWidgetState extends State<UserSearchResultsWidget> {
@@ -54,28 +82,14 @@ class _UserSearchResultsWidgetState extends State<UserSearchResultsWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
-                  onPressed: () {
-                    _showFilteredUsers();
-                  },
-                  child: const Text(
-                    'Users',
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
-                  ),
+                CustomElevatedButton(
+                  onPressed: _showFilteredUsers,
+                  label: 'Users',
                 ),
                 const SizedBox(width: 16),
-                TextButton(
-                  onPressed: () {
-                    _showFilteredPosts();
-                  },
-                  child: const Text(
-                    'Photos',
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
-                  ),
+                CustomElevatedButton(
+                  onPressed: _showFilteredPosts,
+                  label: 'Photos',
                 ),
               ],
             ),
@@ -86,6 +100,8 @@ class _UserSearchResultsWidgetState extends State<UserSearchResultsWidget> {
             GetFilteredPosts(
               filterText: widget.filterText,
             )
+          else
+            const GetAllPosts()
         ],
       ),
     );
@@ -214,11 +230,11 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
 }
 
 class GetFilteredPosts extends StatelessWidget {
-  final String filterText; // Add this field to store the filter text
+  final String filterText;
 
   const GetFilteredPosts({
     super.key,
-    required this.filterText, // Initialize the filter text parameter
+    required this.filterText,
   });
 
   @override
@@ -254,8 +270,7 @@ class GetAllPosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // va trebui sa creez o metoda si sa o apelez aici care sa caute doar pozele cu metadata
-    // care contine textul din searchController
+    BlocProvider.of<PostCubit>(context).getPosts();
     return BlocBuilder<PostCubit, PostState>(
       builder: (context, postState) {
         if (postState is PostLoading) {
