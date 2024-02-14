@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/UI/activity/activity_page.dart';
 import 'package:travel_the_world/UI/profile/profile_page.dart';
@@ -12,7 +11,7 @@ import '../home/home_page.dart';
 
 class MainScreen extends StatefulWidget {
   final String uid;
-  const MainScreen({Key? key, required this.uid}) : super(key: key);
+  const MainScreen({super.key, required this.uid});
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
@@ -52,7 +51,6 @@ class _MainScreenState extends State<MainScreen> {
         if (getsingleUserState is GetSingleUserLoaded) {
           final currentUser = getsingleUserState.user;
           return Scaffold(
-            backgroundColor: backgroundColor,
             bottomNavigationBar: CustomCupertinoTabBar(
               currentIndex: _currentIndex,
               onTap: navigationTapped,
@@ -93,33 +91,38 @@ class CustomCupertinoTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabBar(
-      backgroundColor: backgroundColor,
-      items: const [
+      backgroundColor: Theme.of(context).colorScheme.background,
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_rounded, color: primaryColor),
+          icon: Icon(Icons.home_rounded,
+              color: Theme.of(context).colorScheme.primary),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search_rounded, color: primaryColor),
+          icon: Icon(Icons.search_rounded,
+              color: Theme.of(context).colorScheme.primary),
           label: 'Search',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle_rounded, color: primaryColor),
+          icon: Icon(Icons.add_circle_rounded,
+              color: Theme.of(context).colorScheme.primary),
           label: 'Post',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.favorite_rounded, color: primaryColor),
+          icon: Icon(Icons.favorite_rounded,
+              color: Theme.of(context).colorScheme.primary),
           label: 'Favorite',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle_rounded, color: primaryColor),
+          icon: Icon(Icons.account_circle_rounded,
+              color: Theme.of(context).colorScheme.primary),
           label: 'Profile',
         ),
       ],
       currentIndex: currentIndex,
       onTap: onTap,
-      activeColor: blueColor,
-      inactiveColor: primaryColor,
+      activeColor: Theme.of(context).colorScheme.secondary,
+      inactiveColor: Theme.of(context).colorScheme.primary,
     );
   }
 }

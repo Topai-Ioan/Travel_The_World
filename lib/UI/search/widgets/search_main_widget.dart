@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:travel_the_world/UI/search/search_page.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/cubit/user/user_cubit.dart';
@@ -54,22 +53,22 @@ class CustomElevatedButton extends StatelessWidget {
 }
 
 class _UserSearchResultsWidgetState extends State<UserSearchResultsWidget> {
-  bool showFilteredUsers = true;
-  bool showFilteredPosts = true;
+  bool filteredUsers = true;
+  bool filteredPosts = true;
   @override
   Widget build(BuildContext context) {
-    void _showFilteredUsers() {
+    void showFilteredUsers() {
       setState(() {
-        showFilteredUsers = true;
-        showFilteredPosts = false;
+        filteredUsers = true;
+        filteredPosts = false;
       });
       widget.onStateChanged();
     }
 
-    void _showFilteredPosts() {
+    void showFilteredPosts() {
       setState(() {
-        showFilteredUsers = false;
-        showFilteredPosts = true;
+        filteredUsers = false;
+        filteredPosts = true;
       });
       widget.onStateChanged();
     }
@@ -83,20 +82,20 @@ class _UserSearchResultsWidgetState extends State<UserSearchResultsWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomElevatedButton(
-                  onPressed: _showFilteredUsers,
+                  onPressed: showFilteredUsers,
                   label: 'Users',
                 ),
                 const SizedBox(width: 16),
                 CustomElevatedButton(
-                  onPressed: _showFilteredPosts,
+                  onPressed: showFilteredPosts,
                   label: 'Photos',
                 ),
               ],
             ),
           ),
-          if (showFilteredUsers)
+          if (filteredUsers)
             GetFilteredUsers(filterAllUsers: widget.filterAllUsers)
-          else if (showFilteredPosts)
+          else if (filteredPosts)
             GetFilteredPosts(
               filterText: widget.filterText,
             )

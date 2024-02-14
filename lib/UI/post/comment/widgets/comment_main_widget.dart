@@ -22,8 +22,7 @@ import 'package:travel_the_world/injection_container.dart' as di;
 class CommentMainWidget extends StatefulWidget {
   final AppEntity appEntity;
 
-  const CommentMainWidget({Key? key, required this.appEntity})
-      : super(key: key);
+  const CommentMainWidget({super.key, required this.appEntity});
 
   @override
   State<CommentMainWidget> createState() => _CommentMainWidgetState();
@@ -55,9 +54,9 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: appBarColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: const Text("Comments"),
       ),
       body: buildCommentContent(),
@@ -114,9 +113,9 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
             ],
           ),
         ),
-        const Divider(
+        Divider(
           thickness: 1,
-          color: secondaryColor,
+          color: Theme.of(context).colorScheme.tertiary,
         ),
         sizeVertical(10),
         Expanded(
@@ -166,16 +165,18 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
                 height: 40,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: profileWidget(imageUrl: singlePost.userProfileUrl),
+                  child: profileWidget(
+                      imageUrl: singlePost.userProfileUrl,
+                      boxFit: BoxFit.cover),
                 ),
               ),
               sizeHorizontal(10),
               Text(
                 singlePost.username,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: primaryColor,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
@@ -183,7 +184,8 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
           sizeVertical(10),
           Text(
             singlePost.description,
-            style: const TextStyle(color: primaryColor, fontSize: 16),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.primary, fontSize: 16),
           ),
         ],
       ),

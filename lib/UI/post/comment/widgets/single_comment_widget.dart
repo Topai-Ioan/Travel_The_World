@@ -22,12 +22,11 @@ class SingleCommentWidget extends StatefulWidget {
   final UserModel? currentUser;
 
   const SingleCommentWidget(
-      {Key? key,
+      {super.key,
       required this.comment,
       this.onLongPressListener,
       this.onLikeClickListener,
-      this.currentUser})
-      : super(key: key);
+      this.currentUser});
 
   @override
   State<SingleCommentWidget> createState() => _SingleCommentWidgetState();
@@ -60,10 +59,10 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
       children: [
         Text(
           widget.comment.username,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
-            color: primaryColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         GestureDetector(
@@ -85,7 +84,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   Widget buildCommentText() {
     return Text(
       widget.comment.description,
-      style: const TextStyle(color: primaryColor),
+      style: TextStyle(color: Theme.of(context).colorScheme.primary),
     );
   }
 
