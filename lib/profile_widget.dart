@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:travel_the_world/services/cache_manager.dart';
 
 Widget profileWidget({
   String? imageUrl,
@@ -16,6 +17,7 @@ Widget profileWidget({
       );
     } else {
       return CachedNetworkImage(
+        cacheManager: CustomCacheManager(),
         imageUrl: imageUrl,
         fit: boxFit,
         progressIndicatorBuilder: (context, url, downloadProgress) {
