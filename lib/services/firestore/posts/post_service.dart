@@ -156,6 +156,34 @@ class PostService implements PostServiceInterface {
   }
 
   @override
+  Stream<List<PostModel>> getPostsFiltered(String text) {
+    text = text.toLowerCase();
+    final ref = _db
+        .collection(FirebaseConstants.Posts)
+        .orderBy("createdAt", descending: true);
+
+    return ref.snapshots().map((querySnapshot) {
+      var posts = <PostModel>[];
+
+      for (var doc in querySnapshot.docs) {
+        var data = doc.data();
+        var tags = (data['tags'] as List<dynamic>)
+            .cast<String>()
+            .map((tag) => tag.toLowerCase())
+            .toList();
+
+        for (var tag in tags) {
+          if (tag.contains(text) || tag.startsWith(text)) {
+            posts.add(PostModel.fromJson(data));
+          }
+        }
+      }
+
+      return posts;
+    });
+  }
+
+  @override
   Future<Stream<List<PostModel>>> getPostsFromFollowedUsers(
       {required UserModel currentUser}) async {
     final followingList = List<String>.from(currentUser.following);
@@ -190,11 +218,13 @@ class PostService implements PostServiceInterface {
   Future<void> addTags({required PostModel post}) async {
     final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
 
+    final lowercaseTags = post.tags.map((tag) => tag.toLowerCase()).toList();
+
     var data = {
-      if (post.tags != List.empty()) 'tags': post.tags,
-      if (post.tagsConfidence != List.empty())
-        'tagsConfidence': post.tagsConfidence,
+      if (lowercaseTags.isNotEmpty) 'tags': lowercaseTags,
+      if (post.tagsConfidence.isNotEmpty) 'tagsConfidence': post.tagsConfidence,
     };
+
     return ref.update(data);
   }
 }

@@ -19,6 +19,14 @@ class PostLoaded extends PostState {
   List<Object> get props => [posts];
 }
 
+class FilteredPostsLoaded extends PostState {
+  final List<PostModel> posts;
+
+  const FilteredPostsLoaded({required this.posts});
+  @override
+  List<Object> get props => [posts];
+}
+
 class PostFailure extends PostState {}
 
 class PostEmpty extends PostState {}

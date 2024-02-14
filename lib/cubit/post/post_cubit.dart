@@ -32,6 +32,26 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
+  Future<void> getPostsFiltered(String text) async {
+    emit(PostLoading());
+    try {
+      final streamResponse = postService.getPostsFiltered(text);
+
+      final subscription = streamResponse.listen((posts) {
+        if (posts.isNotEmpty) {
+          emit(FilteredPostsLoaded(posts: posts));
+        } else {
+          emit(PostEmpty());
+        }
+      });
+      subscription.resume();
+    } on SocketException catch (_) {
+      emit(PostFailure());
+    } catch (_) {
+      emit(PostFailure());
+    }
+  }
+
   Future<void> getPostsFromFollowingUsers(UserModel user) async {
     emit(PostLoading());
     try {

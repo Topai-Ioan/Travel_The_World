@@ -6,6 +6,7 @@ abstract class PostServiceInterface {
   Future<void> addTags({required PostModel post});
 
   Stream<List<PostModel>> getPosts();
+  Stream<List<PostModel>> getPostsFiltered(String text);
   Stream<List<PostModel>> getPost({required String postId});
   Future<void> likePost({required String postId});
   Future<void> deletePost({required String postId});
