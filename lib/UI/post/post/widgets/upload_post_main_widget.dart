@@ -399,7 +399,6 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     ))
         .then((value) {
       BlocProvider.of<PostCubit>(context).addCategoryAndDimensions(
-        // need to add the height and width to the post model too
         post: PostModel(
           postId: imageId,
           category: imageCategory,
