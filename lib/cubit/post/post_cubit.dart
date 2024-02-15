@@ -113,9 +113,9 @@ class PostCubit extends Cubit<PostState> {
     }
   }
 
-  Future<void> addcategory({required PostModel post}) async {
+  Future<void> addCategoryAndDimensions({required PostModel post}) async {
     try {
-      await postService.addcategory(post: post);
+      await postService.addCategoryAndDimensions(post: post);
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {

@@ -365,17 +365,24 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     });
     if (file == null) return;
 
-    Map<String, String> imageInfo =
+    ImageUploadResult imageInfo =
         await StoreService().uploadImagePost(File(file.path), "Posts");
 
-    String imageUrl = imageInfo["imageUrl"]!;
-    String imageId = imageInfo["imageId"]!;
+    String imageUrl = imageInfo.imageUrl;
+    String imageId = imageInfo.imageId;
+    double height = imageInfo.height;
+    double width = imageInfo.width;
 
-    _createPost(imageUrl: imageUrl, imageId: imageId);
+    _createPost(
+        imageUrl: imageUrl, imageId: imageId, height: height, width: width);
     Future.delayed(const Duration(seconds: 2), () {});
   }
 
-  _createPost({required String imageUrl, required String imageId}) {
+  _createPost(
+      {required String imageUrl,
+      required String imageId,
+      required double height,
+      required double width}) {
     BlocProvider.of<PostCubit>(context)
         .createPost(
             post: PostModel(
@@ -391,11 +398,16 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       categoryConfidence: categoryConfidence,
     ))
         .then((value) {
-      BlocProvider.of<PostCubit>(context).addcategory(
-          post: PostModel(
-              postId: imageId,
-              category: imageCategory,
-              categoryConfidence: categoryConfidence));
+      BlocProvider.of<PostCubit>(context).addCategoryAndDimensions(
+        // need to add the height and width to the post model too
+        post: PostModel(
+          postId: imageId,
+          category: imageCategory,
+          categoryConfidence: categoryConfidence,
+          height: height,
+          width: width,
+        ),
+      );
       _clear();
     });
     return;

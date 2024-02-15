@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:image/image.dart' as img;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,12 +9,26 @@ import 'package:travel_the_world/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
+class ImageUploadResult {
+  final String imageId;
+  final String imageUrl;
+  final double width;
+  final double height;
+
+  ImageUploadResult({
+    required this.imageId,
+    required this.imageUrl,
+    required this.width,
+    required this.height,
+  });
+}
+
 class StoreService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<Map<String, String>> uploadImagePost(
+  Future<ImageUploadResult> uploadImagePost(
     File? file,
     String childName,
   ) async {
@@ -23,6 +39,11 @@ class StoreService {
       );
       final compressedFile = File(file.path)
         ..writeAsBytesSync(result!.toList());
+
+      img.Image? image = img.decodeImage(file.readAsBytesSync());
+      double width = (image?.width ?? 0).toDouble();
+      double height = (image?.height ?? 0).toDouble();
+
       Reference ref = firebaseStorage
           .ref()
           .child(childName)
@@ -36,17 +57,21 @@ class StoreService {
       final imageUrl =
           await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
 
-      return {
-        "imageId": id,
-        "imageUrl": imageUrl,
-      };
+      return ImageUploadResult(
+        imageId: id,
+        imageUrl: imageUrl,
+        width: width,
+        height: height,
+      );
     } catch (e) {
       toast("Error uploading image");
     }
-    return {
-      "imageId": '',
-      "imageUrl": '',
-    };
+    return ImageUploadResult(
+      imageId: '',
+      imageUrl: '',
+      width: 0,
+      height: 0,
+    );
   }
 
   Future<void> syncProfilePicture(String profileUrl) async {

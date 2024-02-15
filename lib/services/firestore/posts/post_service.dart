@@ -224,7 +224,7 @@ class PostService implements PostServiceInterface {
   }
 
   @override
-  Future<void> addcategory({required PostModel post}) async {
+  Future<void> addCategoryAndDimensions({required PostModel post}) async {
     final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
 
     final lowercasecategory =
@@ -234,6 +234,8 @@ class PostService implements PostServiceInterface {
       if (lowercasecategory.isNotEmpty) 'category': lowercasecategory,
       if (post.categoryConfidence.isNotEmpty)
         'categoryConfidence': post.categoryConfidence,
+      if (post.width != 0) 'weight': post.width,
+      if (post.height != 0) 'height': post.height,
     };
 
     return ref.update(data);

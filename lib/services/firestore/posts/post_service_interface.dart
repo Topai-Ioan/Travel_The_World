@@ -3,7 +3,7 @@ import 'package:travel_the_world/services/models/users/user_model.dart';
 
 abstract class PostServiceInterface {
   Future<void> updatePost({required PostModel post});
-  Future<void> addcategory({required PostModel post});
+  Future<void> addCategoryAndDimensions({required PostModel post});
 
   Stream<List<PostModel>> getPosts();
   Stream<List<PostModel>> getPostsFiltered(String text);
