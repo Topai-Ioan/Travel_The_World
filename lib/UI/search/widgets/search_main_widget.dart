@@ -1,220 +1,15 @@
-import 'dart:math';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:travel_the_world/UI/search/widgets/category_search_results_widget.dart';
+import 'package:travel_the_world/UI/search/widgets/post_display_widget.dart';
+import 'package:travel_the_world/UI/search/widgets/searchbar_widget.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/cubit/user/user_cubit.dart';
-import 'package:travel_the_world/UI/search/widgets/search_widget.dart';
-import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
-
-class UserSearchResultsWidget extends StatefulWidget {
-  final List<UserModel> filterAllUsers;
-  final String filterText;
-  final VoidCallback onStateChanged; // Define the callback here
-
-  const UserSearchResultsWidget(
-      {super.key,
-      required this.filterAllUsers,
-      required this.onStateChanged,
-      required this.filterText});
-
-  @override
-  State<UserSearchResultsWidget> createState() =>
-      _UserSearchResultsWidgetState();
-}
-
-class CustomElevatedButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final String label;
-
-  const CustomElevatedButton(
-      {super.key, required this.onPressed, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.grey[800],
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
-}
-
-class _UserSearchResultsWidgetState extends State<UserSearchResultsWidget> {
-  bool filteredUsers = true;
-  bool filteredPosts = true;
-  @override
-  Widget build(BuildContext context) {
-    void showFilteredUsers() {
-      setState(() {
-        filteredUsers = true;
-        filteredPosts = false;
-      });
-      widget.onStateChanged();
-    }
-
-    void showFilteredPosts() {
-      setState(() {
-        filteredUsers = false;
-        filteredPosts = true;
-      });
-      widget.onStateChanged();
-    }
-
-    return Expanded(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomElevatedButton(
-                  onPressed: showFilteredUsers,
-                  label: 'Users',
-                ),
-                const SizedBox(width: 16),
-                CustomElevatedButton(
-                  onPressed: showFilteredPosts,
-                  label: 'Photos',
-                ),
-              ],
-            ),
-          ),
-          if (filteredUsers)
-            GetFilteredUsers(filterAllUsers: widget.filterAllUsers)
-          else if (filteredPosts)
-            GetFilteredPosts(
-              filterText: widget.filterText,
-            )
-          else
-            const GetAllPosts()
-        ],
-      ),
-    );
-  }
-}
-
-class PostDisplayWidget extends StatefulWidget {
-  final List<PostModel> posts;
-  const PostDisplayWidget({super.key, required this.posts});
-
-  @override
-  PostDisplayWidgetState createState() => PostDisplayWidgetState();
-}
-
-class PostDisplayWidgetState extends State<PostDisplayWidget> {
-  final ScrollController _scrollController = ScrollController();
-  List<PostModel> _displayedPosts = [];
-  final List<PostModel> _latestLoadedPosts = [];
-  final int _pageSize = 8;
-
-  @override
-  void initState() {
-    super.initState();
-    _displayedPosts = widget.posts.take(_pageSize).toList();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.maxScrollExtent ==
-        _scrollController.position.pixels) {
-      _loadMorePosts();
-    }
-  }
-
-  void _loadMorePosts() {
-    final int remainingPostsCount =
-        widget.posts.length - _displayedPosts.length;
-
-    if (remainingPostsCount > 0) {
-      final int postsToAdd = min(remainingPostsCount, _pageSize);
-      List<PostModel> newPosts = widget.posts
-          .getRange(
-            _displayedPosts.length,
-            _displayedPosts.length + postsToAdd,
-          )
-          .toList();
-
-      setState(() {
-        _displayedPosts.addAll(newPosts);
-        _latestLoadedPosts.addAll(newPosts);
-
-        if (_latestLoadedPosts.length > _pageSize) {
-          _latestLoadedPosts.removeRange(0, _pageSize);
-        }
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GridView.custom(
-        gridDelegate: SliverQuiltedGridDelegate(
-          crossAxisCount: 3,
-          mainAxisSpacing: 4,
-          crossAxisSpacing: 4,
-          repeatPattern: QuiltedGridRepeatPattern.inverted,
-          pattern: [
-            const QuiltedGridTile(2, 3),
-            const QuiltedGridTile(2, 2),
-            const QuiltedGridTile(1, 1),
-            const QuiltedGridTile(1, 1),
-            const QuiltedGridTile(1, 1),
-            const QuiltedGridTile(1, 1),
-            const QuiltedGridTile(1, 1),
-          ],
-        ),
-        controller: _scrollController,
-        childrenDelegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      PageRoutes.PostDetailPage,
-                      arguments: _displayedPosts[index].postId,
-                    );
-                  },
-                  child: profileWidget(
-                    boxFit: BoxFit.cover,
-                    imageUrl: _displayedPosts[index].postImageUrl,
-                  ),
-                ),
-              ),
-            );
-          },
-          childCount: _displayedPosts.length,
-        ),
-      ),
-    );
-  }
-}
+import 'package:travel_the_world/profile_widget.dart';
 
 class SearchMainWidget extends StatefulWidget {
   const SearchMainWidget({super.key});
@@ -225,72 +20,81 @@ class SearchMainWidget extends StatefulWidget {
 
 class _SearchMainWidgetState extends State<SearchMainWidget> {
   final TextEditingController _searchController = TextEditingController();
+  final ValueNotifier<bool> _showUsersNotifier = ValueNotifier<bool>(true);
+  Timer? _debounceTimer;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<UserCubit>(context).getUsers(user: UserModel());
-    BlocProvider.of<PostCubit>(context).getPosts();
+    context.read<PostCubit>().getPosts();
+    context.read<UserCubit>().getUsers(user: UserModel());
 
-    _searchController.addListener(() {
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    _showUsersNotifier.dispose();
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      if (_showUsersNotifier.value) {
+        context.read<UserCubit>().getUsers(user: UserModel());
+      } else {
+        if (_searchController.text.isNotEmpty) {
+          context.read<PostCubit>().getPostsFiltered(_searchController.text);
+        } else {
+          context.read<PostCubit>().getPosts();
+        }
+      }
       setState(() {});
     });
   }
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () {
-        if (_searchController.text.isEmpty) {
-          _refreshPage(context);
-        }
-        return Future.value();
-      },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: BlocBuilder<UserCubit, UserState>(
-          builder: (context, userState) {
-            if (userState is UsersLoaded) {
-              final searchText = _searchController.text.toLowerCase();
-              final filterAllUsers = userState.users
-                  .where((user) =>
-                      user.username.toLowerCase().startsWith(searchText) ||
-                      user.username.toLowerCase().contains(searchText))
-                  .toList();
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SearchWidget(controller: _searchController),
-                    _searchController.text.isNotEmpty
-                        ? UserSearchResultsWidget(
-                            filterAllUsers: filterAllUsers,
-                            filterText: _searchController.text,
-                            onStateChanged: () {
-                              setState(() {});
-                            })
-                        : const GetAllPosts()
-                  ],
-                ),
-              );
-            }
-            return Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).primaryColor,
-                ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: BlocBuilder<UserCubit, UserState>(
+        builder: (context, userState) {
+          if (userState is UsersLoaded) {
+            final searchText = _searchController.text.toLowerCase();
+            final filterAllUsers = userState.users
+                .where((user) =>
+                    user.username.toLowerCase().startsWith(searchText))
+                .toList();
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SearchBarWidget(controller: _searchController),
+                  _searchController.text.isNotEmpty
+                      ? CategorySearchResultsWidget(
+                          filterAllUsers: filterAllUsers,
+                          filterText: _searchController.text,
+                          showUsersNotifier: _showUsersNotifier,
+                        )
+                      : const GetAllPosts()
+                ],
               ),
             );
-          },
-        ),
+          }
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -306,26 +110,28 @@ class GetFilteredPosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<PostCubit>(context).getPostsFiltered(filterText);
-
-    return BlocBuilder<PostCubit, PostState>(
-      builder: (context, postState) {
-        if (postState is PostLoading) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ),
-          );
-        }
-        if (postState is FilteredPostsLoaded) {
-          final posts = postState.posts;
-          return PostDisplayWidget(posts: posts);
-        }
-        return const Text(
-          'No data found!',
-          style: TextStyle(color: Colors.red),
-        );
-      },
+    context.read<PostCubit>().getPostsFiltered(filterText);
+    return Expanded(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<PostCubit>().getPostsFiltered(filterText);
+        },
+        child: BlocBuilder<PostCubit, PostState>(
+          builder: (context, postState) {
+            if (postState is PostLoading) {
+              return const CircularProgressIndicator();
+            }
+            if (postState is FilteredPostsLoaded) {
+              final posts = postState.posts;
+              return PostDisplayWidget(posts: posts);
+            }
+            return const Text(
+              'No data found!',
+              style: TextStyle(color: Colors.blue),
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -337,25 +143,27 @@ class GetAllPosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<PostCubit>(context).getPosts();
-    return BlocBuilder<PostCubit, PostState>(
-      builder: (context, postState) {
-        if (postState is PostLoading) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ),
-          );
-        }
-        if (postState is PostLoaded) {
-          final posts = postState.posts;
-          return PostDisplayWidget(posts: posts);
-        }
-        return const Text(
-          'No data found!',
-          style: TextStyle(color: Colors.red),
-        );
-      },
+    return Expanded(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<PostCubit>().getPosts();
+        },
+        child: BlocBuilder<PostCubit, PostState>(
+          builder: (context, postState) {
+            if (postState is PostLoading) {
+              return const CircularProgressIndicator();
+            }
+            if (postState is PostLoaded) {
+              final posts = postState.posts;
+              return PostDisplayWidget(posts: posts);
+            }
+            return const Text(
+              'No data found!',
+              style: TextStyle(color: Colors.green),
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -416,9 +224,4 @@ class GetFilteredUsers extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<void> _refreshPage(BuildContext context) async {
-  BlocProvider.of<UserCubit>(context).getUsers(user: UserModel());
-  BlocProvider.of<PostCubit>(context).getPosts();
 }

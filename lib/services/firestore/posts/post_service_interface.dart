@@ -5,12 +5,12 @@ abstract class PostServiceInterface {
   Future<void> updatePost({required PostModel post});
   Future<void> addCategoryAndDimensions({required PostModel post});
 
-  Stream<List<PostModel>> getPosts();
-  Stream<List<PostModel>> getPostsFiltered(String text);
-  Stream<List<PostModel>> getPost({required String postId});
+  Future<List<PostModel>> getPosts();
+  Future<List<PostModel>> getPostsFiltered(String text);
+  Future<List<PostModel>> getPost({required String postId});
   Future<void> likePost({required String postId});
   Future<void> deletePost({required String postId});
   Future<void> createPost({required PostModel post});
-  Future<Stream<List<PostModel>>> getPostsFromFollowedUsersInTheLast24h(
+  Future<List<PostModel>> getPostsFromFollowedUsersInTheLast24h(
       {required UserModel currentUser});
 }

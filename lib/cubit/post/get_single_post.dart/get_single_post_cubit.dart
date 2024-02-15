@@ -15,12 +15,10 @@ class GetSinglePostCubit extends Cubit<GetSinglePostState> {
   Future<void> getSinglePost({required String postId}) async {
     emit(GetSinglePostLoading());
     try {
-      final streamResponse = postService.getPost(postId: postId);
-      streamResponse.listen((posts) {
-        if (posts.isNotEmpty) {
-          emit(GetSinglePostLoaded(post: posts.first));
-        }
-      });
+      final posts = await postService.getPost(postId: postId);
+      if (posts.isNotEmpty) {
+        emit(GetSinglePostLoaded(post: posts.first));
+      }
     } on SocketException catch (_) {
       emit(GetSinglePostFailure());
     } catch (_) {

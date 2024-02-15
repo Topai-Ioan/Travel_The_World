@@ -15,16 +15,13 @@ class PostCubit extends Cubit<PostState> {
   Future<void> getPosts() async {
     emit(PostLoading());
     try {
-      final streamResponse = postService.getPosts();
+      final posts = await postService.getPosts();
 
-      final subscription = streamResponse.listen((posts) {
-        if (posts.isNotEmpty) {
-          emit(PostLoaded(posts: posts));
-        } else {
-          emit(PostEmpty());
-        }
-      });
-      subscription.resume();
+      if (posts.isNotEmpty) {
+        emit(PostLoaded(posts: posts));
+      } else {
+        emit(PostEmpty());
+      }
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
@@ -35,16 +32,13 @@ class PostCubit extends Cubit<PostState> {
   Future<void> getPostsFiltered(String text) async {
     emit(PostLoading());
     try {
-      final streamResponse = postService.getPostsFiltered(text);
+      final posts = await postService.getPostsFiltered(text);
 
-      final subscription = streamResponse.listen((posts) {
-        if (posts.isNotEmpty) {
-          emit(FilteredPostsLoaded(posts: posts));
-        } else {
-          emit(PostEmpty());
-        }
-      });
-      subscription.resume();
+      if (posts.isNotEmpty) {
+        emit(FilteredPostsLoaded(posts: posts));
+      } else {
+        emit(PostEmpty());
+      }
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {
@@ -55,17 +49,14 @@ class PostCubit extends Cubit<PostState> {
   Future<void> getPostsFromFollowingUsersInTheLast24h(UserModel user) async {
     emit(PostLoading());
     try {
-      final streamResponse = await postService
-          .getPostsFromFollowedUsersInTheLast24h(currentUser: user);
+      final posts = await postService.getPostsFromFollowedUsersInTheLast24h(
+          currentUser: user);
 
-      final subscription = streamResponse.listen((posts) {
-        if (posts.isNotEmpty) {
-          emit(PostLoaded(posts: posts));
-        } else {
-          emit(PostEmpty());
-        }
-      });
-      subscription.resume();
+      if (posts.isNotEmpty) {
+        emit(PostLoaded(posts: posts));
+      } else {
+        emit(PostEmpty());
+      }
     } on SocketException catch (_) {
       emit(PostFailure());
     } catch (_) {

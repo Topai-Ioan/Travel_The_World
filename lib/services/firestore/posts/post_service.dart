@@ -107,6 +107,18 @@ class PostService implements PostServiceInterface {
   }
 
   @override
+  Future<void> updatePost({required PostModel post}) async {
+    final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
+
+    var data = {
+      if (post.description != '') 'description': post.description,
+      if (post.postImageUrl != '') 'postImageUrl': post.postImageUrl,
+      if (post.userProfileUrl != '') 'userProfileUrl': post.userProfileUrl,
+    };
+    return ref.update(data);
+  }
+
+  @override
   Future<void> likePost({required String postId}) async {
     final postCollection = _db.collection(FirebaseConstants.Posts);
 
@@ -129,67 +141,63 @@ class PostService implements PostServiceInterface {
   }
 
   @override
-  Stream<List<PostModel>> getPost({required String postId}) {
+  Future<List<PostModel>> getPost({required String postId}) async {
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .where("postId", isEqualTo: postId)
         .orderBy("createdAt", descending: true);
 
-    return ref.snapshots().map((querySnapshot) {
-      var data = querySnapshot.docs.map((doc) => doc.data());
-      var post = data.map((d) => PostModel.fromJson(d)).toList();
-      return post;
-    });
+    var querySnapshot = await ref.get();
+    var data = querySnapshot.docs.map((doc) => doc.data()).toList();
+    var post = data.map((d) => PostModel.fromJson(d)).toList();
+    return post;
   }
 
   @override
-  Stream<List<PostModel>> getPosts() {
+  Future<List<PostModel>> getPosts() async {
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .orderBy("createdAt", descending: true);
 
-    return ref.snapshots().map((querySnapshot) {
-      var data = querySnapshot.docs.map((doc) => doc.data());
-      var posts = data.map((d) => PostModel.fromJson(d)).toList();
-      return posts;
-    });
+    var querySnapshot = await ref.get();
+    var data = querySnapshot.docs.map((doc) => doc.data()).toList();
+    var posts = data.map((d) => PostModel.fromJson(d)).toList();
+    return posts;
   }
 
   @override
-  Stream<List<PostModel>> getPostsFiltered(String text) {
+  Future<List<PostModel>> getPostsFiltered(String text) async {
     text = text.toLowerCase();
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .orderBy("createdAt", descending: true);
 
-    return ref.snapshots().map((querySnapshot) {
-      var posts = <PostModel>[];
+    var querySnapshot = await ref.get();
+    var posts = <PostModel>[];
 
-      for (var doc in querySnapshot.docs) {
-        var data = doc.data();
-        var category = (data['category'] as List<dynamic>)
-            .cast<String>()
-            .map((tag) => tag.toLowerCase())
-            .toList();
+    for (var doc in querySnapshot.docs) {
+      var data = doc.data();
+      var category = (data['category'] as List<dynamic>)
+          .cast<String>()
+          .map((tag) => tag.toLowerCase())
+          .toList();
 
-        var addedPhotoIDs = <String>{};
-        for (var tag in category) {
-          if (tag.contains(text) || tag.startsWith(text)) {
-            var postModel = PostModel.fromJson(data);
-            if (!addedPhotoIDs.contains(postModel.postId)) {
-              posts.add(postModel);
-              addedPhotoIDs.add(postModel.postId);
-            }
+      var addedPhotoIDs = <String>{};
+      for (var tag in category) {
+        if (tag.contains(text) || tag.startsWith(text)) {
+          var postModel = PostModel.fromJson(data);
+          if (!addedPhotoIDs.contains(postModel.postId)) {
+            posts.add(postModel);
+            addedPhotoIDs.add(postModel.postId);
           }
         }
       }
-
-      return posts;
-    });
+    }
+    return posts;
   }
 
   @override
-  Future<Stream<List<PostModel>>> getPostsFromFollowedUsersInTheLast24h(
+  Future<List<PostModel>> getPostsFromFollowedUsersInTheLast24h(
       {required UserModel currentUser}) async {
     final followingList = List<String>.from(currentUser.following);
     if (!followingList.contains(currentUser.uid)) {
@@ -204,23 +212,10 @@ class PostService implements PostServiceInterface {
         .where('createdAt', isGreaterThan: twentyFourHoursAgo)
         .orderBy("createdAt", descending: true);
 
-    return ref.snapshots().map((querySnapshot) {
-      var data = querySnapshot.docs.map((doc) => doc.data());
-      var posts = data.map((d) => PostModel.fromJson(d)).toList();
-      return posts;
-    });
-  }
-
-  @override
-  Future<void> updatePost({required PostModel post}) async {
-    final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
-
-    var data = {
-      if (post.description != '') 'description': post.description,
-      if (post.postImageUrl != '') 'postImageUrl': post.postImageUrl,
-      if (post.userProfileUrl != '') 'userProfileUrl': post.userProfileUrl,
-    };
-    return ref.update(data);
+    var querySnapshot = await ref.get();
+    var data = querySnapshot.docs.map((doc) => doc.data()).toList();
+    var posts = data.map((d) => PostModel.fromJson(d)).toList();
+    return posts;
   }
 
   @override
