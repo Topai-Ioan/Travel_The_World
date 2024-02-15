@@ -7,6 +7,6 @@ class CustomCacheManager extends CacheManager with ImageCacheManager {
       : super(Config(
           key,
           stalePeriod: const Duration(days: 1),
-          maxNrOfCacheObjects: 10,
+          maxNrOfCacheObjects: 20,
         ));
 }
