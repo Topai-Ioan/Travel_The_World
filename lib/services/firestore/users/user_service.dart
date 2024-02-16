@@ -20,17 +20,6 @@ class UserService implements UserServiceInterface {
   }
 
   @override
-  Stream<List<UserModel>> getUsers() {
-    var ref = _db.collection('Users');
-
-    return ref.snapshots().map((querySnapshot) {
-      var data = querySnapshot.docs.map((doc) => doc.data());
-      var users = data.map((d) => UserModel.fromJson(d)).toList();
-      return users;
-    });
-  }
-
-  @override
   Future<void> createUser(
       {required UserModel user, required String profileUrl}) async {
     final userCollection = _db.collection(FirebaseConstants.Users);
@@ -119,5 +108,17 @@ class UserService implements UserServiceInterface {
         });
       }
     }
+  }
+
+  @override
+  Future<List<UserModel>> searchUsers(String text) async {
+    var ref = _db
+        .collection('Users')
+        .orderBy('username')
+        .startAt([text]).endAt(['$text\uf8ff']);
+    var snapshot = await ref.get();
+    var users =
+        snapshot.docs.map((doc) => UserModel.fromJson(doc.data())).toList();
+    return users;
   }
 }

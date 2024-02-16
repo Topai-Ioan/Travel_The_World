@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
           if (postState is PostFailure) {
             toast("some error occur");
           }
-          if (postState is PostLoaded) {
+          if (postState is PostLoadedInTheLast24h) {
             return ListView.builder(
                 itemCount: postState.posts.length,
                 itemBuilder: (context, index) {

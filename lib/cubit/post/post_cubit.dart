@@ -49,7 +49,7 @@ class PostCubit extends Cubit<PostState> {
     postService.getPostsFromFollowedUsersInTheLast24h(currentUser: user).listen(
       (posts) {
         if (posts.isNotEmpty) {
-          emit(PostLoaded(posts: posts));
+          emit(PostLoadedInTheLast24h(posts: posts));
         } else {
           emit(PostEmpty());
         }

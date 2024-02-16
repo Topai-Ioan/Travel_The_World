@@ -8,7 +8,6 @@ import 'package:travel_the_world/UI/search/widgets/searchbar_widget.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/cubit/user/user_cubit.dart';
-import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:travel_the_world/profile_widget.dart';
 
 class SearchMainWidget extends StatefulWidget {
@@ -22,12 +21,13 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
   final TextEditingController _searchController = TextEditingController();
   final ValueNotifier<bool> _showUsersNotifier = ValueNotifier<bool>(true);
   Timer? _debounceTimer;
+  final _searchFocusNode = FocusNode();
+  String _oldFilterText = '';
 
   @override
   void initState() {
     super.initState();
     context.read<PostCubit>().getPosts();
-    context.read<UserCubit>().getUsers(user: UserModel());
 
     _searchController.addListener(_onSearchChanged);
   }
@@ -38,63 +38,53 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
     _searchController.dispose();
     _showUsersNotifier.dispose();
     _debounceTimer?.cancel();
+    _searchFocusNode.dispose();
+
     super.dispose();
   }
 
   void _onSearchChanged() {
     if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-      if (_showUsersNotifier.value) {
-        context.read<UserCubit>().getUsers(user: UserModel());
-      } else {
-        if (_searchController.text.isNotEmpty) {
-          context.read<PostCubit>().getPostsFiltered(_searchController.text);
+    _debounceTimer = Timer(const Duration(milliseconds: 1000), () {
+      if (_searchFocusNode.hasFocus &&
+          _searchController.text != _oldFilterText) {
+        if (_showUsersNotifier.value) {
+          context.read<UserCubit>().searchUsers(_searchController.text);
         } else {
-          context.read<PostCubit>().getPosts();
+          if (_searchController.text.isNotEmpty) {
+            context.read<PostCubit>().getPostsFiltered(_searchController.text);
+          } else {
+            context.read<PostCubit>().getPosts();
+          }
         }
+        _oldFilterText = _searchController.text;
+        setState(() {});
       }
-      setState(() {});
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final backgroundColor = theme.colorScheme.background;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: BlocBuilder<UserCubit, UserState>(
-        builder: (context, userState) {
-          if (userState is UsersLoaded) {
-            final searchText = _searchController.text.toLowerCase();
-            final filterAllUsers = userState.users
-                .where((user) =>
-                    user.username.toLowerCase().startsWith(searchText))
-                .toList();
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SearchBarWidget(controller: _searchController),
-                  _searchController.text.isNotEmpty
-                      ? CategorySearchResultsWidget(
-                          filterAllUsers: filterAllUsers,
-                          filterText: _searchController.text,
-                          showUsersNotifier: _showUsersNotifier,
-                        )
-                      : const GetAllPosts()
-                ],
-              ),
-            );
-          }
-          return Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 15, maxWidth: 15),
-              child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-          );
-        },
+      backgroundColor: backgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SearchBarWidget(
+                controller: _searchController, focusNode: _searchFocusNode),
+            _searchController.text.isNotEmpty
+                ? CategorySearchResultsWidget(
+                    filterText: _searchController.text.toLowerCase(),
+                    showUsersNotifier: _showUsersNotifier,
+                  )
+                : const GetAllPosts()
+          ],
+        ),
       ),
     );
   }
@@ -143,6 +133,7 @@ class GetAllPosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<PostCubit>().getPosts();
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -168,60 +159,84 @@ class GetAllPosts extends StatelessWidget {
   }
 }
 
-class GetFilteredUsers extends StatelessWidget {
-  final List<UserModel> filterAllUsers;
+class GetFilteredUsers extends StatefulWidget {
+  final String filterText;
 
   const GetFilteredUsers({
     super.key,
-    required this.filterAllUsers,
+    required this.filterText,
   });
 
   @override
+  State<GetFilteredUsers> createState() {
+    return _GetFilteredUsersState();
+  }
+}
+
+class _GetFilteredUsersState extends State<GetFilteredUsers> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<UserCubit>(context).searchUsers(widget.filterText);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (filterAllUsers.isEmpty) {
-      return const Center(
-          child: Text('No users found', style: TextStyle(color: Colors.red)));
-    }
-    return Expanded(
-      child: ListView.builder(
-        itemCount: filterAllUsers.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                PageRoutes.SingleUserProfilePage,
-                arguments: filterAllUsers[index].uid,
-              );
-            },
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 5),
-                  width: 40,
-                  height: 40,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: profileWidget(
-                      imageUrl: filterAllUsers[index].profileUrl,
-                      boxFit: BoxFit.cover,
-                    ),
+    return BlocBuilder<UserCubit, UserState>(
+      builder: (context, state) {
+        if (state is UsersLoaded) {
+          final users = state.users;
+          if (users.isEmpty) {
+            return const Center(
+              child:
+                  Text('No users found', style: TextStyle(color: Colors.red)),
+            );
+          }
+          return Expanded(
+            child: ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                final user = users[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      PageRoutes.SingleUserProfilePage,
+                      arguments: user.uid,
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5),
+                        width: 40,
+                        height: 40,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: profileWidget(
+                            imageUrl: user.profileUrl,
+                            boxFit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        user.username,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    ],
                   ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  filterAllUsers[index].username,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-              ],
+                );
+              },
             ),
           );
-        },
-      ),
+        }
+        return const CircularProgressIndicator();
+      },
     );
   }
 }

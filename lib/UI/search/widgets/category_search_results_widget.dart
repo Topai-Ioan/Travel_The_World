@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/UI/custom/custom_elevated_button.dart';
 import 'package:travel_the_world/UI/search/widgets/search_main_widget.dart';
-import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class CategorySearchResultsWidget extends StatefulWidget {
-  final List<UserModel> filterAllUsers;
   final String filterText;
   final ValueNotifier<bool> showUsersNotifier;
 
   const CategorySearchResultsWidget({
     super.key,
-    required this.filterAllUsers,
     required this.showUsersNotifier,
     required this.filterText,
   });
@@ -48,7 +45,7 @@ class _CategorySearchResultsWidgetState
             valueListenable: widget.showUsersNotifier,
             builder: (context, showUsers, child) {
               if (showUsers) {
-                return GetFilteredUsers(filterAllUsers: widget.filterAllUsers);
+                return GetFilteredUsers(filterText: widget.filterText);
               } else {
                 return GetFilteredPosts(filterText: widget.filterText);
               }
