@@ -6,8 +6,8 @@ import 'package:travel_the_world/services/models/app_entity.dart';
 import 'package:travel_the_world/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/UI/post/post/widgets/like_animation_widget.dart';
-import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
-import 'package:travel_the_world/UI/shared_items/option_item.dart';
+import 'package:travel_the_world/UI/custom/custom_modal_item.dart';
+import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
@@ -289,15 +289,15 @@ _openBottomModalSheet(
       builder: (context) {
         return CustomModalItem(
           children: [
-            OptionItem(
+            CustomOptionItem(
               text: "Settings",
               onTap: () {},
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Delete Post",
               onTap: deletePost,
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Edit Post",
               onTap: () {
                 Navigator.pushNamed(context, PageRoutes.UpdatePostPage,

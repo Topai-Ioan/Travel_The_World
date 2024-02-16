@@ -33,9 +33,18 @@ class StoreService {
     String childName,
   ) async {
     try {
+      img.Image? originalImage = img.decodeImage(file!.readAsBytesSync());
+      double originalWidth = (originalImage?.width ?? 0).toDouble();
+      double originalHeight = (originalImage?.height ?? 0).toDouble();
+      double aspectRatio = originalWidth / originalHeight;
+
+      int targetWidth = 400;
+      int targetHeight = (targetWidth / aspectRatio).round();
       final result = await FlutterImageCompress.compressWithFile(
-        file!.path,
+        file.path,
         quality: 75,
+        minHeight: targetHeight,
+        minWidth: targetWidth,
       );
       final compressedFile = File(file.path)
         ..writeAsBytesSync(result!.toList());

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class OptionItem extends StatelessWidget {
+class CustomOptionItem extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
 
-  const OptionItem({
+  const CustomOptionItem({
     super.key,
     required this.text,
     required this.onTap,

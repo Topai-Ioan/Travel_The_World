@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
-import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
-import 'package:travel_the_world/UI/shared_items/option_item.dart';
+import 'package:travel_the_world/UI/custom/custom_modal_item.dart';
+import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
@@ -199,20 +199,20 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
         builder: (context) {
           return CustomModalItem(
             children: [
-              OptionItem(
+              CustomOptionItem(
                 text: "Settings",
                 onTap: () {
                   Navigator.pushNamed(context, PageRoutes.SettingsPage);
                 },
               ),
-              OptionItem(
+              CustomOptionItem(
                 text: "Edit Profile",
                 onTap: () {
                   Navigator.pushNamed(context, PageRoutes.EditProfilePage,
                       arguments: user);
                 },
               ),
-              OptionItem(
+              CustomOptionItem(
                 text: "Logout",
                 onTap: () {
                   BlocProvider.of<AuthCubit>(context).loggedOut();

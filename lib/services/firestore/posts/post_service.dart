@@ -141,64 +141,67 @@ class PostService implements PostServiceInterface {
   }
 
   @override
-  Future<List<PostModel>> getPost({required String postId}) async {
+  Stream<List<PostModel>> getPost({required String postId}) {
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .where("postId", isEqualTo: postId)
         .orderBy("createdAt", descending: true);
 
-    var querySnapshot = await ref.get();
-    var data = querySnapshot.docs.map((doc) => doc.data()).toList();
-    var post = data.map((d) => PostModel.fromJson(d)).toList();
-    return post;
+    return ref.snapshots().map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
   }
 
   @override
-  Future<List<PostModel>> getPosts() async {
+  Stream<List<PostModel>> getPosts() {
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .orderBy("createdAt", descending: true);
 
-    var querySnapshot = await ref.get();
-    var data = querySnapshot.docs.map((doc) => doc.data()).toList();
-    var posts = data.map((d) => PostModel.fromJson(d)).toList();
-    return posts;
+    return ref.snapshots().map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
   }
 
   @override
-  Future<List<PostModel>> getPostsFiltered(String text) async {
+  Stream<List<PostModel>> getPostsFiltered(String text) {
     text = text.toLowerCase();
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .orderBy("createdAt", descending: true);
 
-    var querySnapshot = await ref.get();
-    var posts = <PostModel>[];
+    return ref.snapshots().map((querySnapshot) {
+      var posts = <PostModel>[];
 
-    for (var doc in querySnapshot.docs) {
-      var data = doc.data();
-      var category = (data['category'] as List<dynamic>)
-          .cast<String>()
-          .map((tag) => tag.toLowerCase())
-          .toList();
+      for (var doc in querySnapshot.docs) {
+        var data = doc.data();
+        var category = (data['category'] as List<dynamic>)
+            .cast<String>()
+            .map((tag) => tag.toLowerCase())
+            .toList();
 
-      var addedPhotoIDs = <String>{};
-      for (var tag in category) {
-        if (tag.contains(text) || tag.startsWith(text)) {
-          var postModel = PostModel.fromJson(data);
-          if (!addedPhotoIDs.contains(postModel.postId)) {
-            posts.add(postModel);
-            addedPhotoIDs.add(postModel.postId);
+        var addedPhotoIDs = <String>{};
+        for (var tag in category) {
+          if (tag.contains(text) || tag.startsWith(text)) {
+            var postModel = PostModel.fromJson(data);
+            if (!addedPhotoIDs.contains(postModel.postId)) {
+              posts.add(postModel);
+              addedPhotoIDs.add(postModel.postId);
+            }
           }
         }
       }
-    }
-    return posts;
+      return posts;
+    });
   }
 
   @override
-  Future<List<PostModel>> getPostsFromFollowedUsersInTheLast24h(
-      {required UserModel currentUser}) async {
+  Stream<List<PostModel>> getPostsFromFollowedUsersInTheLast24h(
+      {required UserModel currentUser}) {
     final followingList = List<String>.from(currentUser.following);
     if (!followingList.contains(currentUser.uid)) {
       followingList.add(currentUser.uid);
@@ -212,10 +215,11 @@ class PostService implements PostServiceInterface {
         .where('createdAt', isGreaterThan: twentyFourHoursAgo)
         .orderBy("createdAt", descending: true);
 
-    var querySnapshot = await ref.get();
-    var data = querySnapshot.docs.map((doc) => doc.data()).toList();
-    var posts = data.map((d) => PostModel.fromJson(d)).toList();
-    return posts;
+    return ref.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
   }
 
   @override

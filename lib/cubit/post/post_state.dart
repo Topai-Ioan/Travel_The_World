@@ -30,3 +30,11 @@ class FilteredPostsLoaded extends PostState {
 class PostFailure extends PostState {}
 
 class PostEmpty extends PostState {}
+
+class PostLiked extends PostState {
+  final PostModel updatedPost;
+
+  const PostLiked({required this.updatedPost});
+  @override
+  List<Object> get props => [updatedPost];
+}

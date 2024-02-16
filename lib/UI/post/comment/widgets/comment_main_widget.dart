@@ -8,9 +8,9 @@ import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/UI/post/comment/widgets/single_comment_widget.dart';
 import 'package:travel_the_world/UI/shared_items/confirmation_dialog.dart';
-import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/UI/custom/custom_modal_item.dart';
 import 'package:travel_the_world/UI/shared_items/custom_text_input.dart';
-import 'package:travel_the_world/UI/shared_items/option_item.dart';
+import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
@@ -221,21 +221,21 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
       builder: (context) {
         return CustomModalItem(
           children: [
-            OptionItem(
+            CustomOptionItem(
               text: "Delete Comment",
               onTap: () => _deleteComment(
                 commentId: comment.commentId,
                 postId: comment.postId,
               ),
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Edit Comment",
               onTap: () {
                 Navigator.pushNamed(context, PageRoutes.UpdateCommentPage,
                     arguments: comment);
               },
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Settings",
               onTap: () {},
             ),

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:travel_the_world/services/firestore/posts/post_service_interface.dart';
@@ -14,15 +12,13 @@ class GetSinglePostCubit extends Cubit<GetSinglePostState> {
 
   Future<void> getSinglePost({required String postId}) async {
     emit(GetSinglePostLoading());
-    try {
-      final posts = await postService.getPost(postId: postId);
-      if (posts.isNotEmpty) {
+    postService.getPost(postId: postId).listen(
+      (posts) {
         emit(GetSinglePostLoaded(post: posts.first));
-      }
-    } on SocketException catch (_) {
-      emit(GetSinglePostFailure());
-    } catch (_) {
-      emit(GetSinglePostFailure());
-    }
+      },
+      onError: (error) {
+        emit(GetSinglePostFailure());
+      },
+    );
   }
 }

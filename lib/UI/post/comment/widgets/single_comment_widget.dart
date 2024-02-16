@@ -5,9 +5,9 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/UI/post/comment/widgets/single_reply_widget.dart';
 import 'package:travel_the_world/UI/shared_items/confirmation_dialog.dart';
-import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/UI/custom/custom_modal_item.dart';
 import 'package:travel_the_world/UI/shared_items/custom_text_input.dart';
-import 'package:travel_the_world/UI/shared_items/option_item.dart';
+import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
@@ -263,7 +263,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
         context: context,
         builder: (context) {
           return CustomModalItem(children: [
-            OptionItem(
+            CustomOptionItem(
               text: "Delete Reply",
               onTap: () {
                 _deleteReply(reply: reply);
@@ -272,7 +272,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                 });
               },
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Edit Reply",
               onTap: () {
                 Navigator.pushNamed(context, PageRoutes.UpdateReplyPage,

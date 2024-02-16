@@ -90,39 +90,39 @@ class CustomCupertinoTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
+    final backgroundColor = theme.colorScheme.background;
+
     return CupertinoTabBar(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      items: [
+      backgroundColor: backgroundColor,
+      items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_rounded,
-              color: Theme.of(context).colorScheme.primary),
+          icon: Icon(Icons.home_rounded),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search_rounded,
-              color: Theme.of(context).colorScheme.primary),
+          icon: Icon(Icons.search_rounded),
           label: 'Search',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle_rounded,
-              color: Theme.of(context).colorScheme.primary),
+          icon: Icon(Icons.add_circle_rounded),
           label: 'Post',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.favorite_rounded,
-              color: Theme.of(context).colorScheme.primary),
+          icon: Icon(Icons.favorite_rounded),
           label: 'Favorite',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle_rounded,
-              color: Theme.of(context).colorScheme.primary),
+          icon: Icon(Icons.account_circle_rounded),
           label: 'Profile',
         ),
       ],
       currentIndex: currentIndex,
       onTap: onTap,
-      activeColor: Theme.of(context).colorScheme.secondary,
-      inactiveColor: Theme.of(context).colorScheme.primary,
+      activeColor: secondaryColor,
+      inactiveColor: primaryColor,
     );
   }
 }

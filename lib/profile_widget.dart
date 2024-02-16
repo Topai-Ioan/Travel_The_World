@@ -9,39 +9,31 @@ Widget profileWidget({
   File? image,
   BoxFit boxFit = BoxFit.contain,
 }) {
-  if (image == null) {
-    if (imageUrl == null || imageUrl == "") {
-      return Image.asset(
-        'assets/images/profile_default.png',
-        fit: boxFit,
-      );
-    } else {
-      return CachedNetworkImage(
-        cacheManager: CustomCacheManager(),
-        imageUrl: imageUrl,
-        fit: boxFit,
-        progressIndicatorBuilder: (context, url, downloadProgress) {
-          double progress = downloadProgress.progress ?? 0.0;
-          return ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: 20,
-              minWidth: 20,
-            ),
-            child: Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-                value: progress,
-              ),
-            ),
-          );
-        },
-        errorWidget: (context, url, error) => Image.asset(
+  if (image != null) {
+    return Image.file(image, fit: boxFit);
+  } else if (imageUrl != null && imageUrl.isNotEmpty) {
+    return CachedNetworkImage(
+      cacheManager: CustomCacheManager(),
+      imageUrl: imageUrl,
+      fit: boxFit,
+      progressIndicatorBuilder: (context, url, downloadProgress) {
+        return Center(
+          child: CircularProgressIndicator(
+            value: downloadProgress.progress ?? 0.0,
+          ),
+        );
+      },
+      errorWidget: (context, url, error) {
+        return Image.asset(
           'assets/images/profile_default.png',
           fit: boxFit,
-        ),
-      );
-    }
+        );
+      },
+    );
   } else {
-    return Image.file(image, fit: boxFit);
+    return Image.asset(
+      'assets/images/profile_default.png',
+      fit: boxFit,
+    );
   }
 }

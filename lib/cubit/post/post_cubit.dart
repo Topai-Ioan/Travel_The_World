@@ -12,56 +12,52 @@ class PostCubit extends Cubit<PostState> {
   final PostServiceInterface postService;
   PostCubit({required this.postService}) : super(PostInitial());
 
-  Future<void> getPosts() async {
+  void getPosts() {
     emit(PostLoading());
-    try {
-      final posts = await postService.getPosts();
-
-      if (posts.isNotEmpty) {
-        emit(PostLoaded(posts: posts));
-      } else {
-        emit(PostEmpty());
-      }
-    } on SocketException catch (_) {
-      emit(PostFailure());
-    } catch (_) {
-      emit(PostFailure());
-    }
+    postService.getPosts().listen(
+      (posts) {
+        if (posts.isNotEmpty) {
+          emit(PostLoaded(posts: posts));
+        } else {
+          emit(PostEmpty());
+        }
+      },
+      onError: (error) {
+        emit(PostFailure());
+      },
+    );
   }
 
-  Future<void> getPostsFiltered(String text) async {
+  void getPostsFiltered(String text) {
     emit(PostLoading());
-    try {
-      final posts = await postService.getPostsFiltered(text);
-
-      if (posts.isNotEmpty) {
-        emit(FilteredPostsLoaded(posts: posts));
-      } else {
-        emit(PostEmpty());
-      }
-    } on SocketException catch (_) {
-      emit(PostFailure());
-    } catch (_) {
-      emit(PostFailure());
-    }
+    postService.getPostsFiltered(text).listen(
+      (posts) {
+        if (posts.isNotEmpty) {
+          emit(FilteredPostsLoaded(posts: posts));
+        } else {
+          emit(PostEmpty());
+        }
+      },
+      onError: (error) {
+        emit(PostFailure());
+      },
+    );
   }
 
-  Future<void> getPostsFromFollowingUsersInTheLast24h(UserModel user) async {
+  void getPostsFromFollowingUsersInTheLast24h(UserModel user) {
     emit(PostLoading());
-    try {
-      final posts = await postService.getPostsFromFollowedUsersInTheLast24h(
-          currentUser: user);
-
-      if (posts.isNotEmpty) {
-        emit(PostLoaded(posts: posts));
-      } else {
-        emit(PostEmpty());
-      }
-    } on SocketException catch (_) {
-      emit(PostFailure());
-    } catch (_) {
-      emit(PostFailure());
-    }
+    postService.getPostsFromFollowedUsersInTheLast24h(currentUser: user).listen(
+      (posts) {
+        if (posts.isNotEmpty) {
+          emit(PostLoaded(posts: posts));
+        } else {
+          emit(PostEmpty());
+        }
+      },
+      onError: (error) {
+        emit(PostFailure());
+      },
+    );
   }
 
   Future<void> likePost({required PostModel post}) async {
