@@ -9,6 +9,7 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class SearchMainWidget extends StatefulWidget {
   const SearchMainWidget({super.key});
@@ -65,11 +66,8 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final backgroundColor = theme.colorScheme.background;
-
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: Column(

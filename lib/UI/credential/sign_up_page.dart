@@ -12,6 +12,8 @@ import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -56,7 +58,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
         body: BlocConsumer<CredentialCubit, CredentialState>(
           listener: (context, credentialState) {
             if (credentialState is CredentialSuccess) {
@@ -115,9 +118,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   bottom: -15,
                   child: IconButton(
                     onPressed: selectImage,
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.add_a_photo,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: AppColors.black,
                     ),
                   ),
                 ),
@@ -142,10 +145,12 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           sizeVertical(15),
           ButtonContainerWidget(
-            color: Theme.of(context).colorScheme.secondary,
+            textStyle: Fonts.f18w600(
+              color: AppColors.black,
+            ),
+            backgroundColor:
+                getThemeColor(context, AppColors.white, AppColors.black),
             text: "Sign Up",
-            textColor: Theme.of(context).primaryColor,
-            fontWeight: FontWeight.w600,
             onTapListener: () {
               _signUpUser();
             },
@@ -155,25 +160,22 @@ class _SignUpPageState extends State<SignUpPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Please wait",
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400)),
+                Text("Please wait",
+                    style: Fonts.f16w400(color: AppColors.black)),
                 sizeHorizontal(10),
                 const CircularProgressIndicator()
               ],
             ),
           Flexible(flex: 2, child: Container()),
           const Divider(
-            color: greenColor,
+            color: AppColors.black,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "Already have and account? ",
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: Fonts.f16w400(color: AppColors.black),
               ),
               InkWell(
                 onTap: () {
@@ -182,9 +184,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 },
                 child: Text(
                   "Sign In.",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColorDark),
+                  style: Fonts.f18w600(
+                    color: AppColors.black,
+                  ),
                 ),
               ),
             ],

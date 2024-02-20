@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/UI/home/widgets/post_action_row.dart';
 import 'package:travel_the_world/UI/home/widgets/post_description.dart';
 import 'package:travel_the_world/UI/home/widgets/post_header.dart';
-import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/UI/post/post/widgets/like_animation_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
@@ -41,7 +40,7 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
               ),
             ],
           ),
-          sizeVertical(10),
+          const SizedBox(height: 10),
           PostImageWithAnimation(
             imageUrl: widget.post.postImageUrl,
             onDoubleTap: () {
@@ -49,12 +48,13 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
                   .likePost(post: PostModel(postId: widget.post.postId));
             },
           ),
-          sizeVertical(10),
+          const SizedBox(height: 10),
           PostActionsRow(
             post: widget.post,
             currentUserId: widget.currentUserId,
           ),
           PostDescription(description: widget.post.description),
+          const Divider(color: Color.fromARGB(255, 40, 92, 42), thickness: 2),
         ],
       ),
     );

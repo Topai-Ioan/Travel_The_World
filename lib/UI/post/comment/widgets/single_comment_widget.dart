@@ -13,6 +13,8 @@ import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/replies/reply_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 class SingleCommentWidget extends StatefulWidget {
@@ -74,7 +76,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
             size: 20,
             color: widget.comment.likes.contains(_currentUid)
                 ? Colors.red
-                : darkGreyColor,
+                : AppColors.black,
           ),
         ),
       ],
@@ -93,7 +95,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
       children: [
         Text(
           DateFormat("dd/MMM/yyy").format(widget.comment.createdAt!),
-          style: const TextStyle(color: darkGreyColor),
+          style: Fonts.f12w400(color: AppColors.darkGreen),
         ),
         sizeHorizontal(15),
         GestureDetector(
@@ -102,9 +104,9 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
               _isUserReplying = !_isUserReplying;
             });
           },
-          child: const Text(
+          child: Text(
             "Reply",
-            style: TextStyle(color: darkGreyColor, fontSize: 12),
+            style: Fonts.f12w400(color: AppColors.darkRed),
           ),
         ),
         sizeHorizontal(15),
@@ -128,16 +130,13 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
             _showReplies && widget.comment.totalReplies != 0
                 ? "Hide Replies"
                 : "View ${widget.comment.totalReplies} Replies",
-            style: const TextStyle(
-              color: darkGreyColor,
-              fontSize: 12,
-            ),
+            style: Fonts.f12w400(color: AppColors.darkRed),
           ),
         ),
         const Spacer(),
         Text(
           "${widget.comment.likes.length} Likes",
-          style: const TextStyle(color: darkGreyColor, fontSize: 12),
+          style: Fonts.f12w400(color: AppColors.darkRed),
         ),
       ],
     );
@@ -259,7 +258,8 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required ReplyModel reply}) {
     return showModalBottomSheet(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
         context: context,
         builder: (context) {
           return CustomModalItem(children: [

@@ -4,6 +4,8 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/UI/home/widgets/single_post_card_widget.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel currentUser;
@@ -16,25 +18,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    context
-        .read<PostCubit>()
-        .getPostsFromFollowingUsersInTheLast24h(widget.currentUser);
-    final theme = Theme.of(context);
-    final backgroundColor = theme.colorScheme.background;
-    final primaryColor = theme.colorScheme.primary;
+    context.read<PostCubit>().getPosts();
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       appBar: const CustomAppBar(),
       body: BlocBuilder<PostCubit, PostState>(
         builder: (context, postState) {
           if (postState is PostEmpty) {
             return Center(
-              child: Text("No posts, yet",
-                  style: TextStyle(
-                      color: primaryColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
-            );
+                child: Text(
+              "No posts, yet",
+              style: Fonts.f18w700(color: AppColors.black),
+            ));
           }
           if (postState is PostLoading) {
             return Center(
@@ -47,16 +42,21 @@ class _HomePageState extends State<HomePage> {
           if (postState is PostFailure) {
             toast("some error occur");
           }
-          if (postState is PostLoadedInTheLast24h) {
-            return ListView.builder(
-                itemCount: postState.posts.length,
-                itemBuilder: (context, index) {
-                  final post = postState.posts[index];
-                  return SinglePostCardWidget(
-                    currentUserId: widget.currentUser.uid,
-                    post: post,
-                  );
-                });
+          if (postState is PostLoaded) {
+            return Container(
+              color: AppColors.black,
+              child: ListView.separated(
+                  itemCount: postState.posts.length,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const SizedBox(height: 10),
+                  itemBuilder: (context, index) {
+                    final post = postState.posts[index];
+                    return SinglePostCardWidget(
+                      currentUserId: widget.currentUser.uid,
+                      post: post,
+                    );
+                  }),
+            );
           }
           return const Center(
             child: SizedBox(
@@ -73,13 +73,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final backgroundColor = AppBarTheme.of(context).backgroundColor;
-    final primaryColor = theme.colorScheme.primary;
-
     return AppBar(
-      backgroundColor: backgroundColor,
-      elevation: 0,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -89,19 +84,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Text(
             "Travel the world",
-            style: TextStyle(
-              color: primaryColor,
-              fontWeight: FontWeight.bold,
+            style: Fonts.f20w700(
+              color: AppColors.black,
             ),
-          )
+          ),
+          sizeVertical(15),
         ],
       ),
       actions: [
         IconButton(
           onPressed: () {},
-          icon: Icon(
+          icon: const Icon(
             Icons.message_outlined,
-            color: primaryColor,
+            color: AppColors.black,
           ),
         ),
       ],

@@ -16,6 +16,7 @@ import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 import 'package:uuid/uuid.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
@@ -54,9 +55,9 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
         title: const Text("Comments"),
       ),
       body: buildCommentContent(),
@@ -216,7 +217,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required CommentModel comment}) {
     showModalBottomSheet(
-      backgroundColor: Colors.transparent.withOpacity(0.5),
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       context: context,
       builder: (context) {
         return CustomModalItem(

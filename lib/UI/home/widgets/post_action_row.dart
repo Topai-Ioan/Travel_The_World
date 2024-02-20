@@ -4,6 +4,8 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/services/models/app_entity.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class PostActionsRow extends StatelessWidget {
   final PostModel post;
@@ -18,7 +20,6 @@ class PostActionsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLiked = post.likes.contains(currentUserId);
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -29,11 +30,10 @@ class PostActionsRow extends StatelessWidget {
                 Navigator.pushNamed(context, PageRoutes.LikeListPage,
                     arguments: post);
               },
-              child: Text('${post.likes.length}',
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18)),
+              child: Text(
+                '${post.likes.length}',
+                style: Fonts.f18w700(color: AppColors.black),
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -42,16 +42,13 @@ class PostActionsRow extends StatelessWidget {
               },
               child: Icon(
                 isLiked ? Icons.favorite : Icons.favorite_outline,
-                color: isLiked ? Colors.red : Theme.of(context).primaryColor,
+                color: isLiked ? Colors.red : AppColors.black,
               ),
             ),
             sizeHorizontal(10),
             Text(
               "${post.totalComments} ",
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18),
+              style: Fonts.f18w700(color: AppColors.black),
             ),
             GestureDetector(
               onTap: () {
@@ -61,27 +58,24 @@ class PostActionsRow extends StatelessWidget {
                   arguments: AppEntity(uid: currentUserId, postId: post.postId),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.comment_rounded,
-                color: Theme.of(context).primaryColor,
+                color: AppColors.black,
               ),
             ),
             sizeHorizontal(10),
             Text(
               "0 ",
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18),
+              style: Fonts.f18w700(color: AppColors.darkGreen),
             ),
-            Icon(
+            const Icon(
               Icons.send,
-              color: Theme.of(context).primaryColor,
+              color: AppColors.black,
             ),
             sizeHorizontal(10),
           ],
         ),
-        const Icon(Icons.bookmark_border_rounded, color: primaryColor),
+        const Icon(Icons.bookmark_border_rounded, color: AppColors.black),
       ],
     );
   }

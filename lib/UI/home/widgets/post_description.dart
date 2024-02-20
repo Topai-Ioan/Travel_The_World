@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class PostDescription extends StatelessWidget {
   final String description;
@@ -12,23 +14,19 @@ class PostDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (description != "") {
-      Column(
+      return Column(
         children: [
           sizeVertical(10),
           Row(
             children: [
               Text(
                 description,
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: Fonts.f16w400(color: AppColors.black),
               ),
             ],
           ),
           sizeVertical(10),
         ],
-      );
-      const Divider(
-        color: Colors.grey,
-        thickness: 1,
       );
     }
     return const SizedBox.shrink();

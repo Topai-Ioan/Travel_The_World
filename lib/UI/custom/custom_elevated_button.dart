@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -15,7 +16,8 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.grey[800],
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),

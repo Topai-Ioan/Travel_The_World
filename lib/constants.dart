@@ -3,14 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-const appBarColor = Color.fromRGBO(0, 0, 0, 1.0);
-const backgroundColor = Color.fromRGBO(0, 0, 0, 1.0);
-const blueColor = Color.fromRGBO(0, 149, 246, 1);
-const primaryColor = Colors.white;
-const secondaryColor = Colors.grey;
-const darkGreyColor = Color.fromRGBO(97, 97, 97, 1);
-const greenColor = Colors.green;
-
 Widget sizeVertical(double height) {
   return SizedBox(
     height: height,
@@ -53,7 +45,7 @@ void toast(String message) {
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 3,
-      backgroundColor: blueColor,
+      backgroundColor: Colors.blue,
       textColor: Colors.white,
       fontSize: 14.0);
 }

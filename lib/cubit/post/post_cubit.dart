@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -10,11 +11,12 @@ part 'post_state.dart';
 
 class PostCubit extends Cubit<PostState> {
   final PostServiceInterface postService;
+  final List<StreamSubscription> _postSubscriptions = [];
   PostCubit({required this.postService}) : super(PostInitial());
 
   void getPosts() {
     emit(PostLoading());
-    postService.getPosts().listen(
+    _postSubscriptions.add(postService.getPosts().listen(
       (posts) {
         if (posts.isNotEmpty) {
           emit(PostLoaded(posts: posts));
@@ -25,38 +27,44 @@ class PostCubit extends Cubit<PostState> {
       onError: (error) {
         emit(PostFailure());
       },
-    );
+    ));
   }
 
   void getPostsFiltered(String text) {
     emit(PostLoading());
-    postService.getPostsFiltered(text).listen(
-      (posts) {
-        if (posts.isNotEmpty) {
-          emit(FilteredPostsLoaded(posts: posts));
-        } else {
-          emit(PostEmpty());
-        }
-      },
-      onError: (error) {
-        emit(PostFailure());
-      },
+    _postSubscriptions.add(
+      postService.getPostsFiltered(text).listen(
+        (posts) {
+          if (posts.isNotEmpty) {
+            emit(FilteredPostsLoaded(posts: posts));
+          } else {
+            emit(PostEmpty());
+          }
+        },
+        onError: (error) {
+          emit(PostFailure());
+        },
+      ),
     );
   }
 
   void getPostsFromFollowingUsersInTheLast24h(UserModel user) {
     emit(PostLoading());
-    postService.getPostsFromFollowedUsersInTheLast24h(currentUser: user).listen(
-      (posts) {
-        if (posts.isNotEmpty) {
-          emit(PostLoadedInTheLast24h(posts: posts));
-        } else {
-          emit(PostEmpty());
-        }
-      },
-      onError: (error) {
-        emit(PostFailure());
-      },
+    _postSubscriptions.add(
+      postService
+          .getPostsFromFollowedUsersInTheLast24h(currentUser: user)
+          .listen(
+        (posts) {
+          if (posts.isNotEmpty) {
+            emit(PostLoadedInTheLast24h(posts: posts));
+          } else {
+            emit(PostEmpty());
+          }
+        },
+        onError: (error) {
+          emit(PostFailure());
+        },
+      ),
     );
   }
 
@@ -108,5 +116,12 @@ class PostCubit extends Cubit<PostState> {
     } catch (_) {
       emit(PostFailure());
     }
+  }
+
+  Future<void> cancelSubscriptions() async {
+    for (var subscription in _postSubscriptions) {
+      await subscription.cancel();
+    }
+    _postSubscriptions.clear();
   }
 }

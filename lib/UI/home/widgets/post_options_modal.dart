@@ -6,6 +6,7 @@ import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class PostOptionsModal extends StatelessWidget {
   final PostModel post;
@@ -23,7 +24,7 @@ class PostOptionsModal extends StatelessWidget {
 
   void showOptions(BuildContext context) {
     showModalBottomSheet(
-      backgroundColor: Colors.transparent.withOpacity(0.5),
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       context: context,
       builder: (context) {
         return CustomModalItem(

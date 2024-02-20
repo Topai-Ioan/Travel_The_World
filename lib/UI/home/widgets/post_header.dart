@@ -4,6 +4,8 @@ import 'package:travel_the_world/UI/home/widgets/post_options_modal.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class PostHeader extends StatelessWidget {
   final PostModel post;
@@ -44,10 +46,7 @@ class PostHeader extends StatelessWidget {
                 sizeHorizontal(10),
                 Text(
                   post.username,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Fonts.f16w700(color: AppColors.black),
                 ),
                 sizeHorizontal(5),
               ],
@@ -55,8 +54,8 @@ class PostHeader extends StatelessWidget {
           ),
           Text(
             DateFormat('yyyy-MM-dd').format(post.createdAt!),
-            style: TextStyle(
-              color: Theme.of(context).primaryColor.withOpacity(0.7),
+            style: Fonts.f14w400(
+              color: AppColors.black.withOpacity(0.8),
             ),
           ),
           const Spacer(),
@@ -67,9 +66,9 @@ class PostHeader extends StatelessWidget {
                   post: post,
                 ).showOptions(context);
               },
-              child: Icon(
+              child: const Icon(
                 Icons.more_vert_rounded,
-                color: Theme.of(context).primaryColor,
+                color: AppColors.black,
               ),
             )
           ]

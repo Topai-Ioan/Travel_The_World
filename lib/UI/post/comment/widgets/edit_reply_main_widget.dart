@@ -5,6 +5,8 @@ import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/UI/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/services/models/replies/reply_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class EditReplyMainWidget extends StatefulWidget {
   final ReplyModel reply;
@@ -29,9 +31,10 @@ class _EditReplyMainWidgetState extends State<EditReplyMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       appBar: AppBar(
-        backgroundColor: appBarColor,
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
         title: const Text("Edit Reply"),
       ),
       body: Padding(
@@ -44,7 +47,7 @@ class _EditReplyMainWidgetState extends State<EditReplyMainWidget> {
             ),
             sizeVertical(10),
             ButtonContainerWidget(
-              color: blueColor,
+              textStyle: Fonts.f16w400(color: Colors.blue),
               text: "Save Changes",
               onTapListener: () {
                 _editReply();

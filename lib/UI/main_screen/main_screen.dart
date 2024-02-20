@@ -6,6 +6,7 @@ import 'package:travel_the_world/UI/activity/activity_page.dart';
 import 'package:travel_the_world/UI/profile/profile_page.dart';
 import 'package:travel_the_world/UI/search/search_page.dart';
 import 'package:travel_the_world/UI/post/post/upload_post_page.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 import '../home/home_page.dart';
 
@@ -90,13 +91,8 @@ class CustomCupertinoTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final primaryColor = theme.colorScheme.primary;
-    final secondaryColor = theme.colorScheme.secondary;
-    final backgroundColor = theme.colorScheme.background;
-
     return CupertinoTabBar(
-      backgroundColor: backgroundColor,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home_rounded),
@@ -121,8 +117,8 @@ class CustomCupertinoTabBar extends StatelessWidget {
       ],
       currentIndex: currentIndex,
       onTap: onTap,
-      activeColor: secondaryColor,
-      inactiveColor: primaryColor,
+      activeColor: AppColors.darkPurple,
+      inactiveColor: AppColors.darkRed,
     );
   }
 }

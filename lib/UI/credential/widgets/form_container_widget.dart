@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../constants.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class FormContainerWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -36,14 +37,11 @@ class FormContainerWidgetState extends State<FormContainerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(3),
-      ),
       child: TextFormField(
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        style: Fonts.f16w400(
+            color: getThemeColor(context, AppColors.white, AppColors.black)),
         controller: widget.controller,
         keyboardType: widget.inputType,
         key: widget.fieldKey,
@@ -52,12 +50,14 @@ class FormContainerWidgetState extends State<FormContainerWidget> {
         validator: widget.validator,
         onFieldSubmitted: widget.onFieldSubmitted,
         decoration: InputDecoration(
-          fillColor: Theme.of(context).colorScheme.tertiary,
-          border: InputBorder.none,
+          fillColor: AppColors.black,
+          border: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
           filled: true,
           hintText: widget.hintText,
-          hintStyle:
-              TextStyle(color: Theme.of(context).primaryColor.withOpacity(0.5)),
+          hintStyle: Fonts.f16w400(color: AppColors.black.withOpacity(0.5)),
           suffixIcon: PasswordVisibilityIcon(
             obscureText: _obscureText,
             isPasswordField: widget.isPasswordField,
@@ -92,58 +92,11 @@ class PasswordVisibilityIcon extends StatelessWidget {
         onTap: onTap,
         child: Icon(
           obscureText ? Icons.visibility_off : Icons.visibility,
-          color: obscureText
-              ? Theme.of(context).colorScheme.secondary
-              : Theme.of(context).colorScheme.primary,
+          color: obscureText ? AppColors.black : AppColors.black,
         ),
       );
     } else {
       return const Text("");
     }
-  }
-}
-
-class FormContainerWidgetAlternateState extends State<FormContainerWidget> {
-  bool _obscureText = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: secondaryColor.withOpacity(.35),
-        borderRadius: BorderRadius.circular(3),
-      ),
-      child: TextFormField(
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
-        controller: widget.controller,
-        keyboardType: widget.inputType,
-        key: widget.fieldKey,
-        obscureText: widget.isPasswordField == true ? _obscureText : false,
-        onSaved: widget.onSaved,
-        validator: widget.validator,
-        onFieldSubmitted: widget.onFieldSubmitted,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          filled: true,
-          hintText: widget.hintText,
-          suffixIcon: GestureDetector(
-            onTap: () {
-              setState(() {
-                _obscureText = !_obscureText;
-              });
-            },
-            child: widget.isPasswordField == true
-                ? Icon(
-                    _obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: _obscureText == false
-                        ? blueColor
-                        : Theme.of(context).colorScheme.primary,
-                  )
-                : const Text(""),
-          ),
-        ),
-      ),
-    );
   }
 }

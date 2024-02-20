@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class CustomCommentSection extends StatelessWidget {
   final UserModel currentUser;
@@ -31,10 +31,10 @@ class CustomCommentSection extends StatelessWidget {
           Expanded(
             child: TextFormField(
               controller: descriptionController,
-              style: const TextStyle(color: primaryColor),
+              style: Fonts.f16w400(color: Colors.white),
               decoration: InputDecoration(
                 hintText: hintText,
-                hintStyle: const TextStyle(color: secondaryColor),
+                hintStyle: Fonts.f14w400(color: Colors.white),
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),

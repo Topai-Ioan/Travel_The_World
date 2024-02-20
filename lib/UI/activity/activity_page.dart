@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class ActivityPage extends StatelessWidget {
   const ActivityPage({super.key});
@@ -8,9 +9,10 @@ class ActivityPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       appBar: AppBar(
-        backgroundColor: colorScheme.primary,
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
         title: Text(
           "Activity",
           style: TextStyle(

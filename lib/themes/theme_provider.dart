@@ -4,12 +4,22 @@ import 'package:travel_the_world/themes/themes.dart';
 
 class ThemeProvider extends ChangeNotifier with WidgetsBindingObserver {
   ThemeData _themeData;
+  static ColorScheme? colorScheme;
+  static ThemeProvider? _instance;
 
   ThemeProvider(this._themeData) {
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       loadThemeFromPrefs();
     });
+  }
+
+  static ThemeProvider getInstance(BuildContext context) {
+    // ignore: prefer_conditional_assignment
+    if (_instance == null) {
+      _instance = ThemeProvider(Theme.of(context));
+    }
+    return _instance!;
   }
 
   @override

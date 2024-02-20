@@ -40,8 +40,6 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => di.sl<AuthCubit>()..appStarted(context)),
@@ -54,7 +52,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: themeProvider.themeData,
+        theme: context.watch<ThemeProvider>().themeData,
         title: 'Travel the world',
         onGenerateRoute: OnGenerateRoute.route,
         initialRoute: "/",

@@ -3,9 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Themes {
-  static const Color green = Color.fromARGB(255, 0, 255, 0);
-  static const Color darkgreen = Color.fromARGB(255, 4, 56, 4);
-
   static ThemeData get systemTheme {
     Brightness platformBrightness =
         PlatformDispatcher.instance.platformBrightness;
@@ -17,49 +14,7 @@ class Themes {
     }
   }
 
-  static final ThemeData darkTheme = ThemeData.dark().copyWith(
-    primaryColor: Colors.white,
-    primaryColorDark: const Color.fromARGB(255, 4, 56, 4),
-    primaryColorLight: const Color.fromARGB(255, 0, 255, 0),
-    //bottomAppBarTheme: const BottomAppBarTheme(color: Colors.black),
-    //appBarTheme: const AppBarTheme(color: Colors.black),
+  static ThemeData lightTheme = ThemeData();
 
-    colorScheme: const ColorScheme.dark().copyWith(
-      background: Colors.black,
-      primary: Colors.white,
-      secondary: const Color.fromARGB(255, 4, 56, 4),
-      tertiary: Colors.grey[800],
-      onTertiary: Colors.white,
-    ),
-    textTheme: ThemeData.dark().textTheme.apply(
-          bodyColor: Colors.black,
-          displayColor: Colors.white,
-        ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.black,
-      foregroundColor: Colors.white,
-    ),
-  );
-
-  static final ThemeData lightTheme = ThemeData.light().copyWith(
-    primaryColor: Colors.black,
-    primaryColorDark: const Color.fromARGB(255, 4, 56, 4),
-    primaryColorLight: const Color.fromARGB(255, 0, 255, 0),
-    colorScheme: const ColorScheme.light().copyWith(
-      background: Colors.white,
-      primary: Colors.black,
-      secondary: const Color.fromARGB(255, 21, 145, 21),
-      tertiary: Colors.grey[300],
-      onTertiary: Colors.white,
-    ),
-    textTheme: ThemeData.light().textTheme.apply(
-          bodyColor: Colors.white,
-          displayColor: Colors.black,
-        ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.grey[300],
-      foregroundColor: Colors.black,
-      surfaceTintColor: Colors.grey[500],
-    ),
-  );
+  static ThemeData darkTheme = ThemeData();
 }

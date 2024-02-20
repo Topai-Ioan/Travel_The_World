@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -9,13 +10,14 @@ part 'comment_state.dart';
 
 class CommentCubit extends Cubit<CommentState> {
   final CommentServiceInterface commentService;
+  StreamSubscription? _commentSubscription;
   CommentCubit({required this.commentService}) : super(CommentInitial());
 
   Future<void> getComments({required String postId}) async {
     emit(CommentLoading());
     try {
-      final streamResponse = commentService.getComments(postId: postId);
-      streamResponse.listen((comments) {
+      _commentSubscription =
+          commentService.getComments(postId: postId).listen((comments) {
         emit(CommentLoaded(comments: comments));
       });
     } on SocketException catch (_) {
@@ -63,5 +65,9 @@ class CommentCubit extends Cubit<CommentState> {
     } catch (_) {
       emit(CommentFailure());
     }
+  }
+
+  Future<void> cancelSubscription() async {
+    await _commentSubscription?.cancel();
   }
 }

@@ -1,6 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:travel_the_world/constants.dart';
+import 'package:travel_the_world/cubit/comment/comment_cubit.dart';
+import 'package:travel_the_world/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
+import 'package:travel_the_world/cubit/post/post_cubit.dart';
+import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
+import 'package:travel_the_world/injection_container.dart' as di;
 import 'package:travel_the_world/services/firestore/users/user_service.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:travel_the_world/services/store_service.dart';
@@ -35,6 +40,10 @@ class AuthService {
   }
 
   Future<void> signOut() async {
+    await di.sl<PostCubit>().cancelSubscriptions();
+    await di.sl<ReplyCubit>().cancelSubscription();
+    await di.sl<CommentCubit>().cancelSubscription();
+    await di.sl<GetSinglePostCubit>().cancelSubscription();
     await firebaseAuth.signOut();
   }
 

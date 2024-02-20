@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/profile_widget.dart';
-import 'package:travel_the_world/services/firestore/users/user_service.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class UserList extends StatelessWidget {
-  final List<dynamic> userList;
+  final List userList;
   final String title;
 
   const UserList({
@@ -25,55 +25,43 @@ class UserList extends StatelessWidget {
       child: ListView.builder(
         itemCount: userList.length,
         itemBuilder: (context, index) {
-          final String userId = userList[index]; // Cast each element to String
-          return StreamBuilder<List<UserModel>>(
-            stream: UserService().getUser(uid: userId),
-            builder: (context, snapshot) {
-              if (snapshot.hasData == false) {
-                return const CircularProgressIndicator();
-              }
-              if (snapshot.data!.isEmpty) {
-                return Container();
-              }
-              final singleUserData = snapshot.data!.first;
-              return GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    PageRoutes.SingleUserProfilePage,
-                    arguments: singleUserData.uid,
-                  );
-                },
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      width: 40,
-                      height: 40,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: profileWidget(
-                          imageUrl: singleUserData.profileUrl,
-                        ),
-                      ),
+          final singleUserData = userList[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                PageRoutes.SingleUserProfilePage,
+                arguments: singleUserData.uid,
+              );
+            },
+            child: Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  width: 40,
+                  height: 40,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: profileWidget(
+                      imageUrl: singleUserData.profileUrl,
                     ),
-                    sizeHorizontal(10),
-                    Row(
-                      children: [
-                        Text(
-                          singleUserData.username,
-                          style: const TextStyle(
-                            color: primaryColor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                  ),
+                ),
+                sizeHorizontal(10),
+                Row(
+                  children: [
+                    Text(
+                      singleUserData.username,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
-              );
-            },
+              ],
+            ),
           );
         },
       ),
@@ -107,10 +95,11 @@ class FollowingPageHelper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: backgroundColor,
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
@@ -140,10 +129,11 @@ class LikesListPageHelper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: backgroundColor,
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
@@ -173,10 +163,11 @@ class FollowersPageHelper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: backgroundColor,
+        backgroundColor:
+            getThemeColor(context, AppColors.white, AppColors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
