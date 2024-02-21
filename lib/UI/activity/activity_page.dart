@@ -9,10 +9,9 @@ class ActivityPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
-        backgroundColor:
-            getThemeColor(context, AppColors.white, AppColors.black),
+        backgroundColor: getBackgroundColor(context),
         title: Text(
           "Activity",
           style: TextStyle(

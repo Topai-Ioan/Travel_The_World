@@ -67,7 +67,7 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: Column(

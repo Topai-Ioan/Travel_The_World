@@ -13,6 +13,18 @@ class AppColors {
   static const black = Color.fromARGB(255, 0, 0, 0);
 }
 
+Color getTextColor(BuildContext context) {
+  return Theme.of(context).brightness == Brightness.light
+      ? AppColors.black
+      : AppColors.white;
+}
+
+Color getBackgroundColor(BuildContext context) {
+  return Theme.of(context).brightness == Brightness.light
+      ? Colors.white
+      : Colors.black;
+}
+
 Color getThemeColor(
     BuildContext? context, Color? lightThemeColor, Color? darkThemeColor) {
   if (context == null || lightThemeColor == null || darkThemeColor == null) {

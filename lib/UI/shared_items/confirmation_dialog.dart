@@ -17,7 +17,7 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     const textColor = Colors.white;
     return AlertDialog(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       title: const Text(
         'Confirmation',
         style: TextStyle(color: textColor),

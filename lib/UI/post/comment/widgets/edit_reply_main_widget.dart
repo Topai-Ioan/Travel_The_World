@@ -31,10 +31,9 @@ class _EditReplyMainWidgetState extends State<EditReplyMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
-        backgroundColor:
-            getThemeColor(context, AppColors.white, AppColors.black),
+        backgroundColor: getBackgroundColor(context),
         title: const Text("Edit Reply"),
       ),
       body: Padding(

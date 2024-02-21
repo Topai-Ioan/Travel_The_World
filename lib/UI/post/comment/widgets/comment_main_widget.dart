@@ -56,8 +56,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            getThemeColor(context, AppColors.white, AppColors.black),
+        backgroundColor: getBackgroundColor(context),
         title: const Text("Comments"),
       ),
       body: buildCommentContent(),
@@ -217,7 +216,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required CommentModel comment}) {
     showModalBottomSheet(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       context: context,
       builder: (context) {
         return CustomModalItem(

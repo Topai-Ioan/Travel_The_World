@@ -114,16 +114,15 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
         title: Text(
           "Post Page",
-          style: Fonts.f22w700(color: AppColors.black),
+          style: Fonts.f22w700(color: getTextColor(context)),
         ),
-        backgroundColor:
-            getThemeColor(context, AppColors.white, AppColors.black),
+        backgroundColor: getBackgroundColor(context),
       ),
       body: Container(
         color: AppColors.black,
@@ -213,7 +212,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       onPressed: () {
         _clear();
       },
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: Colors.red,
       tooltip: 'Delete',
       child: const Icon(Icons.delete),
     );
@@ -221,7 +220,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       onPressed: () {
         _cropImage();
       },
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: Colors.orange,
       tooltip: 'Crop',
       child: const Icon(Icons.crop),
     );
@@ -246,8 +245,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
           child: LinearProgressIndicator(
             color: Colors.green[700],
             borderRadius: BorderRadius.circular(8.0),
-            backgroundColor:
-                getThemeColor(context, AppColors.white, AppColors.black),
+            backgroundColor: Colors.green,
           ),
         ),
     ]);
@@ -262,7 +260,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
             borderRadius: BorderRadius.circular(16.0),
           ),
           child: Container(
-            color: AppColors.black,
+            color: AppColors.darkPurple,
             child: SizedBox(
               width: 320.0,
               height: 300.0,
@@ -311,8 +309,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
                             padding: const EdgeInsets.all(8.0),
                             child: ButtonContainerWidget(
                               text: "Select Image",
-                              backgroundColor: getThemeColor(
-                                  context, AppColors.white, AppColors.black),
+                              backgroundColor: AppColors.darkGreen,
                               textStyle: Fonts.f16w400(
                                 color: AppColors.black,
                               ),
@@ -329,8 +326,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
                               textStyle: Fonts.f16w400(
                                 color: AppColors.black,
                               ),
-                              backgroundColor: getThemeColor(
-                                  context, AppColors.white, AppColors.black),
+                              backgroundColor: AppColors.darkGreen,
                               onTapListener: () {
                                 _pickImage(ImageSource.camera);
                               },
@@ -356,8 +352,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
           ignoring: true,
           child: FloatingActionButton(
             onPressed: () {},
-            backgroundColor:
-                getThemeColor(context, AppColors.white, AppColors.black),
+            backgroundColor: AppColors.darkGreen,
             tooltip: 'Upload',
             child: const Icon(Icons.upload),
           ));
@@ -367,7 +362,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       onPressed: () {
         _submitPost(file);
       },
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: AppColors.darkGreen,
       tooltip: 'Upload',
       child: const Icon(Icons.upload),
     );

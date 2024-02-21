@@ -14,7 +14,6 @@ class Themes {
     }
   }
 
-  static ThemeData lightTheme = ThemeData();
-
-  static ThemeData darkTheme = ThemeData();
+  static ThemeData lightTheme = ThemeData.light();
+  static ThemeData darkTheme = ThemeData.dark();
 }

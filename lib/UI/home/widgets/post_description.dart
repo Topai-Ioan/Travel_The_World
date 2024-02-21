@@ -21,7 +21,7 @@ class PostDescription extends StatelessWidget {
             children: [
               Text(
                 description,
-                style: Fonts.f16w400(color: AppColors.black),
+                style: Fonts.f16w400(color: getTextColor(context)),
               ),
             ],
           ),

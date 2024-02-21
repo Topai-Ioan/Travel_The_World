@@ -258,8 +258,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required ReplyModel reply}) {
     return showModalBottomSheet(
-        backgroundColor:
-            getThemeColor(context, AppColors.white, AppColors.black),
+        backgroundColor: getBackgroundColor(context),
         context: context,
         builder: (context) {
           return CustomModalItem(children: [

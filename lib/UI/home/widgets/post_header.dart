@@ -46,7 +46,7 @@ class PostHeader extends StatelessWidget {
                 sizeHorizontal(10),
                 Text(
                   post.username,
-                  style: Fonts.f16w700(color: AppColors.black),
+                  style: Fonts.f16w700(color: getTextColor(context)),
                 ),
                 sizeHorizontal(5),
               ],
@@ -55,7 +55,7 @@ class PostHeader extends StatelessWidget {
           Text(
             DateFormat('yyyy-MM-dd').format(post.createdAt!),
             style: Fonts.f14w400(
-              color: AppColors.black.withOpacity(0.8),
+              color: getTextColor(context).withOpacity(0.8),
             ),
           ),
           const Spacer(),
@@ -66,9 +66,9 @@ class PostHeader extends StatelessWidget {
                   post: post,
                 ).showOptions(context);
               },
-              child: const Icon(
+              child: Icon(
                 Icons.more_vert_rounded,
-                color: AppColors.black,
+                color: getTextColor(context),
               ),
             )
           ]

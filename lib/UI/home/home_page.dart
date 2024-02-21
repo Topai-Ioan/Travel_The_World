@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     context.read<PostCubit>().getPosts();
     return Scaffold(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       appBar: const CustomAppBar(),
       body: BlocBuilder<PostCubit, PostState>(
         builder: (context, postState) {
@@ -43,20 +43,17 @@ class _HomePageState extends State<HomePage> {
             toast("some error occur");
           }
           if (postState is PostLoaded) {
-            return Container(
-              color: AppColors.black,
-              child: ListView.separated(
-                  itemCount: postState.posts.length,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    final post = postState.posts[index];
-                    return SinglePostCardWidget(
-                      currentUserId: widget.currentUser.uid,
-                      post: post,
-                    );
-                  }),
-            );
+            return ListView.separated(
+                itemCount: postState.posts.length,
+                separatorBuilder: (BuildContext context, int index) =>
+                    const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final post = postState.posts[index];
+                  return SinglePostCardWidget(
+                    currentUserId: widget.currentUser.uid,
+                    post: post,
+                  );
+                });
           }
           return const Center(
             child: SizedBox(
@@ -74,7 +71,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -84,9 +81,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Text(
             "Travel the world",
-            style: Fonts.f20w700(
-              color: AppColors.black,
-            ),
+            style: Fonts.f20w700(color: getTextColor(context)),
           ),
           sizeVertical(15),
         ],

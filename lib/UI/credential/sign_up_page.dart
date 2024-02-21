@@ -58,8 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor:
-            getThemeColor(context, AppColors.white, AppColors.black),
+        backgroundColor: getBackgroundColor(context),
         body: BlocConsumer<CredentialCubit, CredentialState>(
           listener: (context, credentialState) {
             if (credentialState is CredentialSuccess) {
@@ -148,8 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
             textStyle: Fonts.f18w600(
               color: AppColors.black,
             ),
-            backgroundColor:
-                getThemeColor(context, AppColors.white, AppColors.black),
+            backgroundColor: getBackgroundColor(context),
             text: "Sign Up",
             onTapListener: () {
               _signUpUser();

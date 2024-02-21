@@ -32,7 +32,7 @@ class PostActionsRow extends StatelessWidget {
               },
               child: Text(
                 '${post.likes.length}',
-                style: Fonts.f18w700(color: AppColors.black),
+                style: Fonts.f18w700(color: getTextColor(context)),
               ),
             ),
             GestureDetector(
@@ -42,13 +42,13 @@ class PostActionsRow extends StatelessWidget {
               },
               child: Icon(
                 isLiked ? Icons.favorite : Icons.favorite_outline,
-                color: isLiked ? Colors.red : AppColors.black,
+                color: isLiked ? Colors.red : getTextColor(context),
               ),
             ),
             sizeHorizontal(10),
             Text(
               "${post.totalComments} ",
-              style: Fonts.f18w700(color: AppColors.black),
+              style: Fonts.f18w700(color: getTextColor(context)),
             ),
             GestureDetector(
               onTap: () {
@@ -58,24 +58,24 @@ class PostActionsRow extends StatelessWidget {
                   arguments: AppEntity(uid: currentUserId, postId: post.postId),
                 );
               },
-              child: const Icon(
+              child: Icon(
                 Icons.comment_rounded,
-                color: AppColors.black,
+                color: getTextColor(context),
               ),
             ),
             sizeHorizontal(10),
             Text(
               "0 ",
-              style: Fonts.f18w700(color: AppColors.darkGreen),
+              style: Fonts.f18w700(color: getTextColor(context)),
             ),
-            const Icon(
+            Icon(
               Icons.send,
-              color: AppColors.black,
+              color: getTextColor(context),
             ),
             sizeHorizontal(10),
           ],
         ),
-        const Icon(Icons.bookmark_border_rounded, color: AppColors.black),
+        Icon(Icons.bookmark_border_rounded, color: getTextColor(context)),
       ],
     );
   }

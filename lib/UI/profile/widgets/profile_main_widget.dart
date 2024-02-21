@@ -27,7 +27,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       appBar: buildAppBar(),
       body: buildProfileContent(),
     );
@@ -35,9 +35,8 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
 
   AppBar buildAppBar() {
     return AppBar(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
-      surfaceTintColor:
-          getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
+      surfaceTintColor: getBackgroundColor(context),
       title: Text(widget.currentUser.username,
           style: const TextStyle(color: Colors.red)),
       actions: [
@@ -208,8 +207,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required UserModel user}) {
     return showModalBottomSheet(
-        backgroundColor:
-            getThemeColor(context, AppColors.white, AppColors.black),
+        backgroundColor: getBackgroundColor(context),
         context: context,
         builder: (context) {
           return CustomModalItem(

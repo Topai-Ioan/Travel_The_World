@@ -60,7 +60,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     final actionHandler = ActionCooldownHandler();
     return Scaffold(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       appBar: buildAppBar(),
       body: buildBody(actionHandler),
     );
@@ -68,7 +68,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   AppBar buildAppBar() {
     return AppBar(
-      backgroundColor: getThemeColor(context, AppColors.white, AppColors.black),
+      backgroundColor: getBackgroundColor(context),
       title: const Text(
         'Edit Profile',
       ),
