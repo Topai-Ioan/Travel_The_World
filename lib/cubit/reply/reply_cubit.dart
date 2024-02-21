@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -9,14 +10,14 @@ part 'reply_state.dart';
 
 class ReplyCubit extends Cubit<ReplyState> {
   final ReplyServiceInterface replyService;
+  StreamSubscription? _replySubscription;
   ReplyCubit({required this.replyService}) : super(ReplyInitial());
 
   Future<void> getReplies({required ReplyModel reply}) async {
     emit(ReplyLoading());
     try {
-      final streamResponse =
-          replyService.getReplies(commentId: reply.commentId);
-      streamResponse.listen((replies) {
+      _replySubscription =
+          replyService.getReplies(commentId: reply.commentId).listen((replies) {
         emit(ReplyLoaded(replies: replies));
       });
     } on SocketException catch (_) {
@@ -64,5 +65,9 @@ class ReplyCubit extends Cubit<ReplyState> {
     } catch (_) {
       emit(ReplyFailure());
     }
+  }
+
+  Future<void> cancelSubscription() async {
+    await _replySubscription?.cancel();
   }
 }

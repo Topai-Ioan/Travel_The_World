@@ -8,22 +8,22 @@ import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/UI/post/comment/widgets/single_comment_widget.dart';
 import 'package:travel_the_world/UI/shared_items/confirmation_dialog.dart';
-import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/UI/custom/custom_modal_item.dart';
 import 'package:travel_the_world/UI/shared_items/custom_text_input.dart';
-import 'package:travel_the_world/UI/shared_items/option_item.dart';
+import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 import 'package:uuid/uuid.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
 class CommentMainWidget extends StatefulWidget {
   final AppEntity appEntity;
 
-  const CommentMainWidget({Key? key, required this.appEntity})
-      : super(key: key);
+  const CommentMainWidget({super.key, required this.appEntity});
 
   @override
   State<CommentMainWidget> createState() => _CommentMainWidgetState();
@@ -55,9 +55,8 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: appBarColor,
+        backgroundColor: getBackgroundColor(context),
         title: const Text("Comments"),
       ),
       body: buildCommentContent(),
@@ -114,9 +113,9 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
             ],
           ),
         ),
-        const Divider(
+        Divider(
           thickness: 1,
-          color: secondaryColor,
+          color: Theme.of(context).colorScheme.tertiary,
         ),
         sizeVertical(10),
         Expanded(
@@ -166,16 +165,18 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
                 height: 40,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: profileWidget(imageUrl: singlePost.userProfileUrl),
+                  child: profileWidget(
+                      imageUrl: singlePost.userProfileUrl,
+                      boxFit: BoxFit.cover),
                 ),
               ),
               sizeHorizontal(10),
               Text(
                 singlePost.username,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: primaryColor,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
@@ -183,7 +184,8 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
           sizeVertical(10),
           Text(
             singlePost.description,
-            style: const TextStyle(color: primaryColor, fontSize: 16),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.primary, fontSize: 16),
           ),
         ],
       ),
@@ -214,26 +216,26 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required CommentModel comment}) {
     showModalBottomSheet(
-      backgroundColor: Colors.transparent.withOpacity(0.5),
+      backgroundColor: getBackgroundColor(context),
       context: context,
       builder: (context) {
         return CustomModalItem(
           children: [
-            OptionItem(
+            CustomOptionItem(
               text: "Delete Comment",
               onTap: () => _deleteComment(
                 commentId: comment.commentId,
                 postId: comment.postId,
               ),
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Edit Comment",
               onTap: () {
                 Navigator.pushNamed(context, PageRoutes.UpdateCommentPage,
                     arguments: comment);
               },
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Settings",
               onTap: () {},
             ),

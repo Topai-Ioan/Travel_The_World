@@ -4,15 +4,19 @@ import 'package:travel_the_world/constants.dart';
 class ProfileFormWidget extends StatelessWidget {
   final TextEditingController? controller;
   final String? title;
+  //final TextStyle titleTextStyle;
+  //final TextStyle hintTextStyle;
   final String? hintText;
   final Color? fillColor;
-  const ProfileFormWidget(
-      {Key? key,
-      this.title,
-      this.controller,
-      this.hintText,
-      this.fillColor = const Color.fromARGB(255, 23, 23, 23)})
-      : super(key: key);
+  const ProfileFormWidget({
+    super.key,
+    this.title,
+    this.controller,
+    this.hintText,
+    this.fillColor = const Color.fromARGB(255, 23, 23, 23),
+    //required this.titleTextStyle,
+    //required this.hintTextStyle
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +28,16 @@ class ProfileFormWidget extends StatelessWidget {
           margin: const EdgeInsets.only(left: 8),
           child: Text(
             "$title",
-            style: const TextStyle(color: primaryColor, fontSize: 16),
+            style: const TextStyle(color: Colors.red, fontSize: 16),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: controller,
-            style: const TextStyle(color: primaryColor),
+            style: const TextStyle(color: Colors.red),
             decoration: InputDecoration(
-              labelStyle: const TextStyle(color: primaryColor),
+              labelStyle: const TextStyle(color: Colors.red),
               border: InputBorder.none,
               filled: true,
               hintText: "$hintText",
@@ -45,7 +49,7 @@ class ProfileFormWidget extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 1,
-          color: secondaryColor,
+          color: Colors.grey[300],
         ),
         sizeVertical(10),
       ],

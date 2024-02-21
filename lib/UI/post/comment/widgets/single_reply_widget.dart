@@ -4,17 +4,18 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/replies/reply_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class SingleReplyWidget extends StatefulWidget {
   final ReplyModel reply;
   final VoidCallback? onLongPressListener;
   final VoidCallback? onLikeClickListener;
   const SingleReplyWidget(
-      {Key? key,
+      {super.key,
       required this.reply,
       this.onLongPressListener,
-      this.onLikeClickListener})
-      : super(key: key);
+      this.onLikeClickListener});
 
   @override
   State<SingleReplyWidget> createState() => _SingleReplyWidgetState();
@@ -63,10 +64,7 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
                       children: [
                         Text(
                           widget.reply.username,
-                          style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: primaryColor),
+                          style: Fonts.f16w700(color: AppColors.black),
                         ),
                         GestureDetector(
                             onTap: widget.onLikeClickListener,
@@ -77,14 +75,14 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
                               size: 20,
                               color: widget.reply.likes.contains(_currentUid)
                                   ? Colors.red
-                                  : darkGreyColor,
+                                  : AppColors.black,
                             ))
                       ],
                     ),
                     sizeVertical(4),
                     Text(
                       widget.reply.description,
-                      style: const TextStyle(color: primaryColor),
+                      style: Fonts.f16w400(color: AppColors.black),
                     ),
                     sizeVertical(4),
                     Row(
@@ -93,11 +91,11 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
                         Text(
                           DateFormat("dd/MMM/yyy")
                               .format(widget.reply.createdAt!),
-                          style: const TextStyle(color: darkGreyColor),
+                          style: Fonts.f14w400(color: AppColors.darkPurple),
                         ),
                         Text(
                           "${widget.reply.likes.length} likes",
-                          style: const TextStyle(color: darkGreyColor),
+                          style: Fonts.f14w400(color: AppColors.darkGreen),
                         ),
                       ],
                     ),

@@ -12,9 +12,11 @@ import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -56,7 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: getBackgroundColor(context),
         body: BlocConsumer<CredentialCubit, CredentialState>(
           listener: (context, credentialState) {
             if (credentialState is CredentialSuccess) {
@@ -117,7 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     onPressed: selectImage,
                     icon: const Icon(
                       Icons.add_a_photo,
-                      color: blueColor,
+                      color: AppColors.black,
                     ),
                   ),
                 ),
@@ -142,7 +144,10 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           sizeVertical(15),
           ButtonContainerWidget(
-            color: blueColor,
+            textStyle: Fonts.f18w600(
+              color: AppColors.black,
+            ),
+            backgroundColor: getBackgroundColor(context),
             text: "Sign Up",
             onTapListener: () {
               _signUpUser();
@@ -153,35 +158,33 @@ class _SignUpPageState extends State<SignUpPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Please wait",
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400)),
+                Text("Please wait",
+                    style: Fonts.f16w400(color: AppColors.black)),
                 sizeHorizontal(10),
                 const CircularProgressIndicator()
               ],
             ),
           Flexible(flex: 2, child: Container()),
           const Divider(
-            color: greenColor,
+            color: AppColors.black,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Already have and account? ",
-                style: TextStyle(color: primaryColor),
+                style: Fonts.f16w400(color: AppColors.black),
               ),
               InkWell(
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
                       context, PageRoutes.SignInPage, (route) => false);
                 },
-                child: const Text(
+                child: Text(
                   "Sign In.",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: primaryColor),
+                  style: Fonts.f18w600(
+                    color: AppColors.black,
+                  ),
                 ),
               ),
             ],

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ButtonContainerWidget extends StatefulWidget {
-  final Color? color;
+  final TextStyle textStyle;
+  final Color? backgroundColor;
   final String? text;
   final VoidCallback? onTapListener;
 
   const ButtonContainerWidget({
-    Key? key,
-    this.color,
+    super.key,
     this.text,
     this.onTapListener,
-  }) : super(key: key);
+    required this.textStyle,
+    this.backgroundColor,
+  });
 
   @override
   ButtonContainerWidgetState createState() => ButtonContainerWidgetState();
@@ -47,16 +49,16 @@ class ButtonContainerWidgetState extends State<ButtonContainerWidget> {
         width: double.infinity,
         height: 40,
         decoration: BoxDecoration(
-          color: widget.color,
+          color: widget.backgroundColor,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(
           child: Text(
             widget.text ?? "",
-            style: TextStyle(
-              color: isButtonActive ? Colors.white : Colors.white60,
-              fontWeight: FontWeight.w600,
-            ),
+            style: widget.textStyle.copyWith(
+                color: isButtonActive
+                    ? widget.textStyle.color
+                    : widget.textStyle.color?.withOpacity(0.5)),
           ),
         ),
       ),

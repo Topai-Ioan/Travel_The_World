@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String message;
@@ -16,7 +17,7 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     const textColor = Colors.white;
     return AlertDialog(
-      backgroundColor: Colors.transparent.withOpacity(0.5),
+      backgroundColor: getBackgroundColor(context),
       title: const Text(
         'Confirmation',
         style: TextStyle(color: textColor),

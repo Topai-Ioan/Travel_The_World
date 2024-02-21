@@ -8,6 +8,7 @@ import 'package:travel_the_world/UI/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/UI/shared_items/custom_action_handler.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class UpdatePostMainWidget extends StatefulWidget {
   final PostModel post;
@@ -40,9 +41,9 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
   Widget build(BuildContext context) {
     final actionHandler = ActionCooldownHandler();
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
-        backgroundColor: appBarColor,
+        backgroundColor: getBackgroundColor(context),
         title: const Text("EditPost"),
         actions: [
           Padding(
@@ -51,7 +52,8 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
               onPressed: () {},
               icon: GestureDetector(
                 onTap: () async => actionHandler.handleAction(_updatePost),
-                child: const Icon(Icons.check, color: blueColor, size: 28),
+                child:
+                    const Icon(Icons.check, color: AppColors.black, size: 28),
               ),
             ),
           ),
@@ -74,7 +76,7 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
               Text(
                 widget.post.username,
                 style: const TextStyle(
-                    color: primaryColor,
+                    color: Colors.red,
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
               ),

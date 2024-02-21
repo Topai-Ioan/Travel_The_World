@@ -35,7 +35,8 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> loggedOut() async {
-    //todo this can be simplified
+    //todo this can be simplified Subscription
+
     try {
       await AuthService().signOut();
       emit(UnAuthenticated());

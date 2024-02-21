@@ -1,10 +1,11 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel_the_world/themes/themes.dart';
 
 class ThemeProvider extends ChangeNotifier with WidgetsBindingObserver {
   ThemeData _themeData;
+  static ColorScheme? colorScheme;
+  static ThemeProvider? _instance;
 
   ThemeProvider(this._themeData) {
     WidgetsBinding.instance.addObserver(this);
@@ -13,14 +14,20 @@ class ThemeProvider extends ChangeNotifier with WidgetsBindingObserver {
     });
   }
 
+  static ThemeProvider getInstance(BuildContext context) {
+    // ignore: prefer_conditional_assignment
+    if (_instance == null) {
+      _instance = ThemeProvider(Theme.of(context));
+    }
+    return _instance!;
+  }
+
   @override
   void didChangePlatformBrightness() {
-    getThemeName().then((theme) {
+    getThemeName().then((theme) async {
       if (theme == 'system') {
-        Brightness platformBrightness =
-            PlatformDispatcher.instance.platformBrightness;
-        var isDarkMode = platformBrightness == Brightness.dark;
-        setThemeAsync(isDarkMode ? 'dark' : 'light');
+        _themeData = Themes.systemTheme;
+        notifyListeners();
       }
     });
 

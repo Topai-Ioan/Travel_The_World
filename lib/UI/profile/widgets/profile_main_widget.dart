@@ -3,15 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
-import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
-import 'package:travel_the_world/UI/shared_items/option_item.dart';
+import 'package:travel_the_world/UI/custom/custom_modal_item.dart';
+import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class ProfileMainWidget extends StatefulWidget {
   final UserModel currentUser;
-  const ProfileMainWidget({Key? key, required this.currentUser})
-      : super(key: key);
+  const ProfileMainWidget({super.key, required this.currentUser});
 
   @override
   State<ProfileMainWidget> createState() => _ProfileMainWidgetState();
@@ -27,7 +27,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getBackgroundColor(context),
       appBar: buildAppBar(),
       body: buildProfileContent(),
     );
@@ -35,9 +35,10 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
 
   AppBar buildAppBar() {
     return AppBar(
-      backgroundColor: appBarColor,
+      backgroundColor: getBackgroundColor(context),
+      surfaceTintColor: getBackgroundColor(context),
       title: Text(widget.currentUser.username,
-          style: const TextStyle(color: primaryColor)),
+          style: const TextStyle(color: Colors.red)),
       actions: [
         Padding(
           padding: const EdgeInsets.all(10),
@@ -45,7 +46,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
             onTap: () {
               _openBottomModalSheet(context: context, user: widget.currentUser);
             },
-            child: const Icon(Icons.menu, color: primaryColor),
+            child: Icon(Icons.menu, color: Colors.red.shade100),
           ),
         ),
       ],
@@ -53,29 +54,39 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   }
 
   Widget buildProfileContent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildUserInfo(),
-            sizeVertical(10),
-            Text(
-              widget.currentUser.name == ''
-                  ? widget.currentUser.username
-                  : widget.currentUser.name,
-              style: const TextStyle(
-                  color: primaryColor, fontWeight: FontWeight.bold),
-            ),
-            sizeVertical(10),
-            Text(
-              widget.currentUser.bio,
-              style: const TextStyle(color: primaryColor),
-            ),
-            sizeVertical(10),
-            buildUserPosts(),
-          ],
+    return Container(
+      color: getThemeColor(context, AppColors.white, AppColors.black),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                  color: const Color.fromARGB(255, 56, 128, 59),
+                  child: Column(
+                    children: [
+                      buildUserInfo(),
+                      sizeVertical(10),
+                      Text(
+                        widget.currentUser.name == ''
+                            ? widget.currentUser.username
+                            : widget.currentUser.name,
+                        style: const TextStyle(
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      sizeVertical(10),
+                      Text(
+                        widget.currentUser.bio,
+                        style: const TextStyle(color: AppColors.black),
+                      ),
+                    ],
+                  )),
+              sizeVertical(10),
+              buildUserPosts(),
+            ],
+          ),
         ),
       ),
     );
@@ -83,7 +94,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
 
   Widget buildUserInfo() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
           width: 80,
@@ -132,7 +143,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
         Text(
           value,
           style: const TextStyle(
-            color: primaryColor,
+            color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -140,7 +151,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
         sizeVertical(7),
         Text(
           label,
-          style: const TextStyle(color: primaryColor),
+          style: const TextStyle(color: Colors.red),
         ),
       ],
     );
@@ -172,6 +183,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                   height: 175,
                   child: profileWidget(
                     imageUrl: posts[index].postImageUrl,
+                    boxFit: BoxFit.cover,
                   ),
                 ),
               );
@@ -179,7 +191,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
           );
         } else if (postState is PostEmpty) {
           return const Center(
-            child: Text("No post yet", style: TextStyle(color: primaryColor)),
+            child: Text("No post yet", style: TextStyle(color: Colors.red)),
           );
         }
         return Center(
@@ -195,25 +207,25 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required UserModel user}) {
     return showModalBottomSheet(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: getBackgroundColor(context),
         context: context,
         builder: (context) {
           return CustomModalItem(
             children: [
-              OptionItem(
+              CustomOptionItem(
                 text: "Settings",
                 onTap: () {
                   Navigator.pushNamed(context, PageRoutes.SettingsPage);
                 },
               ),
-              OptionItem(
+              CustomOptionItem(
                 text: "Edit Profile",
                 onTap: () {
                   Navigator.pushNamed(context, PageRoutes.EditProfilePage,
                       arguments: user);
                 },
               ),
-              OptionItem(
+              CustomOptionItem(
                 text: "Logout",
                 onTap: () {
                   BlocProvider.of<AuthCubit>(context).loggedOut();

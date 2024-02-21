@@ -7,7 +7,7 @@ import 'package:travel_the_world/injection_container.dart' as di;
 
 class CommentPage extends StatelessWidget {
   final AppEntity appEntity;
-  const CommentPage({Key? key, required this.appEntity}) : super(key: key);
+  const CommentPage({super.key, required this.appEntity});
 
   @override
   Widget build(BuildContext context) {

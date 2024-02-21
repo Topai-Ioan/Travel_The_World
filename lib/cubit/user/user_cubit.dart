@@ -12,20 +12,6 @@ class UserCubit extends Cubit<UserState> {
 
   UserCubit({required this.userService}) : super(UserInitial());
 
-  Future<void> getUsers({required UserModel user}) async {
-    emit(UserLoading());
-    try {
-      final streamResponse = userService.getUsers();
-      streamResponse.listen((users) {
-        emit(UsersLoaded(users: users));
-      });
-    } on SocketException catch (_) {
-      emit(UserFailure());
-    } catch (_) {
-      emit(UserFailure());
-    }
-  }
-
   Future<void> updateUser({required UserModel user}) async {
     try {
       userService.updateUser(user: user);
@@ -43,6 +29,20 @@ class UserCubit extends Cubit<UserState> {
       emit(UserFailure());
     } catch (_) {
       emit(UserFailure());
+    }
+  }
+
+  void searchUsers(String query) async {
+    if (query.isNotEmpty) {
+      emit(UserLoading());
+      try {
+        final users = await userService.searchUsers(query);
+        emit(UsersLoaded(users: users));
+      } catch (e) {
+        emit(UserFailure());
+      }
+    } else {
+      emit(UserInitial());
     }
   }
 }

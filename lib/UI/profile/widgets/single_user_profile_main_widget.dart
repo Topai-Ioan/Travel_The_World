@@ -8,12 +8,13 @@ import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class SingleUserProfileMainWidget extends StatefulWidget {
   final String otherUserId;
 
-  const SingleUserProfileMainWidget({Key? key, required this.otherUserId})
-      : super(key: key);
+  const SingleUserProfileMainWidget({super.key, required this.otherUserId});
 
   @override
   State<SingleUserProfileMainWidget> createState() =>
@@ -55,11 +56,11 @@ class _SingleUserProfileMainWidgetState
         if (userState is GetSingleOtherUserLoaded) {
           final singleUser = userState.otherUser;
           return Scaffold(
-            backgroundColor: backgroundColor,
+            backgroundColor: getBackgroundColor(context),
             appBar: AppBar(
-              backgroundColor: backgroundColor,
+              backgroundColor: getBackgroundColor(context),
               title: Text(singleUser.username,
-                  style: const TextStyle(color: primaryColor)),
+                  style: Fonts.f20w600(color: AppColors.darkPurple)),
             ),
             body: buildProfileContent(singleUser),
           );
@@ -84,7 +85,7 @@ class _SingleUserProfileMainWidgetState
             buildUserInfo(singleUser),
             if (_currentUid != singleUser.uid)
               showFollowUnfollowButton(singleUser),
-            const Divider(height: 20, thickness: 5, color: darkGreyColor),
+            const Divider(height: 20, thickness: 5, color: AppColors.darkGreen),
             buildUserPosts(),
           ],
         ),
@@ -138,29 +139,24 @@ class _SingleUserProfileMainWidgetState
   Widget buildStat(String label, String value) {
     return Column(
       children: [
-        Text(
-          value,
-          style: const TextStyle(
-            color: primaryColor,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text(value,
+            style: Fonts.f20w700(
+                color:
+                    getThemeColor(context, AppColors.black, AppColors.white))),
         sizeVertical(7),
-        Text(
-          label,
-          style: const TextStyle(color: primaryColor),
-        ),
+        Text(label, style: Fonts.f16w400(color: Colors.red)),
       ],
     );
   }
 
   Widget showFollowUnfollowButton(UserModel singleUser) {
     return ButtonContainerWidget(
+      textStyle: Fonts.f18w600(
+        color: singleUser.followers.contains(_currentUid)
+            ? AppColors.purple.withOpacity(.4)
+            : AppColors.darkGreen,
+      ),
       text: singleUser.followers.contains(_currentUid) ? "UnFollow" : "Follow",
-      color: singleUser.followers.contains(_currentUid)
-          ? secondaryColor.withOpacity(.4)
-          : blueColor,
       onTapListener: () {
         BlocProvider.of<UserCubit>(context).followUnFollowUser(
           user: UserModel(
@@ -216,8 +212,8 @@ class _SingleUserProfileMainWidgetState
           );
         }
         if (postState is PostEmpty) {
-          return const Center(
-            child: Text("No post yet", style: TextStyle(color: primaryColor)),
+          return Center(
+            child: Text("No post yet", style: Fonts.f18w700(color: Colors.red)),
           );
         }
 

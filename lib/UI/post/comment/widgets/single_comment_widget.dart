@@ -5,14 +5,16 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/UI/post/comment/widgets/single_reply_widget.dart';
 import 'package:travel_the_world/UI/shared_items/confirmation_dialog.dart';
-import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
+import 'package:travel_the_world/UI/custom/custom_modal_item.dart';
 import 'package:travel_the_world/UI/shared_items/custom_text_input.dart';
-import 'package:travel_the_world/UI/shared_items/option_item.dart';
+import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/replies/reply_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 class SingleCommentWidget extends StatefulWidget {
@@ -22,12 +24,11 @@ class SingleCommentWidget extends StatefulWidget {
   final UserModel? currentUser;
 
   const SingleCommentWidget(
-      {Key? key,
+      {super.key,
       required this.comment,
       this.onLongPressListener,
       this.onLikeClickListener,
-      this.currentUser})
-      : super(key: key);
+      this.currentUser});
 
   @override
   State<SingleCommentWidget> createState() => _SingleCommentWidgetState();
@@ -60,10 +61,10 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
       children: [
         Text(
           widget.comment.username,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
-            color: primaryColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         GestureDetector(
@@ -75,7 +76,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
             size: 20,
             color: widget.comment.likes.contains(_currentUid)
                 ? Colors.red
-                : darkGreyColor,
+                : AppColors.black,
           ),
         ),
       ],
@@ -85,7 +86,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   Widget buildCommentText() {
     return Text(
       widget.comment.description,
-      style: const TextStyle(color: primaryColor),
+      style: TextStyle(color: Theme.of(context).colorScheme.primary),
     );
   }
 
@@ -94,7 +95,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
       children: [
         Text(
           DateFormat("dd/MMM/yyy").format(widget.comment.createdAt!),
-          style: const TextStyle(color: darkGreyColor),
+          style: Fonts.f12w400(color: AppColors.darkGreen),
         ),
         sizeHorizontal(15),
         GestureDetector(
@@ -103,9 +104,9 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
               _isUserReplying = !_isUserReplying;
             });
           },
-          child: const Text(
+          child: Text(
             "Reply",
-            style: TextStyle(color: darkGreyColor, fontSize: 12),
+            style: Fonts.f12w400(color: AppColors.darkRed),
           ),
         ),
         sizeHorizontal(15),
@@ -129,16 +130,13 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
             _showReplies && widget.comment.totalReplies != 0
                 ? "Hide Replies"
                 : "View ${widget.comment.totalReplies} Replies",
-            style: const TextStyle(
-              color: darkGreyColor,
-              fontSize: 12,
-            ),
+            style: Fonts.f12w400(color: AppColors.darkRed),
           ),
         ),
         const Spacer(),
         Text(
           "${widget.comment.likes.length} Likes",
-          style: const TextStyle(color: darkGreyColor, fontSize: 12),
+          style: Fonts.f12w400(color: AppColors.darkRed),
         ),
       ],
     );
@@ -260,11 +258,11 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required ReplyModel reply}) {
     return showModalBottomSheet(
-        backgroundColor: Colors.transparent.withOpacity(0.5),
+        backgroundColor: getBackgroundColor(context),
         context: context,
         builder: (context) {
           return CustomModalItem(children: [
-            OptionItem(
+            CustomOptionItem(
               text: "Delete Reply",
               onTap: () {
                 _deleteReply(reply: reply);
@@ -273,7 +271,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
                 });
               },
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Edit Reply",
               onTap: () {
                 Navigator.pushNamed(context, PageRoutes.UpdateReplyPage,

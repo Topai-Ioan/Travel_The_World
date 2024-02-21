@@ -107,6 +107,18 @@ class PostService implements PostServiceInterface {
   }
 
   @override
+  Future<void> updatePost({required PostModel post}) async {
+    final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
+
+    var data = {
+      if (post.description != '') 'description': post.description,
+      if (post.postImageUrl != '') 'postImageUrl': post.postImageUrl,
+      if (post.userProfileUrl != '') 'userProfileUrl': post.userProfileUrl,
+    };
+    return ref.update(data);
+  }
+
+  @override
   Future<void> likePost({required String postId}) async {
     final postCollection = _db.collection(FirebaseConstants.Posts);
 
@@ -136,9 +148,9 @@ class PostService implements PostServiceInterface {
         .orderBy("createdAt", descending: true);
 
     return ref.snapshots().map((querySnapshot) {
-      var data = querySnapshot.docs.map((doc) => doc.data());
-      var post = data.map((d) => PostModel.fromJson(d)).toList();
-      return post;
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
     });
   }
 
@@ -149,40 +161,117 @@ class PostService implements PostServiceInterface {
         .orderBy("createdAt", descending: true);
 
     return ref.snapshots().map((querySnapshot) {
-      var data = querySnapshot.docs.map((doc) => doc.data());
-      var posts = data.map((d) => PostModel.fromJson(d)).toList();
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
+  }
+
+  @override
+  Stream<List<PostModel>> getPostsFiltered(String text) {
+    text = text.toLowerCase();
+    final ref = _db
+        .collection(FirebaseConstants.Posts)
+        .orderBy("createdAt", descending: true);
+
+    return ref.snapshots().map((querySnapshot) {
+      var posts = <PostModel>[];
+
+      for (var doc in querySnapshot.docs) {
+        var data = doc.data();
+        var category = (data['category'] as List<dynamic>)
+            .cast<String>()
+            .map((tag) => tag.toLowerCase())
+            .toList();
+
+        var addedPhotoIDs = <String>{};
+        for (var tag in category) {
+          if (tag.contains(text) || tag.startsWith(text)) {
+            var postModel = PostModel.fromJson(data);
+            if (!addedPhotoIDs.contains(postModel.postId)) {
+              posts.add(postModel);
+              addedPhotoIDs.add(postModel.postId);
+            }
+          }
+        }
+      }
       return posts;
     });
   }
 
   @override
-  Future<Stream<List<PostModel>>> getPostsFromFollowedUsers(
-      {required UserModel currentUser}) async {
+  Stream<List<PostModel>> getPostsFromFollowedUsersInTheLast24h(
+      {required UserModel currentUser}) {
     final followingList = List<String>.from(currentUser.following);
     if (!followingList.contains(currentUser.uid)) {
       followingList.add(currentUser.uid);
     }
+
+    final twentyFourHoursAgo =
+        DateTime.now().subtract(const Duration(hours: 24));
     final ref = _db
         .collection(FirebaseConstants.Posts)
         .where('creatorUid', whereIn: followingList)
+        .where('createdAt', isGreaterThan: twentyFourHoursAgo)
         .orderBy("createdAt", descending: true);
 
-    return ref.snapshots().map((querySnapshot) {
-      var data = querySnapshot.docs.map((doc) => doc.data());
-      var posts = data.map((d) => PostModel.fromJson(d)).toList();
-      return posts;
+    return ref.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
     });
   }
 
   @override
-  Future<void> updatePost({required PostModel post}) async {
+  Future<void> addCategoryAndDimensions({required PostModel post}) async {
     final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
 
+    final lowercasecategory =
+        post.category.map((tag) => tag.toLowerCase()).toList();
+
     var data = {
-      if (post.description != '') 'description': post.description,
-      if (post.postImageUrl != '') 'postImageUrl': post.postImageUrl,
-      if (post.userProfileUrl != '') 'userProfileUrl': post.userProfileUrl,
+      if (lowercasecategory.isNotEmpty) 'category': lowercasecategory,
+      if (post.categoryConfidence.isNotEmpty)
+        'categoryConfidence': post.categoryConfidence,
+      if (post.imageWidth != 0) 'weight': post.imageWidth,
+      if (post.imageHeight != 0) 'height': post.imageHeight,
     };
+
     return ref.update(data);
+  }
+
+  @override
+  Future<List<PostModel>> getMorePosts(
+      int pageSize, DocumentSnapshot startAfter) {
+    final ref = _db
+        .collection(FirebaseConstants.Posts)
+        .orderBy("createdAt", descending: true)
+        .startAfterDocument(startAfter)
+        .limit(pageSize);
+
+    return ref.get().then((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
+  }
+
+  @override
+  DocumentReference? getPostReference(String postId) {
+    return _db.collection(FirebaseConstants.Posts).doc(postId);
+  }
+
+  @override
+  Future<List<PostModel>> getFirstXPosts(int numberOfPosts) {
+    final ref = _db
+        .collection(FirebaseConstants.Posts)
+        .orderBy("createdAt", descending: true)
+        .limit(numberOfPosts);
+
+    return ref.get().then((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
   }
 }

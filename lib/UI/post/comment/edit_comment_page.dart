@@ -8,7 +8,7 @@ import 'package:travel_the_world/services/models/comments/comment_model.dart';
 class EditCommentPage extends StatelessWidget {
   final CommentModel comment;
 
-  const EditCommentPage({Key? key, required this.comment}) : super(key: key);
+  const EditCommentPage({super.key, required this.comment});
 
   @override
   Widget build(BuildContext context) {

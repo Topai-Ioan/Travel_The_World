@@ -4,7 +4,7 @@ import 'package:travel_the_world/services/models/users/user_model.dart';
 
 class FollowersPage extends StatelessWidget {
   final UserModel user;
-  const FollowersPage({Key? key, required this.user}) : super(key: key);
+  const FollowersPage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

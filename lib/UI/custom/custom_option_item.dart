@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class OptionItem extends StatelessWidget {
+class CustomOptionItem extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
 
-  const OptionItem({
-    Key? key,
+  const CustomOptionItem({
+    super.key,
     required this.text,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

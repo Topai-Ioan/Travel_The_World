@@ -3,30 +3,34 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/UI/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:travel_the_world/services/store_service.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class UploadPostMainWidget extends StatefulWidget {
   final UserModel currentUser;
-  const UploadPostMainWidget({Key? key, required this.currentUser})
-      : super(key: key);
+  const UploadPostMainWidget({super.key, required this.currentUser});
 
   @override
   State<UploadPostMainWidget> createState() => _UploadPostMainWidgetState();
 }
 
 class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
-  File? _pickedFile;
-  File? _croppedFile;
+  XFile? _pickedFile;
+  XFile? _croppedFile;
   final TextEditingController _descriptionController = TextEditingController();
-  bool _isUploading = false;
+  final ValueNotifier<bool> _isUploading = ValueNotifier<bool>(false);
+
+  List<String> imageCategory = [];
+  List<double> categoryConfidence = [];
 
   @override
   void dispose() {
@@ -38,10 +42,32 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     XFile? pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile == null) return;
 
-    File? file = File(pickedFile.path);
+    await getImageLabels(pickedFile);
+
+    XFile? file = XFile(pickedFile.path);
     setState(() {
       _pickedFile = file;
     });
+  }
+
+  Future<void> getImageLabels(XFile image) async {
+    imageCategory.clear();
+    categoryConfidence.clear();
+
+    final inputImage = InputImage.fromFilePath(image.path);
+    ImageLabeler imageLabeler =
+        ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.75));
+    try {
+      List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
+
+      for (ImageLabel imgLabel in labels) {
+        imageCategory.add(imgLabel.label);
+        categoryConfidence
+            .add(double.parse(imgLabel.confidence.toStringAsFixed(2)));
+      }
+    } finally {
+      imageLabeler.close();
+    }
   }
 
   Future<void> _cropImage() async {
@@ -67,8 +93,9 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
         ],
       );
       if (croppedFile == null) return;
+      await getImageLabels(XFile(croppedFile.path));
 
-      File? file = File(croppedFile.path);
+      XFile? file = XFile(croppedFile.path);
       setState(() {
         _croppedFile = file;
       });
@@ -79,7 +106,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     setState(() {
       _pickedFile = null;
       _croppedFile = null;
-      _isUploading = false;
+      _isUploading.value = false;
       _descriptionController.clear();
     });
   }
@@ -87,17 +114,25 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade900,
+      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
-        title: const Text("Post Page"),
-        backgroundColor: appBarColor,
+        centerTitle: true,
+        elevation: 0,
+        title: Text(
+          "Post Page",
+          style: Fonts.f22w700(color: getTextColor(context)),
+        ),
+        backgroundColor: getBackgroundColor(context),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: _body()),
-        ],
+      body: Container(
+        color: AppColors.black,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _body()),
+          ],
+        ),
       ),
     );
   }
@@ -133,7 +168,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
                 title: "Description",
                 controller: _descriptionController,
                 hintText: "Write your description...",
-                fillColor: Colors.grey[850],
+                fillColor: AppColors.black,
               ),
             ),
             const SizedBox(height: 24.0),
@@ -152,23 +187,20 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       return SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: 0.8 * screenWidth,
-            maxHeight: 0.7 * screenHeight,
+            maxWidth: 0.9 * screenWidth,
+            maxHeight: 0.9 * screenHeight,
           ),
           child: Image.file(File(path)),
         ),
       );
     } else if (_pickedFile != null) {
       final path = _pickedFile!.path;
-      return Container(
-        color: Colors.red,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 0.8 * screenWidth,
-            maxHeight: 0.7 * screenHeight,
-          ),
-          child: Image.file(File(path)),
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 0.9 * screenWidth,
+          maxHeight: 0.9 * screenHeight,
         ),
+        child: Image.file(File(path)),
       );
     } else {
       return const SizedBox.shrink();
@@ -188,7 +220,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       onPressed: () {
         _cropImage();
       },
-      backgroundColor: const Color(0xFFBC764A),
+      backgroundColor: Colors.orange,
       tooltip: 'Crop',
       child: const Icon(Icons.crop),
     );
@@ -207,13 +239,13 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
           ],
         ),
       ),
-      if (_isUploading)
+      if (_isUploading.value)
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           child: LinearProgressIndicator(
             color: Colors.green[700],
             borderRadius: BorderRadius.circular(8.0),
-            backgroundColor: Colors.green[900],
+            backgroundColor: Colors.green,
           ),
         ),
     ]);
@@ -228,7 +260,7 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
             borderRadius: BorderRadius.circular(16.0),
           ),
           child: Container(
-            color: Colors.black,
+            color: AppColors.darkPurple,
             child: SizedBox(
               width: 320.0,
               height: 300.0,
@@ -244,27 +276,22 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
                         radius: const Radius.circular(12.0),
                         borderType: BorderType.RRect,
                         dashPattern: const [8, 4],
-                        color:
-                            Theme.of(context).highlightColor.withOpacity(0.4),
+                        color: AppColors.black,
                         child: Center(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.image,
-                                color: Theme.of(context).highlightColor,
+                                color: AppColors.black,
                                 size: 80.0,
                               ),
                               const SizedBox(height: 24.0),
                               Text(
                                 'Select an image to start',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                        color:
-                                            Theme.of(context).highlightColor),
+                                style:
+                                    Fonts.f16w400(color: AppColors.darkGreen),
                               )
                             ],
                           ),
@@ -282,6 +309,10 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
                             padding: const EdgeInsets.all(8.0),
                             child: ButtonContainerWidget(
                               text: "Select Image",
+                              backgroundColor: AppColors.darkGreen,
+                              textStyle: Fonts.f16w400(
+                                color: AppColors.black,
+                              ),
                               onTapListener: () {
                                 _pickImage(ImageSource.gallery);
                               },
@@ -292,6 +323,10 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: ButtonContainerWidget(
+                              textStyle: Fonts.f16w400(
+                                color: AppColors.black,
+                              ),
+                              backgroundColor: AppColors.darkGreen,
                               onTapListener: () {
                                 _pickImage(ImageSource.camera);
                               },
@@ -311,13 +346,13 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     );
   }
 
-  Widget _uploadButon(File? file) {
-    if (_isUploading) {
+  Widget _uploadButon(XFile? file) {
+    if (_isUploading.value) {
       return IgnorePointer(
           ignoring: true,
           child: FloatingActionButton(
             onPressed: () {},
-            backgroundColor: Colors.green[900],
+            backgroundColor: AppColors.darkGreen,
             tooltip: 'Upload',
             child: const Icon(Icons.upload),
           ));
@@ -327,41 +362,62 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       onPressed: () {
         _submitPost(file);
       },
-      backgroundColor: Colors.green,
+      backgroundColor: AppColors.darkGreen,
       tooltip: 'Upload',
       child: const Icon(Icons.upload),
     );
   }
 
-  _submitPost(File? file) async {
+  _submitPost(XFile? file) async {
     setState(() {
-      _isUploading = true;
+      _isUploading.value = true;
     });
+    if (file == null) return;
 
-    Map<String, String> imageInfo =
-        await StoreService().uploadImagePost(file, "Posts");
+    ImageUploadResult imageInfo =
+        await StoreService().uploadImagePost(File(file.path), "Posts");
 
-    String imageUrl = imageInfo["imageUrl"]!;
-    String imageId = imageInfo["imageId"]!;
+    String imageUrl = imageInfo.imageUrl;
+    String imageId = imageInfo.imageId;
+    double height = imageInfo.height;
+    double width = imageInfo.width;
 
-    _createSubmitPost(imageUrl: imageUrl, imageId: imageId);
+    _createPost(
+        imageUrl: imageUrl, imageId: imageId, height: height, width: width);
     Future.delayed(const Duration(seconds: 2), () {});
   }
 
-  _createSubmitPost({required String imageUrl, required String imageId}) {
+  _createPost(
+      {required String imageUrl,
+      required String imageId,
+      required double height,
+      required double width}) {
     BlocProvider.of<PostCubit>(context)
         .createPost(
             post: PostModel(
-          creatorUid: widget.currentUser.uid,
-          likes: const [],
+      creatorUid: widget.currentUser.uid,
+      likes: const [],
+      postId: imageId,
+      postImageUrl: imageUrl,
+      totalComments: 0,
+      username: widget.currentUser.username,
+      userProfileUrl: widget.currentUser.profileUrl,
+      description: _descriptionController.text,
+      category: imageCategory,
+      categoryConfidence: categoryConfidence,
+    ))
+        .then((value) {
+      BlocProvider.of<PostCubit>(context).addCategoryAndDimensions(
+        post: PostModel(
           postId: imageId,
-          postImageUrl: imageUrl,
-          totalComments: 0,
-          username: widget.currentUser.username,
-          userProfileUrl: widget.currentUser.profileUrl,
-          description: _descriptionController.text,
-        ))
-        .then((value) => _clear());
+          category: imageCategory,
+          categoryConfidence: categoryConfidence,
+          imageHeight: height,
+          imageWidth: width,
+        ),
+      );
+      _clear();
+    });
     return;
   }
 }

@@ -15,10 +15,20 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
       likes:
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
+      category: (json['category'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      categoryConfidence: (json['categoryConfidence'] as List<dynamic>?)
+              ?.map((e) => (e as num).toDouble())
+              .toList() ??
+          const [],
       totalComments: json['totalComments'] as num? ?? 0,
       userProfileUrl: json['userProfileUrl'] as String? ?? '',
       createdAt:
           PostModel._timestampToDateTime(json['createdAt'] as Timestamp?),
+      imageWidth: (json['width'] as num?)?.toDouble() ?? 0,
+      imageHeight: (json['height'] as num?)?.toDouble() ?? 0,
     );
 
 Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
@@ -28,7 +38,11 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'description': instance.description,
       'postImageUrl': instance.postImageUrl,
       'likes': instance.likes,
+      'category': instance.category,
+      'categoryConfidence': instance.categoryConfidence,
       'totalComments': instance.totalComments,
       'userProfileUrl': instance.userProfileUrl,
+      'width': instance.imageWidth,
+      'height': instance.imageHeight,
       'createdAt': PostModel._dateTimeToTimestamp(instance.createdAt),
     };

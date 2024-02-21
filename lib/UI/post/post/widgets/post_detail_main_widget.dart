@@ -6,16 +6,17 @@ import 'package:travel_the_world/services/models/app_entity.dart';
 import 'package:travel_the_world/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/UI/post/post/widgets/like_animation_widget.dart';
-import 'package:travel_the_world/UI/shared_items/custom_bottom_sheet.dart';
-import 'package:travel_the_world/UI/shared_items/option_item.dart';
+import 'package:travel_the_world/UI/custom/custom_modal_item.dart';
+import 'package:travel_the_world/UI/custom/custom_option_item.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class PostDetailMainWidget extends StatefulWidget {
   final String postId;
-  const PostDetailMainWidget({Key? key, required this.postId})
-      : super(key: key);
+  const PostDetailMainWidget({super.key, required this.postId});
 
   @override
   State<PostDetailMainWidget> createState() => _PostDetailMainWidgetState();
@@ -63,13 +64,13 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
               return SafeArea(
                 child: Scaffold(
                   appBar: AppBar(
-                    backgroundColor: appBarColor,
-                    title: const Text(
+                    backgroundColor: getBackgroundColor(context),
+                    title: Text(
                       "Post Detail",
-                      style: TextStyle(color: primaryColor),
+                      style: Fonts.f18w700(color: AppColors.darkGreen),
                     ),
                   ),
-                  backgroundColor: backgroundColor,
+                  backgroundColor: getBackgroundColor(context),
                   body: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -93,9 +94,8 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                                   singlePost.userProfileUrl))),
                                   sizeHorizontal(10),
                                   Text(singlePost.username,
-                                      style: const TextStyle(
-                                          color: primaryColor,
-                                          fontWeight: FontWeight.bold)),
+                                      style: Fonts.f16w700(
+                                          color: AppColors.darkPurple)),
                                 ],
                               ),
                               if (singlePost.creatorUid == _currentUid)
@@ -105,7 +105,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                         BlocProvider.of<PostCubit>(context));
                                   },
                                   child: const Icon(Icons.more_vert_rounded,
-                                      color: primaryColor),
+                                      color: AppColors.black),
                                 )
                             ],
                           ),
@@ -133,7 +133,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                       color:
                                           singlePost.likes.contains(_currentUid)
                                               ? Colors.red
-                                              : primaryColor,
+                                              : AppColors.black,
                                     ),
                                   ),
                                   sizeHorizontal(10),
@@ -149,19 +149,19 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                     },
                                     child: const Icon(
                                       Icons.comment_rounded,
-                                      color: primaryColor,
+                                      color: AppColors.black,
                                     ),
                                   ),
                                   sizeHorizontal(10),
                                   const Icon(
                                     Icons.send,
-                                    color: primaryColor,
+                                    color: AppColors.black,
                                   ),
                                   sizeHorizontal(10),
                                 ],
                               ),
                               const Icon(Icons.bookmark_border_rounded,
-                                  color: primaryColor),
+                                  color: AppColors.black),
                             ],
                           ),
                           sizeVertical(10),
@@ -169,13 +169,12 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('${singlePost.likes.length} likes',
-                                  style: const TextStyle(
-                                      color: greenColor,
-                                      fontWeight: FontWeight.bold)),
+                                  style:
+                                      Fonts.f16w400(color: AppColors.darkRed)),
                               Text(
                                 DateFormat("dd/MMM/yyyy")
                                     .format(singlePost.createdAt!),
-                                style: const TextStyle(color: darkGreyColor),
+                                style: Fonts.f16w400(color: AppColors.darkRed),
                               ),
                             ],
                           ),
@@ -183,13 +182,12 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                           Row(
                             children: [
                               Text(singlePost.username,
-                                  style: const TextStyle(
-                                      color: primaryColor,
-                                      fontWeight: FontWeight.w600)),
+                                  style: Fonts.f16w700(
+                                      color: AppColors.darkPurple)),
                               sizeHorizontal(10),
                               Text(
                                 singlePost.description,
-                                style: const TextStyle(color: primaryColor),
+                                style: Fonts.f16w400(color: AppColors.black),
                               ),
                             ],
                           ),
@@ -204,7 +202,8 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                               },
                               child: Text(
                                 "View all ${singlePost.totalComments} comments",
-                                style: const TextStyle(color: darkGreyColor),
+                                style:
+                                    Fonts.f16w400(color: AppColors.darkGreen),
                               )),
                           sizeVertical(10),
                         ],
@@ -285,20 +284,20 @@ _openBottomModalSheet(
   }
 
   return showModalBottomSheet(
-      backgroundColor: Colors.transparent.withOpacity(0.5),
+      backgroundColor: getBackgroundColor(context),
       context: context,
       builder: (context) {
         return CustomModalItem(
           children: [
-            OptionItem(
+            CustomOptionItem(
               text: "Settings",
               onTap: () {},
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Delete Post",
               onTap: deletePost,
             ),
-            OptionItem(
+            CustomOptionItem(
               text: "Edit Post",
               onTap: () {
                 Navigator.pushNamed(context, PageRoutes.UpdatePostPage,

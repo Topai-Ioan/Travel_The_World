@@ -4,7 +4,7 @@ import 'package:travel_the_world/UI/post/post/widgets/post_detail_main_widget.da
 class PostDetailPage extends StatelessWidget {
   final String postId;
 
-  const PostDetailPage({Key? key, required this.postId}) : super(key: key);
+  const PostDetailPage({super.key, required this.postId});
 
   @override
   Widget build(BuildContext context) {

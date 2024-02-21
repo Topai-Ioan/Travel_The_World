@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -9,22 +9,23 @@ part 'get_single_post_state.dart';
 
 class GetSinglePostCubit extends Cubit<GetSinglePostState> {
   final PostServiceInterface postService;
+  StreamSubscription? _postSubscription;
   GetSinglePostCubit({required this.postService})
       : super(GetSinglePostInitial());
 
   Future<void> getSinglePost({required String postId}) async {
     emit(GetSinglePostLoading());
-    try {
-      final streamResponse = postService.getPost(postId: postId);
-      streamResponse.listen((posts) {
-        if (posts.isNotEmpty) {
-          emit(GetSinglePostLoaded(post: posts.first));
-        }
-      });
-    } on SocketException catch (_) {
-      emit(GetSinglePostFailure());
-    } catch (_) {
-      emit(GetSinglePostFailure());
-    }
+    _postSubscription = postService.getPost(postId: postId).listen(
+      (posts) {
+        emit(GetSinglePostLoaded(post: posts.first));
+      },
+      onError: (error) {
+        emit(GetSinglePostFailure());
+      },
+    );
+  }
+
+  Future<void> cancelSubscription() async {
+    await _postSubscription?.cancel();
   }
 }

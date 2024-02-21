@@ -4,7 +4,7 @@ import 'package:travel_the_world/services/models/posts/post_model.dart';
 
 class LikeListPage extends StatelessWidget {
   final PostModel post;
-  const LikeListPage({Key? key, required this.post}) : super(key: key);
+  const LikeListPage({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {

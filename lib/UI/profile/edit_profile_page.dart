@@ -10,12 +10,13 @@ import 'package:travel_the_world/UI/shared_items/custom_action_handler.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:travel_the_world/services/store_service.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class EditProfilePage extends StatefulWidget {
   final UserModel currentUser;
 
-  const EditProfilePage({Key? key, required this.currentUser})
-      : super(key: key);
+  const EditProfilePage({super.key, required this.currentUser});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -59,7 +60,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     final actionHandler = ActionCooldownHandler();
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: getBackgroundColor(context),
       appBar: buildAppBar(),
       body: buildBody(actionHandler),
     );
@@ -67,7 +68,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   AppBar buildAppBar() {
     return AppBar(
-      backgroundColor: appBarColor,
+      backgroundColor: getBackgroundColor(context),
       title: const Text(
         'Edit Profile',
       ),
@@ -86,9 +87,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           padding: const EdgeInsets.only(right: 10),
           child: GestureDetector(
             onTap: _updateUserProfileData,
-            child: const Icon(
+            child: Icon(
               Icons.done,
-              color: primaryColor,
+              color: getThemeColor(context, AppColors.white, AppColors.black),
               size: 32,
             ),
           ),
@@ -119,12 +120,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           Center(
             child: GestureDetector(
               onTap: selectImage,
-              child: const Text(
+              child: Text(
                 "Change profile photo",
-                style: TextStyle(
-                    color: blueColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400),
+                style: Fonts.f20w700(color: Colors.red),
               ),
             ),
           ),
@@ -181,7 +179,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       await _updateUserData();
     } else {
       final profileUrl = await StoreService()
-          .uploadImageProfilePicture(_image, "ProfileImages");
+          .uploadImageProfilePicture(_image!, "ProfileImages");
 
       await _updateUserProfilePictureAndData(profileUrl: profileUrl);
       await StoreService().syncProfilePicture(profileUrl);

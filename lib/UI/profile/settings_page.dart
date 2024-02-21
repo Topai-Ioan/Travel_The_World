@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:travel_the_world/themes/theme_provider.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

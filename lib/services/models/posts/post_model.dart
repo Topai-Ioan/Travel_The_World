@@ -11,8 +11,12 @@ class PostModel {
   final String description;
   final String postImageUrl;
   final List<String> likes;
+  final List<String> category;
+  final List<double> categoryConfidence;
   final num totalComments;
   final String userProfileUrl;
+  final double imageWidth;
+  final double imageHeight;
 
   @JsonKey(fromJson: _timestampToDateTime, toJson: _dateTimeToTimestamp)
   final DateTime? createdAt;
@@ -24,9 +28,13 @@ class PostModel {
     this.description = '',
     this.postImageUrl = '',
     this.likes = const [],
+    this.category = const [],
+    this.categoryConfidence = const [],
     this.totalComments = 0,
     this.userProfileUrl = '',
     this.createdAt,
+    this.imageWidth = 0,
+    this.imageHeight = 0,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) =>

@@ -7,9 +7,11 @@ import 'package:travel_the_world/cubit/credential/credential_cubit.dart';
 import 'package:travel_the_world/UI/main_screen/main_screen.dart';
 import 'package:travel_the_world/UI/credential/widgets/form_container_widget.dart';
 import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  const SignInPage({super.key});
 
   @override
   State<SignInPage> createState() => _SignInPageState();
@@ -18,48 +20,80 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  bool _isSigningIn = false;
+  final ValueNotifier<bool> _isSigningIn = ValueNotifier<bool>(false);
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _isSigningIn.dispose();
     super.dispose();
   }
 
+  void _signInUser() {
+    _isSigningIn.value = true;
+    BlocProvider.of<CredentialCubit>(context)
+        .signInUser(
+          email: _emailController.text,
+          password: _passwordController.text,
+        )
+        .then((value) => _clear());
+  }
+
+  _clear() {
+    setState(() {
+      _passwordController.clear();
+      _isSigningIn.value = false;
+    });
+  }
+
   @override
-  //todo duplicate code as in sign_up_page.dart, make something to hold this code and give _bodyWidget as a parameter
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
-        body: BlocConsumer<CredentialCubit, CredentialState>(
-          listener: (context, credentialState) {
-            if (credentialState is CredentialSuccess) {
-              BlocProvider.of<AuthCubit>(context).loggedIn();
-            }
-            if (credentialState is CredentialFailure) {
-              toast("Invalid credentials");
-            }
-          },
-          builder: (context, credentialState) {
-            if (credentialState is CredentialSuccess) {
-              return BlocBuilder<AuthCubit, AuthState>(
-                  builder: (context, authState) {
+      backgroundColor: getBackgroundColor(context),
+      body: BlocConsumer<CredentialCubit, CredentialState>(
+        listener: (context, credentialState) {
+          if (credentialState is CredentialSuccess) {
+            context.read<AuthCubit>().loggedIn();
+          }
+          if (credentialState is CredentialFailure) {
+            toast("Invalid credentials");
+          }
+        },
+        builder: (context, credentialState) {
+          if (credentialState is CredentialSuccess) {
+            return BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, authState) {
                 if (authState is Authenticated) {
                   return MainScreen(uid: authState.uid);
                 } else {
-                  return _bodyWidget();
+                  return BodyWidget(_emailController, _passwordController,
+                      _isSigningIn, _signInUser);
                 }
-              });
-            }
+              },
+            );
+          }
 
-            return _bodyWidget();
-          },
-        ));
+          return BodyWidget(
+              _emailController, _passwordController, _isSigningIn, _signInUser);
+        },
+      ),
+    );
   }
+}
 
-  _bodyWidget() {
+class BodyWidget extends StatelessWidget {
+  final TextEditingController _emailController;
+  final TextEditingController _passwordController;
+  final ValueNotifier<bool> _isSigningIn;
+  final VoidCallback _signInUser;
+
+  const BodyWidget(this._emailController, this._passwordController,
+      this._isSigningIn, this._signInUser,
+      {super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
@@ -86,46 +120,54 @@ class _SignInPageState extends State<SignInPage> {
           ),
           sizeVertical(15),
           ButtonContainerWidget(
-            color: blueColor,
+            textStyle: Fonts.f18w600(
+              color: AppColors.black,
+            ),
+            backgroundColor:
+                getThemeColor(context, AppColors.white, AppColors.black),
             text: "Sign In",
-            onTapListener: () {
-              _signInUser();
-            },
+            onTapListener: _signInUser,
           ),
           sizeVertical(10),
-          if (_isSigningIn)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Please wait",
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400)),
-                sizeHorizontal(10),
-                const CircularProgressIndicator()
-              ],
-            ),
+          ValueListenableBuilder<bool>(
+            valueListenable: _isSigningIn,
+            builder: (context, isSigningIn, child) {
+              if (isSigningIn) {
+                return Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Please wait",
+                          style: Fonts.f16w400(color: AppColors.black)),
+                      sizeHorizontal(10),
+                      const CircularProgressIndicator()
+                    ],
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
           Flexible(flex: 2, child: Container()),
           const Divider(
-            color: greenColor,
+            color: AppColors.black,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Don't have and account? ",
-                style: TextStyle(color: primaryColor),
+                style: Fonts.f16w400(color: AppColors.black),
               ),
               InkWell(
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
                       context, PageRoutes.SignUpPage, (route) => false);
                 },
-                child: const Text(
+                child: Text(
                   "Sign Up.",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: primaryColor),
+                  style: Fonts.f18w600(color: AppColors.black),
                 ),
               ),
             ],
@@ -133,21 +175,5 @@ class _SignInPageState extends State<SignInPage> {
         ],
       ),
     );
-  }
-
-  void _signInUser() {
-    _isSigningIn = true;
-    BlocProvider.of<CredentialCubit>(context)
-        .signInUser(
-            email: _emailController.text, password: _passwordController.text)
-        .then((value) => _clear());
-  }
-
-  _clear() {
-    setState(() {
-      _emailController.clear();
-      _passwordController.clear();
-      _isSigningIn = false;
-    });
   }
 }

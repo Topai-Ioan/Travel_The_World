@@ -137,7 +137,7 @@ dynamic routeBuilder(Widget child) {
 }
 
 class NoPageFound extends StatelessWidget {
-  const NoPageFound({Key? key}) : super(key: key);
+  const NoPageFound({super.key});
 
   @override
   Widget build(BuildContext context) {
