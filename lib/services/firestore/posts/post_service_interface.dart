@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 
@@ -13,4 +14,11 @@ abstract class PostServiceInterface {
   Future<void> createPost({required PostModel post});
   Stream<List<PostModel>> getPostsFromFollowedUsersInTheLast24h(
       {required UserModel currentUser});
+
+  Future<List<PostModel>> getMorePosts(
+      int pageSize, DocumentSnapshot startAfter);
+
+  DocumentReference? getPostReference(String postId);
+
+  Future<List<PostModel>> getFirstXPosts(int numberOfPosts);
 }

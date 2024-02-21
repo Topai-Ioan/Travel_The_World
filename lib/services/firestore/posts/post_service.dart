@@ -233,10 +233,45 @@ class PostService implements PostServiceInterface {
       if (lowercasecategory.isNotEmpty) 'category': lowercasecategory,
       if (post.categoryConfidence.isNotEmpty)
         'categoryConfidence': post.categoryConfidence,
-      if (post.width != 0) 'weight': post.width,
-      if (post.height != 0) 'height': post.height,
+      if (post.imageWidth != 0) 'weight': post.imageWidth,
+      if (post.imageHeight != 0) 'height': post.imageHeight,
     };
 
     return ref.update(data);
+  }
+
+  @override
+  Future<List<PostModel>> getMorePosts(
+      int pageSize, DocumentSnapshot startAfter) {
+    final ref = _db
+        .collection(FirebaseConstants.Posts)
+        .orderBy("createdAt", descending: true)
+        .startAfterDocument(startAfter)
+        .limit(pageSize);
+
+    return ref.get().then((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
+  }
+
+  @override
+  DocumentReference? getPostReference(String postId) {
+    return _db.collection(FirebaseConstants.Posts).doc(postId);
+  }
+
+  @override
+  Future<List<PostModel>> getFirstXPosts(int numberOfPosts) {
+    final ref = _db
+        .collection(FirebaseConstants.Posts)
+        .orderBy("createdAt", descending: true)
+        .limit(numberOfPosts);
+
+    return ref.get().then((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
   }
 }

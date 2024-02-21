@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:travel_the_world/services/firestore/posts/post_service_interface.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
@@ -123,5 +124,42 @@ class PostCubit extends Cubit<PostState> {
       await subscription.cancel();
     }
     _postSubscriptions.clear();
+  }
+
+  Future<List<PostModel>> getMorePosts(
+      int pageSize, DocumentSnapshot startAfter) async {
+    try {
+      List<PostModel> posts =
+          await postService.getMorePosts(pageSize, startAfter);
+      if (posts.isNotEmpty) {
+        emit(PostLoaded(posts: posts));
+      } else {
+        emit(PostEmpty());
+      }
+      return posts;
+    } catch (error) {
+      emit(PostFailure());
+      return [];
+    }
+  }
+
+  DocumentReference? getPostReference(String postId) {
+    return postService.getPostReference(postId);
+  }
+
+  Future<List<PostModel>> getFirstXPosts(int numberOfPosts) async {
+    emit(PostLoading());
+    try {
+      List<PostModel> posts = await postService.getFirstXPosts(numberOfPosts);
+      if (posts.isNotEmpty) {
+        emit(PostLoaded(posts: posts));
+      } else {
+        emit(PostEmpty());
+      }
+      return posts;
+    } catch (error) {
+      emit(PostFailure());
+      return [];
+    }
   }
 }

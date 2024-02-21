@@ -15,8 +15,8 @@ class PostModel {
   final List<double> categoryConfidence;
   final num totalComments;
   final String userProfileUrl;
-  final double width;
-  final double height;
+  final double imageWidth;
+  final double imageHeight;
 
   @JsonKey(fromJson: _timestampToDateTime, toJson: _dateTimeToTimestamp)
   final DateTime? createdAt;
@@ -33,8 +33,8 @@ class PostModel {
     this.totalComments = 0,
     this.userProfileUrl = '',
     this.createdAt,
-    this.width = 0,
-    this.height = 0,
+    this.imageWidth = 0,
+    this.imageHeight = 0,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) =>

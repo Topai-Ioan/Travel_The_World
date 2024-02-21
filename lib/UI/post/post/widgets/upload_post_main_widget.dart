@@ -412,8 +412,8 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
           postId: imageId,
           category: imageCategory,
           categoryConfidence: categoryConfidence,
-          height: height,
-          width: width,
+          imageHeight: height,
+          imageWidth: width,
         ),
       );
       _clear();
