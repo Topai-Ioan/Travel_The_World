@@ -47,7 +47,6 @@ dependencies:
   #Service Locator
   get_it: ^7.2.0
 
-  flutter_svg: ^2.0.7
   image_picker: ^1.0.1
   intl: ^0.19.0
   uuid: ^4.2.2
@@ -64,8 +63,6 @@ dependencies:
   toast: ^0.3.0
   image_cropper: ^5.0.0
   dotted_border: ^2.0.0+3
-  flutter_image_compress: ^2.1.0
-  firebase_in_app_messaging: ^0.7.3+7
   #use local storage
   shared_preferences: ^2.0.8
 
@@ -78,6 +75,7 @@ dependencies:
 
   infinite_scroll_pagination: ^4.0.0
   exif: ^3.3.0
+  geocoding: ^2.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

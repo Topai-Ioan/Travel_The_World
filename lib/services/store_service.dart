@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ImageUploadResult {
   final String imageId;
@@ -33,23 +32,7 @@ class StoreService {
     String childName,
   ) async {
     try {
-      img.Image? originalImage = img.decodeImage(file!.readAsBytesSync());
-      double originalWidth = (originalImage?.width ?? 0).toDouble();
-      double originalHeight = (originalImage?.height ?? 0).toDouble();
-      double aspectRatio = originalWidth / originalHeight;
-
-      int targetWidth = 400;
-      int targetHeight = (targetWidth / aspectRatio).round();
-      final result = await FlutterImageCompress.compressWithFile(
-        file.path,
-        quality: 75,
-        minHeight: targetHeight,
-        minWidth: targetWidth,
-      );
-      final compressedFile = File(file.path)
-        ..writeAsBytesSync(result!.toList());
-
-      img.Image? image = img.decodeImage(file.readAsBytesSync());
+      img.Image? image = img.decodeImage(file!.readAsBytesSync());
       double width = (image?.width ?? 0).toDouble();
       double height = (image?.height ?? 0).toDouble();
 
@@ -61,7 +44,7 @@ class StoreService {
       String id = const Uuid().v4();
       ref = ref.child(id);
 
-      final uploadTask = ref.putFile(compressedFile);
+      final uploadTask = ref.putFile(file);
 
       final imageUrl =
           await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
@@ -128,19 +111,12 @@ class StoreService {
     String childName,
   ) async {
     try {
-      final result = await FlutterImageCompress.compressWithFile(
-        file.path,
-        quality: 75,
-      );
-      final compressedFile = File(file.path)
-        ..writeAsBytesSync(result!.toList());
-
       Reference ref = firebaseStorage
           .ref()
           .child(childName)
           .child(firebaseAuth.currentUser!.uid);
 
-      final uploadTask = ref.putFile(compressedFile);
+      final uploadTask = ref.putFile(file);
 
       final imageUrl =
           (await uploadTask.whenComplete(() {})).ref.getDownloadURL();

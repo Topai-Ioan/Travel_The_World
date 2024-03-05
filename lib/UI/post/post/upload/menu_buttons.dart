@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/themes/app_colors.dart';
 
 class MenuButtons extends StatelessWidget {
@@ -8,8 +8,6 @@ class MenuButtons extends StatelessWidget {
   final Future<void> Function(XFile?) submitPost;
   final XFile? croppedFile;
   final ValueNotifier<bool> isUploading;
-  final double latitude;
-  final double longitude;
 
   const MenuButtons({
     super.key,
@@ -18,8 +16,6 @@ class MenuButtons extends StatelessWidget {
     required this.submitPost,
     required this.croppedFile,
     required this.isUploading,
-    required this.latitude,
-    required this.longitude,
   });
 
   @override
@@ -52,7 +48,6 @@ class MenuButtons extends StatelessWidget {
           ],
         ),
       ),
-      Text('Location: $latitude, $longitude'),
       if (isUploading.value)
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16.0),

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/cubit/credential/credential_cubit.dart';
@@ -96,10 +95,8 @@ class _SignUpPageState extends State<SignUpPage> {
         children: [
           Flexible(flex: 2, child: Container()),
           Center(
-            child: SvgPicture.asset(
-              "assets/images/logo.svg",
-              colorFilter:
-                  const ColorFilter.mode(Colors.green, BlendMode.srcIn),
+            child: Image.asset(
+              "assets/images/logo.png",
             ),
           ),
           sizeVertical(30),

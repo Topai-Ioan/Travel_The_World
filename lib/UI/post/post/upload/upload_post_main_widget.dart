@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:travel_the_world/UI/post/post/upload/get_location_response_model.dart';
 import 'package:travel_the_world/UI/post/post/upload/menu_buttons.dart';
 import 'package:travel_the_world/UI/post/post/upload/uploader_card.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
@@ -77,9 +79,9 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
         pickedFile: _pickedFile,
         descriptionController: _descriptionController,
         isUploading: _isUploading,
-        clear: _clear,
-        cropImage: _cropImage,
-        submitPost: _submitPost,
+        clear: () => _clear(),
+        cropImage: () => _cropImage(),
+        submitPost: (XFile? file) => _submitPost(_pickedFile),
         latitude: _latitude,
         longitudine: _longitude,
       );
@@ -93,7 +95,6 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     if (pickedFile == null) return;
 
     await getImageLabels(pickedFile);
-    await getMedataData(pickedFile);
 
     XFile? file = XFile(pickedFile.path);
     setState(() {
@@ -153,40 +154,59 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     }
   }
 
-  Future<void> getMedataData(XFile pickedFile) async {
-    final fileBytes = File(pickedFile.path).readAsBytesSync();
+  Future<GetLocationResponseModel> getLocation(XFile pickedFile) async {
+    final fileBytes = await pickedFile.readAsBytes();
     final data = await readExifFromBytes(fileBytes, details: false);
-
     if (data.isEmpty) {
-      return;
+      return GetLocationResponseModel(
+        country: "Unknown",
+        city: "Unknown",
+        lat: 0.0,
+        lon: 0.0,
+      );
+    }
+    final latitudeValue = data["GPS GPSLatitude"]?.values.toList();
+    final latitudeSignal = data['GPS GPSLatitudeRef']?.printable;
+    final longitudeValue = data['GPS GPSLongitude']?.values.toList();
+    final longitudeSignal = data['GPS GPSLongitudeRef']?.printable;
+    if (latitudeValue == null ||
+        latitudeSignal == null ||
+        longitudeValue == null ||
+        longitudeSignal == null) {
+      return GetLocationResponseModel(
+        country: "Unknown",
+        city: "Unknown",
+        lat: 0.0,
+        lon: 0.0,
+      );
     }
 
-    final latitudeValue = data['GPS GPSLatitude']!
-        .values
-        .toList()
-        .map<double>(
-            (item) => (item.numerator.toDouble() / item.denominator.toDouble()))
-        .toList();
-    final latitudeSignal = data['GPS GPSLatitudeRef']!.printable;
+    _latitude = convertRationalLatLon(latitudeValue, latitudeSignal);
+    _longitude = convertRationalLatLon(longitudeValue, longitudeSignal);
 
-    final longitudeValue = data['GPS GPSLongitude']!
-        .values
-        .toList()
-        .map<double>(
-            (item) => (item.numerator.toDouble() / item.denominator.toDouble()))
-        .toList();
-    final longitudeSignal = data['GPS GPSLongitudeRef']!.printable;
+    log("$_latitude : $_longitude");
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(_latitude, _longitude);
+    return GetLocationResponseModel(
+      country: placemarks[0].country.toString(),
+      city: placemarks[0].locality.toString(),
+      lat: _latitude,
+      lon: _longitude,
+    );
+  }
 
-    _latitude =
-        latitudeValue[0] + (latitudeValue[1] / 60) + (latitudeValue[2] / 3600);
+  double convertRationalLatLon(List<dynamic> values, String ref) {
+    double degrees = values[0].toDouble();
+    double minutes = values[1].toDouble();
+    double seconds = values[2].toDouble();
 
-    _longitude = longitudeValue[0] +
-        (longitudeValue[1] / 60) +
-        (longitudeValue[2] / 3600);
+    double latLong = degrees + (minutes / 60) + (seconds / 3600);
 
-    if (latitudeSignal == 'S') _latitude = -_latitude;
-    if (longitudeSignal == 'W') _longitude = -_longitude;
-    log("$_longitude: $_latitude");
+    if (ref == 'S' || ref == 'W') {
+      latLong = -latLong;
+    }
+
+    return latLong;
   }
 
   Future<void> _submitPost(XFile? file) async {
@@ -198,13 +218,16 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     ImageUploadResult imageInfo =
         await StoreService().uploadImagePost(File(file.path), "Posts");
 
-    String imageUrl = imageInfo.imageUrl;
-    String imageId = imageInfo.imageId;
-    double height = imageInfo.height;
-    double width = imageInfo.width;
+    GetLocationResponseModel locationInfo = await getLocation(file);
 
     _createPost(
-        imageUrl: imageUrl, imageId: imageId, height: height, width: width);
+      imageUrl: imageInfo.imageUrl,
+      imageId: imageInfo.imageId,
+      height: imageInfo.height,
+      width: imageInfo.width,
+    );
+
+    await File(file.path).delete();
     Future.delayed(const Duration(seconds: 2), () {});
   }
 
@@ -297,13 +320,12 @@ class ImageCard extends StatelessWidget {
             ),
             const SizedBox(height: 24.0),
             MenuButtons(
-                clear: clear,
-                cropImage: cropImage,
-                submitPost: submitPost,
-                croppedFile: croppedFile,
-                isUploading: isUploading,
-                latitude: latitude,
-                longitude: longitudine),
+              clear: clear,
+              cropImage: cropImage,
+              submitPost: submitPost,
+              croppedFile: croppedFile,
+              isUploading: isUploading,
+            ),
           ],
         ),
       ),
