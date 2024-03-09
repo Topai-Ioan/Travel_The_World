@@ -85,7 +85,7 @@ class _SingleUserProfileMainWidgetState
             buildUserInfo(singleUser),
             if (_currentUid != singleUser.uid)
               showFollowUnfollowButton(singleUser),
-            const Divider(height: 20, thickness: 5, color: AppColors.darkGreen),
+            const Divider(height: 20, thickness: 5, color: AppColors.darkOlive),
             buildUserPosts(),
           ],
         ),
@@ -154,7 +154,7 @@ class _SingleUserProfileMainWidgetState
       textStyle: Fonts.f18w600(
         color: singleUser.followers.contains(_currentUid)
             ? AppColors.purple.withOpacity(.4)
-            : AppColors.darkGreen,
+            : AppColors.darkOlive,
       ),
       text: singleUser.followers.contains(_currentUid) ? "UnFollow" : "Follow",
       onTapListener: () {

@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:travel_the_world/UI/post/post/upload/get_location_response_model.dart';
 import 'package:travel_the_world/UI/post/post/upload/menu_buttons.dart';
 import 'package:travel_the_world/UI/post/post/upload/uploader_card.dart';
+import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/UI/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
@@ -58,9 +59,9 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: getBackgroundColor(context),
-      appBar: const CustomAppBar(title: "Post Page"),
+      appBar: const CustomAppBar(),
       body: Container(
-        color: AppColors.black,
+        color: getBackgroundColor(context),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,7 +316,6 @@ class ImageCard extends StatelessWidget {
                 title: "Description",
                 controller: descriptionController,
                 hintText: "Write your description...",
-                fillColor: Colors.grey[800],
               ),
             ),
             const SizedBox(height: 24.0),
@@ -371,22 +371,30 @@ class ImageDisplay extends StatelessWidget {
 }
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  const CustomAppBar({super.key, required this.title});
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  const CustomAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      centerTitle: true,
-      elevation: 0,
-      title: Text(
-        title,
-        style: Fonts.f22w700(color: getTextColor(context)),
-      ),
       backgroundColor: getBackgroundColor(context),
+      surfaceTintColor: getBackgroundColor(context),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            "assets/images/logo.png",
+            height: 30,
+          ),
+          Text(
+            "Travel the world",
+            style: Fonts.f20w700(color: getTextColor(context)),
+          ),
+          sizeVertical(15),
+        ],
+      ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

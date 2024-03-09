@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class ProfileFormWidget extends StatelessWidget {
   final TextEditingController? controller;
@@ -7,13 +8,11 @@ class ProfileFormWidget extends StatelessWidget {
   //final TextStyle titleTextStyle;
   //final TextStyle hintTextStyle;
   final String? hintText;
-  final Color? fillColor;
   const ProfileFormWidget({
     super.key,
     this.title,
     this.controller,
     this.hintText,
-    this.fillColor = const Color.fromARGB(255, 23, 23, 23),
     //required this.titleTextStyle,
     //required this.hintTextStyle
   });
@@ -28,30 +27,38 @@ class ProfileFormWidget extends StatelessWidget {
           margin: const EdgeInsets.only(left: 8),
           child: Text(
             "$title",
-            style: const TextStyle(color: Colors.red, fontSize: 16),
+            style: TextStyle(
+                color: getThemeColor(context, AppColors.black, AppColors.white),
+                fontSize: 16),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(6.0),
           child: TextFormField(
             controller: controller,
-            style: const TextStyle(color: Colors.red),
+            style: TextStyle(
+              color:
+                  getThemeColor(context, AppColors.darkOlive, AppColors.olive),
+            ),
             decoration: InputDecoration(
-              labelStyle: const TextStyle(color: Colors.red),
+              labelStyle: const TextStyle(color: AppColors.darkOlive),
               border: InputBorder.none,
               filled: true,
               hintText: "$hintText",
-              fillColor: fillColor,
-              hintStyle: const TextStyle(color: Colors.grey),
+              fillColor:
+                  getThemeColor(context, AppColors.olive, AppColors.darkOlive),
+              hintStyle: TextStyle(
+                color: getThemeColor(
+                    context, AppColors.darkOlive, AppColors.olive),
+              ),
             ),
           ),
         ),
-        Container(
-          width: double.infinity,
-          height: 1,
-          color: Colors.grey[300],
+        Divider(
+          color: getThemeColor(context, AppColors.darkOlive, AppColors.olive),
+          thickness: 1,
         ),
-        sizeVertical(10),
+        sizeVertical(5),
       ],
     );
   }

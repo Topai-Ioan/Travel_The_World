@@ -101,6 +101,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: getBackgroundColor(context),
+      surfaceTintColor: getBackgroundColor(context),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -171,7 +172,7 @@ class PostLoadingWidget extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: LinearProgressIndicator(
-            color: AppColors.darkGreen,
+            color: AppColors.darkOlive,
           ),
         ),
       ],

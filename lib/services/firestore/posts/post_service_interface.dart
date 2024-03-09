@@ -21,4 +21,6 @@ abstract class PostServiceInterface {
   DocumentReference? getPostReference(String postId);
 
   Future<List<PostModel>> getFirstXPosts(int numberOfPosts);
+
+  Future<List<PostModel>> getFirstXPostsFromUser(int numberOfPosts, String uid);
 }

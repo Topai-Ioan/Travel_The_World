@@ -95,7 +95,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
       children: [
         Text(
           DateFormat("dd/MMM/yyy").format(widget.comment.createdAt!),
-          style: Fonts.f12w400(color: AppColors.darkGreen),
+          style: Fonts.f12w400(color: AppColors.darkOlive),
         ),
         sizeHorizontal(15),
         GestureDetector(

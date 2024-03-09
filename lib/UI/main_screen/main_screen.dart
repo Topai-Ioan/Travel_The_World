@@ -92,7 +92,7 @@ class CustomCupertinoTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabBar(
-      backgroundColor: getBackgroundColor(context),
+      backgroundColor: AppColors.darkOlive,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home_rounded),
@@ -117,8 +117,8 @@ class CustomCupertinoTabBar extends StatelessWidget {
       ],
       currentIndex: currentIndex,
       onTap: onTap,
-      activeColor: AppColors.green,
-      inactiveColor: AppColors.darkGreen,
+      activeColor: AppColors.olive,
+      inactiveColor: AppColors.white,
     );
   }
 }

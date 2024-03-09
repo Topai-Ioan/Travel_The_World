@@ -50,7 +50,7 @@ class ButtonContainerWidgetState extends State<ButtonContainerWidget> {
         height: 40,
         decoration: BoxDecoration(
           color: widget.backgroundColor,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
           child: Text(

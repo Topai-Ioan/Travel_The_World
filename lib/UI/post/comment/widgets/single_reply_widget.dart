@@ -95,7 +95,7 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
                         ),
                         Text(
                           "${widget.reply.likes.length} likes",
-                          style: Fonts.f14w400(color: AppColors.darkGreen),
+                          style: Fonts.f14w400(color: AppColors.darkOlive),
                         ),
                       ],
                     ),

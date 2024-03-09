@@ -7,6 +7,7 @@ import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/UI/post/post/widgets/like_animation_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 
 class SinglePostCardWidget extends StatefulWidget {
   final PostModel post;
@@ -54,7 +55,7 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
             currentUserId: widget.currentUserId,
           ),
           PostDescription(description: widget.post.description),
-          const Divider(color: Color.fromARGB(255, 40, 92, 42), thickness: 2),
+          const Divider(color: AppColors.darkOlive, thickness: 3),
         ],
       ),
     );

@@ -67,7 +67,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                     backgroundColor: getBackgroundColor(context),
                     title: Text(
                       "Post Detail",
-                      style: Fonts.f18w700(color: AppColors.darkGreen),
+                      style: Fonts.f18w700(color: AppColors.darkOlive),
                     ),
                   ),
                   backgroundColor: getBackgroundColor(context),
@@ -203,7 +203,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                               child: Text(
                                 "View all ${singlePost.totalComments} comments",
                                 style:
-                                    Fonts.f16w400(color: AppColors.darkGreen),
+                                    Fonts.f16w400(color: AppColors.darkOlive),
                               )),
                           sizeVertical(10),
                         ],

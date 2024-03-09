@@ -80,7 +80,7 @@ class UploadButton extends StatelessWidget {
           ignoring: true,
           child: FloatingActionButton(
             onPressed: () {},
-            backgroundColor: AppColors.darkGreen,
+            backgroundColor: AppColors.darkOlive,
             tooltip: 'Upload',
             child: const Icon(Icons.upload),
           ));
@@ -90,7 +90,7 @@ class UploadButton extends StatelessWidget {
       onPressed: () {
         submitPost(croppedFile);
       },
-      backgroundColor: AppColors.darkGreen,
+      backgroundColor: AppColors.darkOlive,
       tooltip: 'Upload',
       child: const Icon(Icons.upload),
     );

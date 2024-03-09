@@ -162,4 +162,22 @@ class PostCubit extends Cubit<PostState> {
       return [];
     }
   }
+
+  Future<List<PostModel>> getFirstXPostsFromUser(
+      int numberOfPosts, String uid) async {
+    emit(PostLoading());
+    try {
+      List<PostModel> posts =
+          await postService.getFirstXPostsFromUser(numberOfPosts, uid);
+      if (posts.isNotEmpty) {
+        emit(PostLoaded(posts: posts));
+      } else {
+        emit(PostEmpty());
+      }
+      return posts;
+    } catch (error) {
+      emit(PostFailure());
+      return [];
+    }
+  }
 }

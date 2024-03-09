@@ -20,7 +20,7 @@ class UploaderCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.0),
           ),
           child: Container(
-            color: Colors.grey[900],
+            color: AppColors.olive,
             child: SizedBox(
               width: 320.0,
               height: 300.0,
@@ -42,16 +42,16 @@ class UploaderCard extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.image,
-                                color: AppColors.black,
+                                color: getThemeColor(context,
+                                    AppColors.darkOlive, AppColors.darkOlive),
                                 size: 80.0,
                               ),
                               const SizedBox(height: 24.0),
                               Text(
                                 'Select an image to start',
-                                style:
-                                    Fonts.f16w400(color: AppColors.darkGreen),
+                                style: Fonts.f16w400(color: AppColors.black),
                               )
                             ],
                           ),
@@ -69,7 +69,7 @@ class UploaderCard extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: ButtonContainerWidget(
                               text: "Select Image",
-                              backgroundColor: AppColors.darkGreen,
+                              backgroundColor: AppColors.darkOlive,
                               textStyle: Fonts.f16w400(
                                 color: AppColors.black,
                               ),
@@ -86,7 +86,7 @@ class UploaderCard extends StatelessWidget {
                               textStyle: Fonts.f16w400(
                                 color: AppColors.black,
                               ),
-                              backgroundColor: AppColors.darkGreen,
+                              backgroundColor: AppColors.darkOlive,
                               onTapListener: () {
                                 pickImage(ImageSource.camera);
                               },

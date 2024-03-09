@@ -89,7 +89,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             onTap: _updateUserProfileData,
             child: Icon(
               Icons.done,
-              color: getThemeColor(context, AppColors.white, AppColors.black),
+              color: getThemeColor(context, AppColors.black, AppColors.white),
               size: 32,
             ),
           ),
@@ -122,7 +122,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onTap: selectImage,
               child: Text(
                 "Change profile photo",
-                style: Fonts.f20w700(color: Colors.red),
+                style: Fonts.f18w600(color: AppColors.darkOlive),
               ),
             ),
           ),

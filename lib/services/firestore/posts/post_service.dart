@@ -274,4 +274,20 @@ class PostService implements PostServiceInterface {
       }).toList();
     });
   }
+
+  @override
+  Future<List<PostModel>> getFirstXPostsFromUser(
+      int numberOfPosts, String uid) {
+    final ref = _db
+        .collection(FirebaseConstants.Posts)
+        .where("creatorUid", isEqualTo: uid)
+        .orderBy("createdAt", descending: true)
+        .limit(numberOfPosts);
+
+    return ref.get().then((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return PostModel.fromJson(doc.data());
+      }).toList();
+    });
+  }
 }

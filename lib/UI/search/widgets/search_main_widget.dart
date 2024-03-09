@@ -68,21 +68,17 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: getBackgroundColor(context),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SearchBarWidget(
-                controller: _searchController, focusNode: _searchFocusNode),
-            _searchController.text.isNotEmpty
-                ? CategorySearchResultsWidget(
-                    filterText: _searchController.text.toLowerCase(),
-                    showUsersNotifier: _showUsersNotifier,
-                  )
-                : const GetAllPosts()
-          ],
-        ),
+      body: Column(
+        children: [
+          SearchBarWidget(
+              controller: _searchController, focusNode: _searchFocusNode),
+          _searchController.text.isNotEmpty
+              ? CategorySearchResultsWidget(
+                  filterText: _searchController.text.toLowerCase(),
+                  showUsersNotifier: _showUsersNotifier,
+                )
+              : const GetAllPosts()
+        ],
       ),
     );
   }
