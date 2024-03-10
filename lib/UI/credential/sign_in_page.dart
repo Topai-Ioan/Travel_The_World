@@ -118,7 +118,7 @@ class BodyWidget extends StatelessWidget {
           sizeVertical(15),
           ButtonContainerWidget(
             textStyle: Fonts.f18w600(
-              color: AppColors.black,
+              color: getTextColor(context),
             ),
             backgroundColor:
                 getThemeColor(context, AppColors.white, AppColors.black),
@@ -148,14 +148,15 @@ class BodyWidget extends StatelessWidget {
           ),
           Flexible(flex: 2, child: Container()),
           const Divider(
-            color: AppColors.black,
+            thickness: 3,
+            color: AppColors.darkOlive,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Don't have and account? ",
-                style: Fonts.f16w400(color: AppColors.black),
+                "Don't have an account? ",
+                style: Fonts.f16w400(color: getTextColor(context)),
               ),
               InkWell(
                 onTap: () {
@@ -164,7 +165,7 @@ class BodyWidget extends StatelessWidget {
                 },
                 child: Text(
                   "Sign Up.",
-                  style: Fonts.f18w600(color: AppColors.black),
+                  style: Fonts.f18w600(color: getTextColor(context)),
                 ),
               ),
             ],

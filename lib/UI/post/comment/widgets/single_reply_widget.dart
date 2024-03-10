@@ -91,7 +91,7 @@ class _SingleReplyWidgetState extends State<SingleReplyWidget> {
                         Text(
                           DateFormat("dd/MMM/yyy")
                               .format(widget.reply.createdAt!),
-                          style: Fonts.f14w400(color: AppColors.darkPurple),
+                          style: Fonts.f14w400(color: AppColors.red),
                         ),
                         Text(
                           "${widget.reply.likes.length} likes",

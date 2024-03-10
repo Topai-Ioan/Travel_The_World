@@ -10,6 +10,7 @@ import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class SearchMainWidget extends StatefulWidget {
   const SearchMainWidget({super.key});
@@ -109,9 +110,9 @@ class GetFilteredPosts extends StatelessWidget {
               final posts = postState.posts;
               return PostDisplayWidget(posts: posts);
             }
-            return const Text(
+            return Text(
               'No data found!',
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: getTextColor(context)),
             );
           },
         ),
@@ -142,9 +143,9 @@ class GetAllPosts extends StatelessWidget {
               final posts = postState.posts;
               return PostDisplayWidget(posts: posts);
             }
-            return const Text(
+            return Text(
               'No data found!',
-              style: TextStyle(color: Colors.green),
+              style: TextStyle(color: getTextColor(context)),
             );
           },
         ),
@@ -181,9 +182,9 @@ class _GetFilteredUsersState extends State<GetFilteredUsers> {
         if (state is UsersLoaded) {
           final users = state.users;
           if (users.isEmpty) {
-            return const Center(
-              child:
-                  Text('No users found', style: TextStyle(color: Colors.red)),
+            return Center(
+              child: Text('No users found!',
+                  style: TextStyle(color: getTextColor(context))),
             );
           }
           return Expanded(
@@ -216,10 +217,8 @@ class _GetFilteredUsersState extends State<GetFilteredUsers> {
                       const SizedBox(width: 10),
                       Text(
                         user.username,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                        style: Fonts.f14w600(
+                          color: getTextColor(context),
                         ),
                       )
                     ],

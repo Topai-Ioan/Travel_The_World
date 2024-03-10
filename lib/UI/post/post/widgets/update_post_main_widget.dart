@@ -9,6 +9,7 @@ import 'package:travel_the_world/UI/shared_items/custom_action_handler.dart';
 import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class UpdatePostMainWidget extends StatefulWidget {
   final PostModel post;
@@ -44,7 +45,10 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
       backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
         backgroundColor: getBackgroundColor(context),
-        title: const Text("EditPost"),
+        title: Text(
+          "Edit Post",
+          style: Fonts.f18w700(color: getTextColor(context)),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),

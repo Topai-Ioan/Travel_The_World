@@ -34,13 +34,17 @@ class _EditCommentMainWidgetState extends State<EditCommentMainWidget> {
       backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
         backgroundColor: getBackgroundColor(context),
-        title: const Text("Edit Comment"),
+        title: Text(
+          "Edit Comment",
+          style: Fonts.f18w700(color: getTextColor(context)),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
         child: Column(
           children: [
             ProfileFormWidget(
+              hintText: "Comment",
               title: "Comment",
               controller: _descriptionController,
             ),

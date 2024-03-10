@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/themes/app_colors.dart';
 import 'package:travel_the_world/themes/app_fonts.dart';
 
 class CustomCommentSection extends StatelessWidget {
@@ -22,7 +23,7 @@ class CustomCommentSection extends StatelessWidget {
       width: double.infinity,
       height: 55,
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: getThemeColor(context, AppColors.olive, AppColors.darkOlive),
         borderRadius: BorderRadius.circular(12.0),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -31,10 +32,14 @@ class CustomCommentSection extends StatelessWidget {
           Expanded(
             child: TextFormField(
               controller: descriptionController,
-              style: Fonts.f16w400(color: Colors.white),
+              style: Fonts.f16w400(
+                  color: getThemeColor(
+                      context, AppColors.darkOlive, AppColors.olive)),
               decoration: InputDecoration(
                 hintText: hintText,
-                hintStyle: Fonts.f14w400(color: Colors.white),
+                hintStyle: Fonts.f14w400(
+                    color: getThemeColor(
+                        context, AppColors.darkOlive, AppColors.olive)),
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),
@@ -49,9 +54,11 @@ class CustomCommentSection extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
               ),
-              child: const Text(
+              child: Text(
                 "Post",
-                style: TextStyle(fontSize: 15, color: Colors.white),
+                style: Fonts.f16w600(
+                    color: getThemeColor(
+                        context, AppColors.darkOlive, AppColors.olive)),
               ),
             ),
           ),

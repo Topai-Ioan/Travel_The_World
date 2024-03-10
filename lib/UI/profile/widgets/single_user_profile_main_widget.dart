@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_the_world/UI/main_screen/main_screen.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
+import 'package:travel_the_world/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/cubit/user/user_cubit.dart';
 import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
@@ -25,11 +27,34 @@ class _SingleUserProfileMainWidgetState
     extends State<SingleUserProfileMainWidget> {
   String _currentUid = "";
   bool _dataLoaded = false;
+  int _currentIndex = 0;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<GetSingleUserCubit>(context)
+        .getSingleUser(uid: widget.otherUserId);
+
+    _pageController = PageController();
+
     loadData();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _navigationTapped(int index) {
+    _pageController.jumpToPage(index);
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   Future<void> loadData() async {
@@ -60,9 +85,13 @@ class _SingleUserProfileMainWidgetState
             appBar: AppBar(
               backgroundColor: getBackgroundColor(context),
               title: Text(singleUser.username,
-                  style: Fonts.f20w600(color: AppColors.darkPurple)),
+                  style: Fonts.f20w600(color: getTextColor(context))),
             ),
             body: buildProfileContent(singleUser),
+            bottomNavigationBar: CustomCupertinoTabBar(
+              currentIndex: _currentIndex,
+              onTap: _navigationTapped,
+            ),
           );
         }
         return Center(
@@ -85,7 +114,6 @@ class _SingleUserProfileMainWidgetState
             buildUserInfo(singleUser),
             if (_currentUid != singleUser.uid)
               showFollowUnfollowButton(singleUser),
-            const Divider(height: 20, thickness: 5, color: AppColors.darkOlive),
             buildUserPosts(),
           ],
         ),
@@ -144,26 +172,34 @@ class _SingleUserProfileMainWidgetState
                 color:
                     getThemeColor(context, AppColors.black, AppColors.white))),
         sizeVertical(7),
-        Text(label, style: Fonts.f16w400(color: Colors.red)),
+        Text(label,
+            style: Fonts.f16w400(
+                color: getThemeColor(
+                    context, AppColors.darkOlive, AppColors.olive))),
       ],
     );
   }
 
   Widget showFollowUnfollowButton(UserModel singleUser) {
-    return ButtonContainerWidget(
-      textStyle: Fonts.f18w600(
-        color: singleUser.followers.contains(_currentUid)
-            ? AppColors.purple.withOpacity(.4)
-            : AppColors.darkOlive,
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: ButtonContainerWidget(
+        backgroundColor: AppColors.darkOlive,
+        textStyle: Fonts.f18w600(
+          color: singleUser.followers.contains(_currentUid)
+              ? AppColors.olive
+              : AppColors.white,
+        ),
+        text:
+            singleUser.followers.contains(_currentUid) ? "Unfollow" : "Follow",
+        onTapListener: () {
+          BlocProvider.of<UserCubit>(context).followUnFollowUser(
+            user: UserModel(
+              uid: widget.otherUserId,
+            ),
+          );
+        },
       ),
-      text: singleUser.followers.contains(_currentUid) ? "UnFollow" : "Follow",
-      onTapListener: () {
-        BlocProvider.of<UserCubit>(context).followUnFollowUser(
-          user: UserModel(
-            uid: widget.otherUserId,
-          ),
-        );
-      },
     );
   }
 

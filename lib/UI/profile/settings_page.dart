@@ -17,7 +17,6 @@ class SettingsPage extends StatelessWidget {
           children: [
             Text('This is the Settings Page!'),
             SizedBox(height: 20),
-            // Add your settings widgets here
             ThemeButton(),
           ],
         ),
@@ -33,7 +32,6 @@ class ThemeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // Show a pop-up with theme options
         showThemeDialog(context);
       },
       child: Text(

@@ -114,9 +114,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   bottom: -15,
                   child: IconButton(
                     onPressed: selectImage,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.add_a_photo,
-                      color: AppColors.black,
+                      color: getTextColor(context),
                     ),
                   ),
                 ),
@@ -142,7 +142,7 @@ class _SignUpPageState extends State<SignUpPage> {
           sizeVertical(15),
           ButtonContainerWidget(
             textStyle: Fonts.f18w600(
-              color: AppColors.black,
+              color: getTextColor(context),
             ),
             backgroundColor: getBackgroundColor(context),
             text: "Sign Up",
@@ -163,14 +163,15 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           Flexible(flex: 2, child: Container()),
           const Divider(
-            color: AppColors.black,
+            thickness: 3,
+            color: AppColors.darkOlive,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "Already have and account? ",
-                style: Fonts.f16w400(color: AppColors.black),
+                style: Fonts.f16w400(color: getTextColor(context)),
               ),
               InkWell(
                 onTap: () {
@@ -180,7 +181,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Text(
                   "Sign In.",
                   style: Fonts.f18w600(
-                    color: AppColors.black,
+                    color: getTextColor(context),
                   ),
                 ),
               ),

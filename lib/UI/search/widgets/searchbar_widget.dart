@@ -16,21 +16,26 @@ class SearchBarWidget extends StatelessWidget {
         width: double.infinity,
         height: 45,
         decoration: BoxDecoration(
-          color: AppColors.olive,
+          color: getThemeColor(context, AppColors.olive, AppColors.darkOlive),
           borderRadius: BorderRadius.circular(15),
         ),
         child: TextFormField(
           focusNode: focusNode,
           controller: controller,
-          style: Fonts.f16w400(color: getTextColor(context)),
+          style: Fonts.f16w400(
+            color: getThemeColor(context, AppColors.darkOlive, AppColors.olive),
+          ),
           decoration: InputDecoration(
             border: InputBorder.none,
             prefixIcon: Icon(
               Icons.search,
-              color: getTextColor(context),
+              color:
+                  getThemeColor(context, AppColors.darkOlive, AppColors.olive),
             ),
             hintText: "Search",
-            hintStyle: Fonts.f16w400(color: getTextColor(context)),
+            hintStyle: Fonts.f16w400(
+                color: getThemeColor(
+                    context, AppColors.darkOlive, AppColors.olive)),
           ),
         ),
       ),

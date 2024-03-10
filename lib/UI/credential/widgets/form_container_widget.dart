@@ -41,7 +41,8 @@ class FormContainerWidgetState extends State<FormContainerWidget> {
       width: double.infinity,
       child: TextFormField(
         style: Fonts.f16w400(
-            color: getThemeColor(context, AppColors.white, AppColors.black)),
+            color:
+                getThemeColor(context, AppColors.darkOlive, AppColors.olive)),
         controller: widget.controller,
         keyboardType: widget.inputType,
         key: widget.fieldKey,
@@ -50,14 +51,20 @@ class FormContainerWidgetState extends State<FormContainerWidget> {
         validator: widget.validator,
         onFieldSubmitted: widget.onFieldSubmitted,
         decoration: InputDecoration(
-          fillColor: AppColors.black,
+          fillColor:
+              getThemeColor(context, AppColors.olive, AppColors.darkOlive),
           border: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,
           ),
           filled: true,
           hintText: widget.hintText,
-          hintStyle: Fonts.f16w400(color: AppColors.black.withOpacity(0.5)),
+          hintStyle: Fonts.f16w400(
+              color: getThemeColor(
+            context,
+            AppColors.darkOlive,
+            AppColors.olive,
+          )),
           suffixIcon: PasswordVisibilityIcon(
             obscureText: _obscureText,
             isPasswordField: widget.isPasswordField,
@@ -92,7 +99,7 @@ class PasswordVisibilityIcon extends StatelessWidget {
         onTap: onTap,
         child: Icon(
           obscureText ? Icons.visibility_off : Icons.visibility,
-          color: obscureText ? AppColors.black : AppColors.black,
+          color: obscureText ? AppColors.black : AppColors.white,
         ),
       );
     } else {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -16,15 +17,15 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: getBackgroundColor(context),
+        backgroundColor:
+            getThemeColor(context, AppColors.darkOlive, AppColors.olive),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
+        style: Fonts.f14w400(
+          color: getThemeColor(context, AppColors.white, AppColors.black),
         ),
       ),
     );

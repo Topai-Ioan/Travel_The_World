@@ -273,7 +273,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required UserModel user}) {
     return showModalBottomSheet(
-        backgroundColor: getBackgroundColor(context),
+        backgroundColor: AppColors.transparent,
         context: context,
         builder: (context) {
           return CustomModalItem(

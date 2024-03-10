@@ -61,11 +61,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
       children: [
         Text(
           widget.comment.username,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          style: Fonts.f14w500(color: getTextColor(context)),
         ),
         GestureDetector(
           onTap: widget.onLikeClickListener,
@@ -76,7 +72,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
             size: 20,
             color: widget.comment.likes.contains(_currentUid)
                 ? Colors.red
-                : AppColors.black,
+                : getTextColor(context),
           ),
         ),
       ],
@@ -86,7 +82,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
   Widget buildCommentText() {
     return Text(
       widget.comment.description,
-      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+      style: Fonts.f14w400(color: getTextColor(context)),
     );
   }
 
@@ -106,7 +102,7 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
           },
           child: Text(
             "Reply",
-            style: Fonts.f12w400(color: AppColors.darkRed),
+            style: Fonts.f12w400(color: AppColors.darkOlive),
           ),
         ),
         sizeHorizontal(15),
@@ -130,13 +126,13 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
             _showReplies && widget.comment.totalReplies != 0
                 ? "Hide Replies"
                 : "View ${widget.comment.totalReplies} Replies",
-            style: Fonts.f12w400(color: AppColors.darkRed),
+            style: Fonts.f12w400(color: AppColors.darkOlive),
           ),
         ),
         const Spacer(),
         Text(
           "${widget.comment.likes.length} Likes",
-          style: Fonts.f12w400(color: AppColors.darkRed),
+          style: Fonts.f12w400(color: AppColors.darkOlive),
         ),
       ],
     );
@@ -195,7 +191,9 @@ class _SingleCommentWidgetState extends State<SingleCommentWidget> {
               height: 40,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: profileWidget(imageUrl: widget.comment.userProfileUrl),
+                child: profileWidget(
+                    boxFit: BoxFit.cover,
+                    imageUrl: widget.comment.userProfileUrl),
               ),
             ),
             sizeVertical(10),

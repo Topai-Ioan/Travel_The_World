@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:travel_the_world/UI/main_screen/main_screen.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/services/models/app_entity.dart';
 import 'package:travel_the_world/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
@@ -67,9 +68,11 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                     backgroundColor: getBackgroundColor(context),
                     title: Text(
                       "Post Detail",
-                      style: Fonts.f18w700(color: AppColors.darkOlive),
+                      style: Fonts.f18w700(color: getTextColor(context)),
                     ),
                   ),
+                  bottomNavigationBar:
+                      CustomCupertinoTabBar(currentIndex: 0, onTap: (index) {}),
                   backgroundColor: getBackgroundColor(context),
                   body: SingleChildScrollView(
                     child: Padding(
@@ -90,12 +93,21 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                           borderRadius:
                                               BorderRadius.circular(15),
                                           child: profileWidget(
+                                              boxFit: BoxFit.cover,
                                               imageUrl:
                                                   singlePost.userProfileUrl))),
                                   sizeHorizontal(10),
                                   Text(singlePost.username,
                                       style: Fonts.f16w700(
-                                          color: AppColors.darkPurple)),
+                                          color: getTextColor(context))),
+                                  sizeHorizontal(10),
+                                  Text(
+                                    DateFormat("dd/MMM/yyyy")
+                                        .format(singlePost.createdAt!),
+                                    style: Fonts.f14w400(
+                                        color: getTextColor(context)
+                                            .withOpacity(0.8)),
+                                  ),
                                 ],
                               ),
                               if (singlePost.creatorUid == _currentUid)
@@ -104,8 +116,10 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                     _openBottomModalSheet(context, singlePost,
                                         BlocProvider.of<PostCubit>(context));
                                   },
-                                  child: const Icon(Icons.more_vert_rounded,
-                                      color: AppColors.black),
+                                  child: Icon(
+                                    Icons.more_vert_rounded,
+                                    color: getTextColor(context),
+                                  ),
                                 )
                             ],
                           ),
@@ -133,7 +147,7 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                       color:
                                           singlePost.likes.contains(_currentUid)
                                               ? Colors.red
-                                              : AppColors.black,
+                                              : getTextColor(context),
                                     ),
                                   ),
                                   sizeHorizontal(10),
@@ -147,49 +161,29 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                                             postId: singlePost.postId),
                                       );
                                     },
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.comment_rounded,
-                                      color: AppColors.black,
+                                      color: getTextColor(context),
                                     ),
                                   ),
                                   sizeHorizontal(10),
-                                  const Icon(
+                                  Icon(
                                     Icons.send,
-                                    color: AppColors.black,
+                                    color: getTextColor(context),
                                   ),
                                   sizeHorizontal(10),
                                 ],
                               ),
-                              const Icon(Icons.bookmark_border_rounded,
-                                  color: AppColors.black),
-                            ],
-                          ),
-                          sizeVertical(10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('${singlePost.likes.length} likes',
-                                  style:
-                                      Fonts.f16w400(color: AppColors.darkRed)),
-                              Text(
-                                DateFormat("dd/MMM/yyyy")
-                                    .format(singlePost.createdAt!),
-                                style: Fonts.f16w400(color: AppColors.darkRed),
+                              Icon(
+                                Icons.bookmark_border_rounded,
+                                color: getTextColor(context),
                               ),
                             ],
                           ),
                           sizeVertical(10),
-                          Row(
-                            children: [
-                              Text(singlePost.username,
-                                  style: Fonts.f16w700(
-                                      color: AppColors.darkPurple)),
-                              sizeHorizontal(10),
-                              Text(
-                                singlePost.description,
-                                style: Fonts.f16w400(color: AppColors.black),
-                              ),
-                            ],
+                          Text(
+                            singlePost.description,
+                            style: Fonts.f16w400(color: getTextColor(context)),
                           ),
                           sizeVertical(10),
                           GestureDetector(
@@ -202,8 +196,11 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
                               },
                               child: Text(
                                 "View all ${singlePost.totalComments} comments",
-                                style:
-                                    Fonts.f16w400(color: AppColors.darkOlive),
+                                style: Fonts.f16w400(
+                                    color: getThemeColor(
+                                        context,
+                                        AppColors.darkOlive,
+                                        AppColors.darkOlive)),
                               )),
                           sizeVertical(10),
                         ],

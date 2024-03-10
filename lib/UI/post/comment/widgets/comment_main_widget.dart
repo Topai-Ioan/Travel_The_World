@@ -17,6 +17,7 @@ import 'package:travel_the_world/services/models/comments/comment_model.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
 import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/themes/app_fonts.dart';
 import 'package:uuid/uuid.dart';
 import 'package:travel_the_world/injection_container.dart' as di;
 
@@ -55,9 +56,13 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
         backgroundColor: getBackgroundColor(context),
-        title: const Text("Comments"),
+        title: Text(
+          "Comments",
+          style: Fonts.f18w700(color: getTextColor(context)),
+        ),
       ),
       body: buildCommentContent(),
     );
@@ -113,9 +118,9 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
             ],
           ),
         ),
-        Divider(
-          thickness: 1,
-          color: Theme.of(context).colorScheme.tertiary,
+        const Divider(
+          thickness: 3,
+          color: AppColors.darkOlive,
         ),
         sizeVertical(10),
         Expanded(
@@ -173,19 +178,14 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
               sizeHorizontal(10),
               Text(
                 singlePost.username,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                style: Fonts.f16w600(color: getTextColor(context)),
               ),
             ],
           ),
           sizeVertical(10),
           Text(
             singlePost.description,
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.primary, fontSize: 16),
+            style: Fonts.f16w400(color: getTextColor(context)),
           ),
         ],
       ),
@@ -216,7 +216,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   _openBottomModalSheet(
       {required BuildContext context, required CommentModel comment}) {
     showModalBottomSheet(
-      backgroundColor: getBackgroundColor(context),
+      backgroundColor: AppColors.transparent,
       context: context,
       builder: (context) {
         return CustomModalItem(

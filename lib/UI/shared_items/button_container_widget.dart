@@ -55,10 +55,7 @@ class ButtonContainerWidgetState extends State<ButtonContainerWidget> {
         child: Center(
           child: Text(
             widget.text ?? "",
-            style: widget.textStyle.copyWith(
-                color: isButtonActive
-                    ? widget.textStyle.color
-                    : widget.textStyle.color?.withOpacity(0.5)),
+            style: widget.textStyle.copyWith(color: widget.textStyle.color),
           ),
         ),
       ),

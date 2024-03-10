@@ -32,24 +32,30 @@ class ProfileFormWidget extends StatelessWidget {
                 fontSize: 16),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: TextFormField(
-            controller: controller,
-            style: TextStyle(
-              color:
-                  getThemeColor(context, AppColors.darkOlive, AppColors.olive),
-            ),
-            decoration: InputDecoration(
-              labelStyle: const TextStyle(color: AppColors.darkOlive),
-              border: InputBorder.none,
-              filled: true,
-              hintText: "$hintText",
-              fillColor:
-                  getThemeColor(context, AppColors.olive, AppColors.darkOlive),
-              hintStyle: TextStyle(
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: getThemeColor(context, AppColors.olive, AppColors.darkOlive),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: TextFormField(
+              controller: controller,
+              style: TextStyle(
                 color: getThemeColor(
                     context, AppColors.darkOlive, AppColors.olive),
+              ),
+              decoration: InputDecoration(
+                labelStyle: const TextStyle(color: AppColors.darkOlive),
+                border: InputBorder.none,
+                filled: true,
+                hintText: "$hintText",
+                fillColor: getThemeColor(
+                    context, AppColors.olive, AppColors.darkOlive),
+                hintStyle: TextStyle(
+                  color: getThemeColor(
+                      context, AppColors.darkOlive, AppColors.olive),
+                ),
               ),
             ),
           ),
