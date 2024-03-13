@@ -170,20 +170,17 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     final latitudeSignal = data['GPS GPSLatitudeRef']?.printable;
     final longitudeValue = data['GPS GPSLongitude']?.values.toList();
     final longitudeSignal = data['GPS GPSLongitudeRef']?.printable;
-    if (latitudeValue == null ||
-        latitudeSignal == null ||
-        longitudeValue == null ||
-        longitudeSignal == null) {
+
+    _latitude = convertRationalLatLon(latitudeValue, latitudeSignal);
+    _longitude = convertRationalLatLon(longitudeValue, longitudeSignal);
+    if (_latitude.isNaN || _longitude.isNaN) {
       return GetLocationResponseModel(
-        country: "Unknown",
-        city: "Unknown",
+        country: "",
+        city: "",
         lat: 0.0,
         lon: 0.0,
       );
     }
-
-    _latitude = convertRationalLatLon(latitudeValue, latitudeSignal);
-    _longitude = convertRationalLatLon(longitudeValue, longitudeSignal);
 
     log("$_latitude : $_longitude");
     List<Placemark> placemarks =
@@ -196,12 +193,17 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     );
   }
 
-  double convertRationalLatLon(List<dynamic> values, String ref) {
+  double convertRationalLatLon(List<dynamic>? values, String? ref) {
+    if (values == null || ref == null) {
+      return -1;
+    }
+
     double degrees = values[0].toDouble();
     double minutes = values[1].toDouble();
     double seconds = values[2].toDouble();
 
     double latLong = degrees + (minutes / 60) + (seconds / 3600);
+    latLong = double.parse(latLong.toStringAsFixed(6));
 
     if (ref == 'S' || ref == 'W') {
       latLong = -latLong;
@@ -224,45 +226,35 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     _createPost(
       imageUrl: imageInfo.imageUrl,
       imageId: imageInfo.imageId,
-      height: imageInfo.height,
-      width: imageInfo.width,
+      locationInfo: locationInfo,
     );
-
     await File(file.path).delete();
-    Future.delayed(const Duration(seconds: 2), () {});
   }
 
   Future<void> _createPost(
       {required String imageUrl,
       required String imageId,
-      required double height,
-      required double width}) {
+      required GetLocationResponseModel locationInfo}) {
     BlocProvider.of<PostCubit>(context)
         .createPost(
-            post: PostModel(
-      creatorUid: widget.currentUser.uid,
-      likes: const [],
-      postId: imageId,
-      postImageUrl: imageUrl,
-      totalComments: 0,
-      username: widget.currentUser.username,
-      userProfileUrl: widget.currentUser.profileUrl,
-      description: _descriptionController.text,
-      category: imageCategory,
-      categoryConfidence: categoryConfidence,
-    ))
-        .then((value) {
-      BlocProvider.of<PostCubit>(context).addCategoryAndDimensions(
-        post: PostModel(
-          postId: imageId,
-          category: imageCategory,
-          categoryConfidence: categoryConfidence,
-          imageHeight: height,
-          imageWidth: width,
-        ),
-      );
-      _clear();
-    });
+          post: PostModel(
+            creatorUid: widget.currentUser.uid,
+            likes: const [],
+            postId: imageId,
+            postImageUrl: imageUrl,
+            totalComments: 0,
+            username: widget.currentUser.username,
+            userProfileUrl: widget.currentUser.profileUrl,
+            description: _descriptionController.text,
+            category: imageCategory,
+            categoryConfidence: categoryConfidence,
+            country: locationInfo.country,
+            city: locationInfo.city,
+            latitude: locationInfo.lat,
+            longitude: locationInfo.lon,
+          ),
+        )
+        .then((value) => _clear());
     return Future<void>.value();
   }
 }

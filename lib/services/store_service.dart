@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:image/image.dart' as img;
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,14 +9,10 @@ import 'package:uuid/uuid.dart';
 class ImageUploadResult {
   final String imageId;
   final String imageUrl;
-  final double width;
-  final double height;
 
   ImageUploadResult({
     required this.imageId,
     required this.imageUrl,
-    required this.width,
-    required this.height,
   });
 }
 
@@ -32,9 +26,12 @@ class StoreService {
     String childName,
   ) async {
     try {
-      img.Image? image = img.decodeImage(file!.readAsBytesSync());
-      double width = (image?.width ?? 0).toDouble();
-      double height = (image?.height ?? 0).toDouble();
+      if (file == null) {
+        return ImageUploadResult(
+          imageId: '',
+          imageUrl: '',
+        );
+      }
 
       Reference ref = firebaseStorage
           .ref()
@@ -52,8 +49,6 @@ class StoreService {
       return ImageUploadResult(
         imageId: id,
         imageUrl: imageUrl,
-        width: width,
-        height: height,
       );
     } catch (e) {
       toast("Error uploading image");
@@ -61,8 +56,6 @@ class StoreService {
     return ImageUploadResult(
       imageId: '',
       imageUrl: '',
-      width: 0,
-      height: 0,
     );
   }
 

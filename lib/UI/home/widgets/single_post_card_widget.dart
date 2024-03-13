@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_the_world/UI/home/widgets/post_action_row.dart';
 import 'package:travel_the_world/UI/home/widgets/post_description.dart';
 import 'package:travel_the_world/UI/home/widgets/post_header.dart';
+import 'package:travel_the_world/UI/post/post/upload/get_location_response_model.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/UI/post/post/widgets/like_animation_widget.dart';
 import 'package:travel_the_world/profile_widget.dart';
@@ -53,6 +54,11 @@ class _SinglePostCardWidgetState extends State<SinglePostCardWidget> {
           PostActionsRow(
             post: widget.post,
             currentUserId: widget.currentUserId,
+            location: GetLocationResponseModel(
+                lat: widget.post.latitude,
+                lon: widget.post.longitude,
+                country: widget.post.country,
+                city: widget.post.city),
           ),
           PostDescription(description: widget.post.description),
           const Divider(color: AppColors.darkOlive, thickness: 3),

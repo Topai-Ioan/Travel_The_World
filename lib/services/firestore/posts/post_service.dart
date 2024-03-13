@@ -24,6 +24,12 @@ class PostService implements PostServiceInterface {
       description: post.description,
       creatorUid: post.creatorUid,
       createdAt: DateTime.now().toUtc(),
+      category: post.category,
+      categoryConfidence: post.categoryConfidence,
+      country: post.country,
+      city: post.city,
+      latitude: post.latitude,
+      longitude: post.longitude,
     ).toJson();
 
     try {
@@ -220,24 +226,6 @@ class PostService implements PostServiceInterface {
         return PostModel.fromJson(doc.data());
       }).toList();
     });
-  }
-
-  @override
-  Future<void> addCategoryAndDimensions({required PostModel post}) async {
-    final ref = _db.collection(FirebaseConstants.Posts).doc(post.postId);
-
-    final lowercasecategory =
-        post.category.map((tag) => tag.toLowerCase()).toList();
-
-    var data = {
-      if (lowercasecategory.isNotEmpty) 'category': lowercasecategory,
-      if (post.categoryConfidence.isNotEmpty)
-        'categoryConfidence': post.categoryConfidence,
-      if (post.imageWidth != 0) 'weight': post.imageWidth,
-      if (post.imageHeight != 0) 'height': post.imageHeight,
-    };
-
-    return ref.update(data);
   }
 
   @override

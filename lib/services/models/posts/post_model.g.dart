@@ -27,8 +27,10 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
       userProfileUrl: json['userProfileUrl'] as String? ?? '',
       createdAt:
           PostModel._timestampToDateTime(json['createdAt'] as Timestamp?),
-      imageWidth: (json['width'] as num?)?.toDouble() ?? 0,
-      imageHeight: (json['height'] as num?)?.toDouble() ?? 0,
+      country: json['country'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      latitude: (json['latitude'] as num?)?.toDouble() ?? -1,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? -1,
     );
 
 Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
@@ -42,7 +44,9 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'categoryConfidence': instance.categoryConfidence,
       'totalComments': instance.totalComments,
       'userProfileUrl': instance.userProfileUrl,
-      'width': instance.imageWidth,
-      'height': instance.imageHeight,
+      'country': instance.country,
+      'city': instance.city,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
       'createdAt': PostModel._dateTimeToTimestamp(instance.createdAt),
     };
