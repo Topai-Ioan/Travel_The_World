@@ -78,6 +78,7 @@ dependencies:
   geocoding: ^2.2.0
 
   url_launcher: ^6.2.5
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

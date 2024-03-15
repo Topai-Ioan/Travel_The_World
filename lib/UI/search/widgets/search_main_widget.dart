@@ -12,6 +12,8 @@ import 'package:travel_the_world/profile_widget.dart';
 import 'package:travel_the_world/themes/app_colors.dart';
 import 'package:travel_the_world/themes/app_fonts.dart';
 
+import 'post_skeleton_widget.dart';
+
 class SearchMainWidget extends StatefulWidget {
   const SearchMainWidget({super.key});
 
@@ -130,25 +132,20 @@ class GetAllPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<PostCubit>().getPosts();
     return Expanded(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          context.read<PostCubit>().getPosts();
+      child: BlocBuilder<PostCubit, PostState>(
+        builder: (context, postState) {
+          if (postState is PostLoading) {
+            return const PostSkeletonWidget();
+          }
+          if (postState is PostLoaded) {
+            final posts = postState.posts;
+            return PostDisplayWidget(posts: posts);
+          }
+          return Text(
+            'No data found!',
+            style: TextStyle(color: getTextColor(context)),
+          );
         },
-        child: BlocBuilder<PostCubit, PostState>(
-          builder: (context, postState) {
-            if (postState is PostLoading) {
-              return const CircularProgressIndicator();
-            }
-            if (postState is PostLoaded) {
-              final posts = postState.posts;
-              return PostDisplayWidget(posts: posts);
-            }
-            return Text(
-              'No data found!',
-              style: TextStyle(color: getTextColor(context)),
-            );
-          },
-        ),
       ),
     );
   }

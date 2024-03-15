@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_the_world/UI/home/home_page.dart';
 import 'package:travel_the_world/cubit/user/get_single_user/get_single_user_cubit.dart';
 import 'package:travel_the_world/UI/activity/activity_page.dart';
 import 'package:travel_the_world/UI/profile/profile_page.dart';
 import 'package:travel_the_world/UI/search/search_page.dart';
 import 'package:travel_the_world/UI/post/post/upload/upload_post_page.dart';
 import 'package:travel_the_world/themes/app_colors.dart';
-
-import '../home/home_page.dart';
 
 class MainScreen extends StatefulWidget {
   final String uid;

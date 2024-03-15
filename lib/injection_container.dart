@@ -6,6 +6,7 @@ import 'package:travel_the_world/cubit/auth/auth_cubit.dart';
 import 'package:travel_the_world/cubit/comment/comment_cubit.dart';
 import 'package:travel_the_world/cubit/credential/credential_cubit.dart';
 import 'package:travel_the_world/cubit/post/get_single_post.dart/get_single_post_cubit.dart';
+import 'package:travel_the_world/cubit/post/home_page_posts/home_page_posts_cubit.dart';
 import 'package:travel_the_world/cubit/post/post_cubit.dart';
 import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/cubit/user/get_single_other_user/get_single_other_user_cubit.dart';
@@ -38,6 +39,8 @@ Future<void> init() async {
   sl.registerFactory(
       () => GetSinglePostCubit(postService: sl<PostServiceInterface>()));
   sl.registerFactory(() => CommentCubit(commentService: CommentService()));
+  sl.registerFactory(
+      () => HomePagePostsCubit(postService: sl<PostServiceInterface>()));
   sl.registerFactory(
       () => ReplyCubit(replyService: sl<ReplyServiceInterface>()));
 

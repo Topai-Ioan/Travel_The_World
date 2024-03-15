@@ -27,14 +27,6 @@ class FilteredPostsLoaded extends PostState {
   List<Object> get props => [posts];
 }
 
-class PostLoadedInTheLast24h extends PostState {
-  final List<PostModel> posts;
-
-  const PostLoadedInTheLast24h({required this.posts});
-  @override
-  List<Object> get props => [posts];
-}
-
 class PostFailure extends PostState {}
 
 class PostEmpty extends PostState {}

@@ -185,9 +185,24 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
     log("$_latitude : $_longitude");
     List<Placemark> placemarks =
         await placemarkFromCoordinates(_latitude, _longitude);
+    String country = '';
+    String city = '';
+
+    for (var placemark in placemarks) {
+      if (placemark.country != null && placemark.country!.isNotEmpty) {
+        country = placemark.country!;
+      }
+      if (placemark.locality != null && placemark.locality!.isNotEmpty) {
+        city = placemark.locality!;
+      }
+      if (country.isNotEmpty && city.isNotEmpty) {
+        break;
+      }
+    }
+
     return GetLocationResponseModel(
-      country: placemarks[0].country.toString(),
-      city: placemarks[0].locality.toString(),
+      country: country,
+      city: city,
       lat: _latitude,
       lon: _longitude,
     );
