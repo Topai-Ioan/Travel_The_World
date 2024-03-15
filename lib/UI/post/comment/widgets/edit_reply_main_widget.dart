@@ -5,7 +5,6 @@ import 'package:travel_the_world/cubit/reply/reply_cubit.dart';
 import 'package:travel_the_world/UI/shared_items/button_container_widget.dart';
 import 'package:travel_the_world/UI/profile/widgets/profile_form_widget.dart';
 import 'package:travel_the_world/services/models/replies/reply_model.dart';
-import 'package:travel_the_world/themes/app_colors.dart';
 import 'package:travel_the_world/themes/app_fonts.dart';
 
 class EditReplyMainWidget extends StatefulWidget {
@@ -31,9 +30,7 @@ class _EditReplyMainWidgetState extends State<EditReplyMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
-        backgroundColor: getBackgroundColor(context),
         title: const Text("Edit Reply"),
       ),
       body: Padding(

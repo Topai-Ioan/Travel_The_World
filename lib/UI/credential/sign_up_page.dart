@@ -57,34 +57,33 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: getBackgroundColor(context),
         body: BlocConsumer<CredentialCubit, CredentialState>(
-          listener: (context, credentialState) {
-            if (credentialState is CredentialSuccess) {
-              BlocProvider.of<AuthCubit>(context).loggedIn();
+      listener: (context, credentialState) {
+        if (credentialState is CredentialSuccess) {
+          BlocProvider.of<AuthCubit>(context).loggedIn();
+        }
+        if (credentialState is CredentialFailure) {
+          toast("Invalid credentials");
+        }
+      },
+      builder: (context, credentialState) {
+        if (credentialState is CredentialSuccess) {
+          return BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, authState) {
+            if (authState is Authenticated) {
+              _emailController.dispose();
+              _usernameController.dispose();
+              _passwordController.dispose();
+              return MainScreen(uid: authState.uid);
+            } else {
+              return _bodyWidget();
             }
-            if (credentialState is CredentialFailure) {
-              toast("Invalid credentials");
-            }
-          },
-          builder: (context, credentialState) {
-            if (credentialState is CredentialSuccess) {
-              return BlocBuilder<AuthCubit, AuthState>(
-                  builder: (context, authState) {
-                if (authState is Authenticated) {
-                  _emailController.dispose();
-                  _usernameController.dispose();
-                  _passwordController.dispose();
-                  return MainScreen(uid: authState.uid);
-                } else {
-                  return _bodyWidget();
-                }
-              });
-            }
+          });
+        }
 
-            return _bodyWidget();
-          },
-        ));
+        return _bodyWidget();
+      },
+    ));
   }
 
   _bodyWidget() {

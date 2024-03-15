@@ -31,9 +31,7 @@ class _EditCommentMainWidgetState extends State<EditCommentMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
-        backgroundColor: getBackgroundColor(context),
         title: Text(
           "Edit Comment",
           style: Fonts.f18w700(color: getTextColor(context)),

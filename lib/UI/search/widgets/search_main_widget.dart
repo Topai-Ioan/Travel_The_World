@@ -70,7 +70,6 @@ class _SearchMainWidgetState extends State<SearchMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getBackgroundColor(context),
       body: Column(
         children: [
           SearchBarWidget(

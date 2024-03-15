@@ -56,9 +56,7 @@ class _CommentMainWidgetState extends State<CommentMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
-        backgroundColor: getBackgroundColor(context),
         title: Text(
           "Comments",
           style: Fonts.f18w700(color: getTextColor(context)),

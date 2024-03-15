@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/profile_widget.dart';
+import 'package:travel_the_world/services/firestore/users/user_service_interface.dart';
 import 'package:travel_the_world/services/models/posts/post_model.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/services/models/users/user_model_for_lists.dart';
 import 'package:travel_the_world/themes/app_colors.dart';
+import 'package:travel_the_world/injection_container.dart' as di;
 
-class UserList extends StatelessWidget {
-  final List userList;
+class UserList extends StatefulWidget {
+  final List<String> userList;
   final String title;
 
   const UserList({
@@ -16,16 +19,36 @@ class UserList extends StatelessWidget {
   });
 
   @override
+  State<UserList> createState() => _UserListState();
+}
+
+class _UserListState extends State<UserList> {
+  List<UserModelForLists> usersData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsersData();
+  }
+
+  Future<void> _fetchUsersData() async {
+    final fetchedUsersData =
+        await di.sl<UserServiceInterface>().getUsers(uids: widget.userList);
+    setState(() {
+      usersData = fetchedUsersData;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (userList.isEmpty) {
+    if (usersData.isEmpty) {
       return _noFollowersWidget();
     }
-
     return Expanded(
       child: ListView.builder(
-        itemCount: userList.length,
+        itemCount: usersData.length,
         itemBuilder: (context, index) {
-          final singleUserData = userList[index];
+          final singleUserData = usersData[index];
           return GestureDetector(
             onTap: () {
               Navigator.pushNamed(
@@ -71,7 +94,7 @@ class UserList extends StatelessWidget {
   Widget _noFollowersWidget() {
     return Center(
       child: Text(
-        "No ${title.toLowerCase()}",
+        "No ${widget.title.toLowerCase()}",
         style: const TextStyle(
           color: Colors.white,
           fontSize: 18,
@@ -105,7 +128,7 @@ class FollowingPageHelper extends StatelessWidget {
         child: Column(
           children: [
             UserList(
-              userList: user.following,
+              userList: user.followers,
               title: title,
             ),
           ],

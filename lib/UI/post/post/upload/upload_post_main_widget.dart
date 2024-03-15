@@ -58,7 +58,6 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getBackgroundColor(context),
       appBar: const CustomAppBar(),
       body: Container(
         color: getBackgroundColor(context),
@@ -383,8 +382,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: getBackgroundColor(context),
-      surfaceTintColor: getBackgroundColor(context),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

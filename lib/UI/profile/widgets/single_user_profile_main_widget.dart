@@ -81,9 +81,7 @@ class _SingleUserProfileMainWidgetState
         if (userState is GetSingleOtherUserLoaded) {
           final singleUser = userState.otherUser;
           return Scaffold(
-            backgroundColor: getBackgroundColor(context),
             appBar: AppBar(
-              backgroundColor: getBackgroundColor(context),
               title: Text(singleUser.username,
                   style: Fonts.f20w600(color: getTextColor(context))),
             ),

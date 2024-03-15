@@ -14,8 +14,14 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       website: json['website'] as String? ?? '',
       email: json['email'] as String? ?? '',
       profileUrl: json['profileUrl'] as String? ?? '',
-      followers: json['followers'] as List<dynamic>? ?? const [],
-      following: json['following'] as List<dynamic>? ?? const [],
+      followers: (json['followers'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      following: (json['following'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       totalPosts: json['totalPosts'] as num? ?? 0,
       createdAt:
           UserModel._timestampToDateTime(json['createdAt'] as Timestamp?),

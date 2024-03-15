@@ -74,7 +74,6 @@ class _HomePageMainWidgetState extends State<HomePageMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getBackgroundColor(context),
       appBar: const CustomAppBar(),
       body: BlocBuilder<HomePagePostsCubit, HomePagePostsState>(
         builder: (context, postState) {
@@ -115,8 +114,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: getBackgroundColor(context),
-      surfaceTintColor: getBackgroundColor(context),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

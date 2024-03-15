@@ -42,9 +42,7 @@ class _UpdatePostMainWidgetState extends State<UpdatePostMainWidget> {
   Widget build(BuildContext context) {
     final actionHandler = ActionCooldownHandler();
     return Scaffold(
-      backgroundColor: getBackgroundColor(context),
       appBar: AppBar(
-        backgroundColor: getBackgroundColor(context),
         title: Text(
           "Edit Post",
           style: Fonts.f18w700(color: getTextColor(context)),

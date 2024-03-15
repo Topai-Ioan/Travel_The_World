@@ -14,8 +14,8 @@ class UserModel {
   final String website;
   final String email;
   final String profileUrl;
-  final List followers;
-  final List following;
+  final List<String> followers;
+  final List<String> following;
   final num totalPosts;
 
   @JsonKey(fromJson: _timestampToDateTime, toJson: _dateTimeToTimestamp)

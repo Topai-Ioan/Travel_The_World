@@ -71,7 +71,6 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: getBackgroundColor(context),
       appBar: buildAppBar(),
       body: buildProfileContent(),
     );
@@ -79,8 +78,6 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
 
   AppBar buildAppBar() {
     return AppBar(
-      backgroundColor: getBackgroundColor(context),
-      surfaceTintColor: getBackgroundColor(context),
       title: Text(
         widget.currentUser.username,
         style: TextStyle(

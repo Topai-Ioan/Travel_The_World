@@ -4,6 +4,7 @@ import 'package:travel_the_world/constants.dart';
 import 'package:travel_the_world/services/firestore/auth/auth_service.dart';
 import 'package:travel_the_world/services/firestore/users/user_service_interface.dart';
 import 'package:travel_the_world/services/models/users/user_model.dart';
+import 'package:travel_the_world/services/models/users/user_model_for_lists.dart';
 
 class UserService implements UserServiceInterface {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -119,6 +120,16 @@ class UserService implements UserServiceInterface {
     var snapshot = await ref.get();
     var users =
         snapshot.docs.map((doc) => UserModel.fromJson(doc.data())).toList();
+    return users;
+  }
+
+  @override
+  Future<List<UserModelForLists>> getUsers({required List<String> uids}) async {
+    var ref = _db.collection('Users').where('uid', whereIn: uids);
+    var snapshot = await ref.get();
+    var users = snapshot.docs
+        .map((doc) => UserModelForLists.fromJson(doc.data()))
+        .toList();
     return users;
   }
 }

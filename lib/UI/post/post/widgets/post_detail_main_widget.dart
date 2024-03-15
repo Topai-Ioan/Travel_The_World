@@ -65,7 +65,6 @@ class _PostDetailMainWidgetState extends State<PostDetailMainWidget> {
               return SafeArea(
                 child: Scaffold(
                   appBar: AppBar(
-                    backgroundColor: getBackgroundColor(context),
                     title: Text(
                       "Post Detail",
                       style: Fonts.f18w700(color: getTextColor(context)),
