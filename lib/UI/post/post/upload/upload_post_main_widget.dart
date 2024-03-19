@@ -1,13 +1,17 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:travel_the_world/UI/post/post/upload/face_painter.dart';
 import 'package:travel_the_world/UI/post/post/upload/get_location_response_model.dart';
 import 'package:travel_the_world/UI/post/post/upload/menu_buttons.dart';
 import 'package:travel_the_world/UI/post/post/upload/uploader_card.dart';
@@ -345,30 +349,93 @@ class ImageDisplay extends StatelessWidget {
 
   const ImageDisplay(
       {super.key, required this.croppedFile, required this.pickedFile});
+  Future<List<Face>> getFaces(XFile inputImage) async {
+    final image = InputImage.fromFilePath(inputImage.path);
+    final options = FaceDetectorOptions(
+        enableContours: true, performanceMode: FaceDetectorMode.accurate);
+    final faceDetector = FaceDetector(options: options);
+    final List<Face> faces = await faceDetector.processImage(image);
+
+    faceDetector.close();
+    return faces;
+  }
+
+  Widget buildImageWithFaces() {
+    return FutureBuilder<List<Face>>(
+      future: getFaces(pickedFile!),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final faces = snapshot.data!;
+          final imageFile = File(pickedFile!.path);
+          return FutureBuilder<ui.Image>(
+            future: _loadImage(imageFile),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final img = snapshot.data!;
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    Size(constraints.maxWidth, constraints.maxHeight);
+                    return Stack(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: img.width / img.height,
+                          child: CustomPaint(
+                            painter: FacePainter(
+                              img,
+                              faces,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Future<ui.Image> _loadImage(File file) async {
+    final data = await file.readAsBytes();
+    return await decodeImageFromList(data);
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     if (croppedFile != null) {
-      final path = croppedFile!.path;
       return SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: 0.9 * screenWidth,
             maxHeight: 0.9 * screenHeight,
           ),
-          child: Image.file(File(path)),
+          child: buildImageWithFaces(),
         ),
       );
     } else if (pickedFile != null) {
-      final path = pickedFile!.path;
-      return ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 0.9 * screenWidth,
-          maxHeight: 0.9 * screenHeight,
+      return SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 0.9 * screenWidth,
+              maxHeight: 0.9 * screenHeight,
+            ),
+            child: buildImageWithFaces(),
+          ),
         ),
-        child: Image.file(File(path)),
       );
     } else {
       return const SizedBox.shrink();
