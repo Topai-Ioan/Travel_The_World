@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:exif/exif.dart';
@@ -185,7 +186,6 @@ class _UploadPostMainWidgetState extends State<UploadPostMainWidget> {
       );
     }
 
-    log("$_latitude : $_longitude");
     List<Placemark> placemarks =
         await placemarkFromCoordinates(_latitude, _longitude);
     String country = '';
@@ -382,18 +382,30 @@ class ImageDisplay extends StatelessWidget {
                 final img = snapshot.data!;
                 return LayoutBuilder(
                   builder: (context, constraints) {
-                    Size(constraints.maxWidth, constraints.maxHeight);
+                    final widgetSize =
+                        Size(constraints.maxWidth, constraints.maxHeight);
+                    final imageSize =
+                        Size(img.width.toDouble(), img.height.toDouble());
+                    var scale = min(widgetSize.width / imageSize.width,
+                        widgetSize.height / imageSize.height);
+                    final fittedSize =
+                        Size(imageSize.width * scale, imageSize.height * scale);
+                    final scaleX = fittedSize.width / img.width;
+                    final scaleY = fittedSize.height / img.height;
                     return Stack(
                       children: [
                         AspectRatio(
                           aspectRatio: img.width / img.height,
-                          child: CustomPaint(
-                            painter: FacePainter(
-                              img,
-                              faces,
-                            ),
+                          child: Image.file(
+                            imageFile,
+                            fit: BoxFit.contain,
                           ),
                         ),
+                        ...faces.map((face) => FaceWidget(
+                              rect: face.boundingBox,
+                              scaleX: scaleX,
+                              scaleY: scaleY,
+                            ))
                       ],
                     );
                   },
